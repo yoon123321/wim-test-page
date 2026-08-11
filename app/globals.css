@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/**
+ * 브레이크포인트 정의 (3단계)
+ *
+ *   mobile :        ~  767px   → 클래스 접두사 없음 (기본값) 또는 mb:
+ *   tablet :  768px ~ 1199px   → tb:
+ *   pc     : 1200px ~          → dt:
+ *
+ * Tailwind는 mobile-first 이므로 기본 스타일이 곧 모바일이고,
+ * tb: 는 768px 이상, dt: 는 1200px 이상에서 적용된다.
+ *
+ * `--breakpoint-*: initial` 로 기본 screens(sm/md/lg/xl/2xl)를 제거해서
+ * 프로젝트 전체가 이 3단계만 쓰도록 강제한다.
+ */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-tb: 48rem; /* 768px */
+  --breakpoint-dt: 75rem; /* 1200px */
+}
+
+/** 모바일에만 적용해야 할 때 쓰는 max-width 변형 (767px 이하) */
+@custom-variant mb (@media (max-width: 47.999rem));
+
+/** 태블릿 구간에만 적용 (768px ~ 1199px) */
+@custom-variant tb-only (@media (min-width: 48rem) and (max-width: 74.999rem));
+
+/** 태블릿 이하 = 모바일 + 태블릿 (1199px 이하) */
+@custom-variant tb-down (@media (max-width: 74.999rem));
