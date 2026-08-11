@@ -37,45 +37,7 @@ export default function WireframeTwo() {
 
   return (
     <div className="w-full bg-white text-neutral-800">
-      <section aria-label={CONTENT.threeM.title} className={`${sectionClass} bg-neutral-100`}>
-        <div className={innerClass}>
-          <SectionTitle eyebrow={CONTENT.threeM.eyebrow} title={CONTENT.threeM.title} description={CONTENT.threeM.description} />
-          <div className="mt-10 grid gap-10 tb:mt-14 tb:grid-cols-[minmax(260px,.8fr)_1.2fr] tb:items-center dt:gap-20">
-            <div className="relative mx-auto aspect-square w-full max-w-[340px] rounded-full border border-dashed border-neutral-400">
-              {CONTENT.threeM.items.map((item, index) => {
-                const positions = ["left-1/2 top-0 -translate-x-1/2 -translate-y-1/4", "bottom-0 left-0 -translate-x-1/4 translate-y-1/4", "bottom-0 right-0 translate-x-1/4 translate-y-1/4"];
-                return <button key={item.title} type="button" aria-label={item.title} onClick={() => setMethod(index)} className={`absolute grid size-20 place-items-center rounded-full border text-[10px] font-semibold tb:size-24 ${positions[index]} ${method === index ? "border-neutral-700 bg-neutral-300" : "border-neutral-400 bg-neutral-100"}`}>{index + 1}</button>;
-              })}
-              <div className="absolute left-1/2 top-1/2 grid size-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-neutral-600 bg-neutral-300 text-xs font-bold">3M</div>
-            </div>
-            <div className="grid gap-4">
-              {CONTENT.threeM.items.map((item, index) => (
-                <button key={item.title} type="button" onClick={() => setMethod(index)} className={`rounded-2xl border p-5 text-left transition tb:p-6 ${method === index ? "border-neutral-600 bg-white opacity-100" : "border-neutral-300 bg-neutral-50 opacity-55"}`}>
-                  <strong className="block text-lg tb:text-xl">{item.title}</strong>
-                  <span className="mt-1 block text-xs text-neutral-500">{item.subtitle}</span>
-                  <span className="mt-3 block text-sm leading-6 text-neutral-600">{item.description}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section aria-label={CONTENT.programs.title} className={sectionClass}>
-        <div className={innerClass}>
-          <SectionTitle eyebrow={CONTENT.programs.eyebrow} title={CONTENT.programs.title} description={CONTENT.programs.description} />
-          <div className="mt-10 grid gap-6 tb:mt-14 tb:grid-cols-3">
-            {CONTENT.programs.items.map((item) => (
-              <article key={item.title} className="rounded-2xl border border-neutral-300 p-4 tb:p-5">
-                <ImageSlot label={item.imageDescription} className="h-44 tb:h-48 dt:h-56" />
-                <h3 className="mt-5 text-lg font-bold">{item.title}</h3>
-                <p className="mt-1 text-xs text-neutral-500">{item.subtitle}</p>
-                <p className="mt-3 text-sm leading-6 text-neutral-600">{item.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+  
 
       <section aria-label={CONTENT.introduction.title} className={`${sectionClass} bg-neutral-100`}>
         <div className={`${innerClass} grid gap-8 tb:grid-cols-[.9fr_1.1fr] tb:items-center dt:gap-16`}>
@@ -114,7 +76,45 @@ export default function WireframeTwo() {
           <ImageSlot label={CONTENT.consultation.imageDescription} className="h-72 tb:h-auto" />
         </div>
       </section>
+    <section aria-label={CONTENT.threeM.title} className={`${sectionClass} bg-neutral-100`}>
+        <div className={innerClass}>
+          <SectionTitle eyebrow={CONTENT.threeM.eyebrow} title={CONTENT.threeM.title} description={CONTENT.threeM.description} />
+          <div className="mt-10 grid gap-10 tb:mt-14 tb:grid-cols-[minmax(260px,.8fr)_1.2fr] tb:items-center dt:gap-20">
+            <div className="relative mx-auto aspect-square w-full max-w-[340px] rounded-full border border-dashed border-neutral-400">
+              {CONTENT.threeM.items.map((item, index) => {
+                const positions = ["left-1/2 top-0 -translate-x-1/2 -translate-y-1/4", "bottom-0 left-0 -translate-x-1/4 translate-y-1/4", "bottom-0 right-0 translate-x-1/4 translate-y-1/4"];
+                return <button key={item.title} type="button" aria-label={item.title} onClick={() => setMethod(index)} className={`absolute grid size-20 place-items-center rounded-full border text-[10px] font-semibold tb:size-24 ${positions[index]} ${method === index ? "border-neutral-700 bg-neutral-300" : "border-neutral-400 bg-neutral-100"}`}>{index + 1}</button>;
+              })}
+              <div className="absolute left-1/2 top-1/2 grid size-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-neutral-600 bg-neutral-300 text-xs font-bold">3M</div>
+            </div>
+            <div className="grid gap-4">
+              {CONTENT.threeM.items.map((item, index) => (
+                <button key={item.title} type="button" onClick={() => setMethod(index)} className={`rounded-2xl border p-5 text-left transition tb:p-6 ${method === index ? "border-neutral-600 bg-white opacity-100" : "border-neutral-300 bg-neutral-50 opacity-55"}`}>
+                  <strong className="block text-lg tb:text-xl">{item.title}</strong>
+                  <span className="mt-1 block text-xs text-neutral-500">{item.subtitle}</span>
+                  <span className="mt-3 block text-sm leading-6 text-neutral-600">{item.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section aria-label={CONTENT.programs.title} className={sectionClass}>
+        <div className={innerClass}>
+          <SectionTitle eyebrow={CONTENT.programs.eyebrow} title={CONTENT.programs.title} description={CONTENT.programs.description} />
+          <div className="mt-10 grid gap-6 tb:mt-14 tb:grid-cols-3">
+            {CONTENT.programs.items.map((item) => (
+              <article key={item.title} className="rounded-2xl border border-neutral-300 p-4 tb:p-5">
+                <ImageSlot label={item.imageDescription} className="h-44 tb:h-48 dt:h-56" />
+                <h3 className="mt-5 text-lg font-bold">{item.title}</h3>
+                <p className="mt-1 text-xs text-neutral-500">{item.subtitle}</p>
+                <p className="mt-3 text-sm leading-6 text-neutral-600">{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       <section aria-label={CONTENT.cases.title} className={sectionClass}>
         <div className={innerClass}>
           <div className="flex items-end justify-between gap-5"><div><p className="text-xs font-semibold tracking-[.18em] text-neutral-500">{CONTENT.cases.eyebrow}</p><h2 className="mt-4 text-2xl font-bold tb:text-3xl dt:text-4xl">{CONTENT.cases.title}</h2></div><span className="text-xs text-neutral-500 tb:text-sm">{CONTENT.cases.linkLabel}</span></div>

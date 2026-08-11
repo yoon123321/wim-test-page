@@ -66,7 +66,7 @@ export default function Page() {
           <div className="text-[14px] text-[#8a8a8a]">{COPY.text002}</div>
         </div>
 
-        <div className="relative w-full max-w-[1160px] h-[320px] tb:h-[420px] mx-auto overflow-hidden">
+        <div className="hidden dt:block relative w-full max-w-[1160px] h-[420px] mx-auto overflow-hidden">
           <div className="absolute left-0 right-0 bottom-0 h-[150px] bg-[linear-gradient(180deg,rgba(240,240,240,0)_0%,rgba(240,240,240,.92)_68%,#f0f0f0_100%)] z-[2]"></div>
           <div className="absolute left-[10px] top-[6px] rotate-[-3deg] bg-white text-[#8f8f8f] text-[15px] py-[16px] px-[24px] rounded-[999px_999px_6px_999px] shadow-[0_3px_14px_rgba(0,0,0,.07)] whitespace-nowrap opacity-[.6]">{COPY.text003}</div>
           <div className="absolute left-[330px] top-0 rotate-[2deg] bg-white text-[#8f8f8f] text-[15px] py-[16px] px-[24px] rounded-[999px_999px_999px_6px] shadow-[0_3px_14px_rgba(0,0,0,.07)] whitespace-nowrap opacity-[.6]">{COPY.text004}</div>

@@ -11,7 +11,7 @@ function Ph({ className = "" }: { className?: string }) {
 export default function HomePage() {
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
-      <Hero imagePosition="center" />
+      <Hero imagePosition="center" {...CONTENT.hero} />
 
       {/* 센터 소개 */}
       <section
@@ -48,7 +48,7 @@ export default function HomePage() {
       </section>
 
       {/* 진료 항목 */}
-      <section id="services" className="pb-16 tb:pb-20 dt:pb-24">
+      <section id="services" className="">
         <div className="bg-neutral-100 px-5 py-16 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-[72px]">
           <div className="mb-11 flex max-w-[640px] flex-col gap-3">
             <h2 className={`${HEADING} text-2xl leading-tight tb:text-[32px]`}>{CONTENT.services.title}</h2>

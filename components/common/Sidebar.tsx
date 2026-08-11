@@ -68,16 +68,32 @@ export default function Sidebar({ open, onClose, navLinks }: SidebarProps) {
         </div>
 
         <nav className="flex flex-1 flex-col overflow-y-auto">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={onClose}
-              className="border-b border-neutral-200 px-5 py-4 text-[15px]"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.children ? (
+              <div key={link.label} className="border-b border-neutral-200">
+                <div className="px-5 pb-1 pt-4 text-[13px] font-semibold text-neutral-500">{link.label}</div>
+                {link.children.map((child) => (
+                  <Link
+                    key={child.href}
+                    href={child.href}
+                    onClick={onClose}
+                    className="block py-3 pl-8 pr-5 text-[15px]"
+                  >
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href!}
+                onClick={onClose}
+                className="border-b border-neutral-200 px-5 py-4 text-[15px]"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
       </aside>
     </div>

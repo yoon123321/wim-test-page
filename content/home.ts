@@ -1,8 +1,16 @@
 /** 홈(/) 페이지에서 수정 가능한 문구와 카드 데이터 */
 export const HOME_CONTENT = {
+  hero: {
+    eyebrow: "WIM CENTER",
+    title: "의사가 설계하고,전문 인력이 끝까지 관리 합니다",
+    description: "과학적이고 지속 가능한 프로그램으로 건강한 라이프스타일을 만들어 갑니다.",
+    primaryButton: "상담 신청",
+    secondaryButton: "프로그램 보기",
+    imageDescription: "메인 히어로 이미지",
+  },
   about: {
     eyebrow: "PERSONALIZED DIET COACHING",
-    titleLines: ["개인맞춤형 다이어트 코칭으로", "몸이 달라집니다"],
+    titleLines: ["당신의 다이어트가 자꾸 실패하는 이유,", "몸이 달라집니다"],
     description: "같은 식단, 같은 운동도 사람마다 결과가 다릅니다. 윔센터는 검사 결과와 생활 패턴을 먼저 읽고, 유지할 수 있는 방식으로 계획을 짭니다. 감량 이후의 체중 관리까지 한 명의 코치가 이어서 봅니다.",
     tags: ["1:1 전담 코치", "체성분 정밀 검사", "유지 관리 프로그램"],
     buttonLabel: "코칭 시작하기 →",
