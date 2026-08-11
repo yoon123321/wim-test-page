@@ -27,7 +27,7 @@ function SectionTitle({ eyebrow, title, description }: { eyebrow: string; title:
   );
 }
 
-const sectionClass = "border-t border-dashed border-neutral-300 px-5 py-14 tb:px-8 tb:py-20 dt:px-10 dt:py-24";
+const sectionClass = "border-t border-dashed border-neutral-300 px-4 py-14 tb:px-8 tb:py-20 dt:px-10 dt:py-24";
 const innerClass = "mx-auto w-full max-w-[1200px]";
 
 export default function WireframeTwo() {
@@ -47,7 +47,7 @@ export default function WireframeTwo() {
             <h2 className="mt-4 text-2xl font-bold tb:text-3xl dt:text-4xl">{CONTENT.introduction.title}</h2>
             <div className="mt-7 flex flex-wrap items-center gap-3"><strong className="text-xl">{CONTENT.introduction.personName}</strong><span className="rounded-full bg-neutral-300 px-3 py-1 text-xs">{CONTENT.introduction.personRole}</span></div>
             <p className="mt-5 text-sm leading-7 text-neutral-600 tb:text-base">{CONTENT.introduction.description}</p>
-            <button type="button" className="mt-7 rounded-full border border-neutral-500 px-5 py-3 text-sm font-semibold">{CONTENT.introduction.button}</button>
+            <button type="button" className="mt-7 rounded-full border border-neutral-500 px-4 py-3 text-sm font-semibold">{CONTENT.introduction.button}</button>
           </div>
         </div>
         <div className={`${innerClass} mt-10 grid grid-cols-2 gap-2 rounded-xl bg-neutral-200 p-3 text-center text-xs text-neutral-600 tb:grid-cols-4`}>
@@ -58,7 +58,7 @@ export default function WireframeTwo() {
       <section aria-label={CONTENT.careTeam.title} className={sectionClass}>
         <div className={innerClass}>
           <div className="max-w-2xl"><p className="text-xs font-semibold tracking-[.18em] text-neutral-500">{CONTENT.careTeam.eyebrow}</p><h2 className="mt-4 text-2xl font-bold tb:text-3xl dt:text-4xl">{CONTENT.careTeam.title}</h2><p className="mt-4 text-sm leading-7 text-neutral-600 tb:text-base">{CONTENT.careTeam.description}</p></div>
-          <p className="mt-6 inline-block rounded-full bg-neutral-200 px-5 py-2 text-xs text-neutral-600">{CONTENT.careTeam.summary}</p>
+          <p className="mt-6 inline-block rounded-full bg-neutral-200 px-4 py-2 text-xs text-neutral-600">{CONTENT.careTeam.summary}</p>
           <div className="mt-10 grid gap-5 tb:grid-cols-3">
             {CONTENT.careTeam.members.map((member, index) => (
               <button key={member.title} type="button" onClick={() => setManager(index)} className={`rounded-2xl border p-6 text-left transition ${manager === index ? "border-neutral-700 bg-neutral-100" : "border-neutral-300 bg-white opacity-60"}`}>
@@ -118,10 +118,10 @@ export default function WireframeTwo() {
       <section aria-label={CONTENT.cases.title} className={sectionClass}>
         <div className={innerClass}>
           <div className="flex items-end justify-between gap-5"><div><p className="text-xs font-semibold tracking-[.18em] text-neutral-500">{CONTENT.cases.eyebrow}</p><h2 className="mt-4 text-2xl font-bold tb:text-3xl dt:text-4xl">{CONTENT.cases.title}</h2></div><span className="text-xs text-neutral-500 tb:text-sm">{CONTENT.cases.linkLabel}</span></div>
-          <div className="mt-10 grid grid-cols-1 gap-4 tb:grid-cols-2 dt:grid-cols-4">
+          <div className="-mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden tb:mx-0 tb:grid tb:grid-cols-2 tb:overflow-visible tb:px-0 tb:pb-0 dt:grid-cols-4">
             {CONTENT.cases.items.map((item, index) => (
-              <button key={item.title} type="button" onClick={() => setSelectedCase(index)} className={`rounded-2xl border p-4 text-left transition ${selectedCase === index ? "border-neutral-700 bg-neutral-100" : "border-neutral-300"}`}>
-                <div className="h-28 rounded-xl border border-dashed border-neutral-400" /><h3 className="mt-4 font-bold">{item.title}</h3><p className="mt-2 text-sm leading-6 text-neutral-600">{item.description}</p><Bar className={`mt-4 ${lineWidths[index]}`} />
+              <button key={item.title} type="button" onClick={() => setSelectedCase(index)} className={`w-[85%] shrink-0 snap-center [scroll-snap-stop:always] rounded-2xl border p-4 text-left transition tb:w-auto ${selectedCase === index ? "border-neutral-700 bg-neutral-100" : "border-neutral-300"}`}>
+                <div className="grid aspect-video place-items-center rounded-xl border border-dashed border-neutral-400 bg-neutral-100 text-xs font-semibold text-neutral-500">{CONTENT.cases.videoPlaceholder}</div><h3 className="mt-4 font-bold">{item.title}</h3><p className="mt-2 text-sm leading-6 text-neutral-600">{item.description}</p><Bar className={`mt-4 ${lineWidths[index]}`} />
               </button>
             ))}
           </div>

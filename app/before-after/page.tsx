@@ -67,7 +67,7 @@ export default function BeforeAfterPage() {
         imageDescription="비포앤애프터 대표 이미지"
       />
 
-      <section className="px-5 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
+      <section className="px-4 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
         {/* 대표 스토리 카드 */}
         <div className="relative mx-auto w-full max-w-[1000px]">
           <div className="grid grid-cols-1 gap-4 tb:grid-cols-2">
@@ -123,7 +123,7 @@ export default function BeforeAfterPage() {
       </section>
 
       {/* 기기관리 후기 캐러셀 + CTA */}
-      <section className="border-t border-neutral-200 bg-neutral-50 px-5 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
+      <section className="border-t border-neutral-200 bg-neutral-50 px-4 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
         {/* 후기 버튼 */}
         <div className="flex justify-center">
           <span className="rounded-full bg-[#4a763f] px-6 py-2.5 text-sm font-medium text-white">

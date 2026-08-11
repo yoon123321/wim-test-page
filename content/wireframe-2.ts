@@ -35,9 +35,9 @@ export const WIREFRAME_TWO_CONTENT = {
     ],
   },
   programs: {
-    eyebrow: "PROGRAM",
-    title: "목표에 맞는 프로그램",
-    description: "필요한 관리 범위에 따라 프로그램을 선택할 수 있습니다.",
+    eyebrow: "PHILOSOPHY",
+    title: "윔센터의 철학",
+    description: "몸의 변화를 넘어, 건강한 관리가 일상으로 이어지도록 함께합니다.",
     items: [
       { title: "체중 관리", subtitle: "감량 중심", description: "체중과 체지방 변화를 중심으로 관리합니다.", imageDescription: "체중 관리 이미지", titleWidth: 120, subtitleWidth: 100, lastLineWidth: "70%" },
       { title: "대사 관리", subtitle: "건강 중심", description: "대사 지표와 생활 리듬을 함께 점검합니다.", imageDescription: "대사 관리 이미지", titleWidth: 150, subtitleWidth: 90, lastLineWidth: "58%" },
@@ -80,6 +80,7 @@ export const WIREFRAME_TWO_CONTENT = {
     eyebrow: "CASES",
     title: "변화를 시작한 사람들",
     linkLabel: "전체 사례 보기",
+    videoPlaceholder: "유튜브 영상 자리",
     items: [
       { title: "산후 체중 관리", description: "생활 리듬을 회복하며 진행한 맞춤 관리", lastLineWidth: "70%" },
       { title: "갱년기 관리", description: "몸의 변화에 맞춰 조정한 건강 관리", lastLineWidth: "86%" },

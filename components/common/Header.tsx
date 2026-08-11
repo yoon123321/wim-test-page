@@ -21,7 +21,7 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
-  const activeMenu = navLinks.find((link) => link.label === openMenu && link.children);
+  const activeLink = navLinks.find((link) => link.label === openMenu && link.children);
 
   return (
     <>
@@ -29,7 +29,18 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
         className="sticky top-0 z-30 border-b border-neutral-300 bg-white"
         onMouseLeave={() => setOpenMenu(null)}
       >
-        <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-5 tb:px-8 dt:px-10">
+        {/* PC: 하위 메뉴 풀너비 흰색 배경 (항목은 부모 아래에 별도 정렬) */}
+        {activeLink && (
+          <div className="absolute left-0 top-full z-0 hidden w-full border-b border-neutral-200 bg-white dt:block">
+            <ul className="invisible mx-auto w-full max-w-[1200px] flex-col py-4">
+              {activeLink.children!.map((child) => (
+                <li key={child.href} className="py-2 text-sm">{child.label}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="relative z-10 mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between bg-white px-4 tb:px-8 dt:px-10">
           <Link href="/" className="text-lg font-bold">
             {logo}
           </Link>
@@ -38,29 +49,45 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
           <nav className="hidden items-center gap-8 dt:flex">
             {navLinks.map((link) =>
               link.children ? (
-                <button
-                  key={link.label}
-                  type="button"
-                  onMouseEnter={() => setOpenMenu(link.label)}
-                  className="flex items-center gap-1 text-sm"
-                >
-                  {link.label}
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    aria-hidden="true"
-                    className={`transition ${openMenu === link.label ? "rotate-180" : ""}`}
+                <div key={link.label} className="relative flex h-16 items-center" onMouseEnter={() => setOpenMenu(link.label)}>
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 border-0 bg-transparent p-0 text-sm"
                   >
-                    <path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
+                    {link.label}
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      aria-hidden="true"
+                      className={`transition ${openMenu === link.label ? "rotate-180" : ""}`}
+                    >
+                      <path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+
+                  {openMenu === link.label && (
+                    <ul className="absolute left-0 top-full z-10 flex min-w-[160px] flex-col py-4">
+                      {link.children.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            onClick={() => setOpenMenu(null)}
+                            className="block whitespace-nowrap py-2 text-sm text-neutral-500 transition hover:text-neutral-900"
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               ) : (
                 <Link
                   key={link.href}
                   href={link.href!}
                   onMouseEnter={() => setOpenMenu(null)}
-                  className="text-sm"
+                  className="flex h-16 items-center text-sm"
                 >
                   {link.label}
                 </Link>
@@ -81,24 +108,6 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
             </svg>
           </button>
         </div>
-
-        {/* PC: 하위 메뉴 풀너비 패널 */}
-        {activeMenu && (
-          <div className="absolute inset-x-0 top-full hidden border-b border-neutral-200 bg-white dt:block">
-            <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-5 py-6 tb:px-8 dt:px-10">
-              {activeMenu.children!.map((child) => (
-                <Link
-                  key={child.href}
-                  href={child.href}
-                  onClick={() => setOpenMenu(null)}
-                  className="w-fit text-sm text-neutral-600 transition hover:text-neutral-900"
-                >
-                  {child.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       </header>
 
       <Sidebar open={open} onClose={() => setOpen(false)} navLinks={navLinks} />

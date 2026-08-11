@@ -1,4 +1,13 @@
 /** 와이어프레임 1 화면 문구. 값만 수정하면 화면에 바로 반영됩니다. */
+export const WIREFRAME_ONE_HERO = {
+  eyebrow: "WIM 통합 다이어트 타워",
+  title: "살찌지 않는 몸.",
+  description: "내과전문의가 설계한 시스템과 전담 매니저가 당신의 하루를 처음부터 다시 설계합니다.",
+  primaryButton: "상담 신청",
+  secondaryButton: "프로그램 보기",
+  imageDescription: "감량프로그램 히어로 이미지",
+} as const;
+
 export const WIREFRAME_ONE_TEXT = {
   flipToPhoto: "사진으로 돌아가기",
   flipToDetails: "상세 보기",

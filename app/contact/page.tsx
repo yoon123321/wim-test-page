@@ -42,7 +42,7 @@ export default function ContactPage() {
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
       <Hero imagePosition="center" />
 
-      <section className="px-5 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
+      <section className="px-4 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-3">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">{CONTENT.eyebrow}</span>
           <h1 className={`${HEADING} text-3xl leading-snug tb:text-4xl`}>{CONTENT.title}</h1>
@@ -125,7 +125,7 @@ export default function ContactPage() {
       </section>
 
       {/* 찾아오는 길 */}
-      <section className="border-t border-neutral-200 bg-neutral-50 px-5 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
+      <section className="border-t border-neutral-200 bg-neutral-50 px-4 py-16 tb:px-10 tb:py-20 dt:px-[120px] dt:py-24">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-3">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">{CONTENT.directions.eyebrow}</span>
           <h2 className={`${HEADING} text-2xl leading-snug tb:text-3xl`}>{CONTENT.directions.title}</h2>

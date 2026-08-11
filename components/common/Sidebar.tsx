@@ -53,7 +53,7 @@ export default function Sidebar({ open, onClose, navLinks }: SidebarProps) {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-300 px-5">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-300 px-4">
           <span className="text-sm">{COMMON_CONTENT.menu.title}</span>
           <button
             type="button"
@@ -71,7 +71,7 @@ export default function Sidebar({ open, onClose, navLinks }: SidebarProps) {
           {navLinks.map((link) =>
             link.children ? (
               <div key={link.label} className="border-b border-neutral-200">
-                <div className="px-5 pb-1 pt-4 text-[13px] font-semibold text-neutral-500">{link.label}</div>
+                <div className="px-4 pb-1 pt-4 text-[13px] font-semibold text-neutral-500">{link.label}</div>
                 {link.children.map((child) => (
                   <Link
                     key={child.href}
@@ -88,7 +88,7 @@ export default function Sidebar({ open, onClose, navLinks }: SidebarProps) {
                 key={link.href}
                 href={link.href!}
                 onClick={onClose}
-                className="border-b border-neutral-200 px-5 py-4 text-[15px]"
+                className="border-b border-neutral-200 px-4 py-4 text-[15px]"
               >
                 {link.label}
               </Link>

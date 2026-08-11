@@ -3,6 +3,7 @@ export const COMMON_CONTENT = {
   siteTitle: "Wireframe",
   logo: "윔센터",
   floatingConsultLabel: "상담예약",
+  scrollToTopLabel: "페이지 맨 위로 이동",
   menu: {
     dialogLabel: "메뉴",
     title: "MENU",

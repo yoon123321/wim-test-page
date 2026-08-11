@@ -15,6 +15,9 @@ export const PAGE_SINGLE_CONTENT = {
     sectionLabel: "② 기기 5종 — 이미지·설명 지그재그",
     title: "다섯 개의 기전, 다섯 가지 회복",
     subtitle: "한 대씩, 몸으로 이해되게 보여줍니다",
+    detailButtonLabel: "상세보기",
+    modalVideoLabel: "동영상 자리",
+    modalCloseLabel: "모달 닫기",
     note: "✓ 규칙: 기기당 정의 1문장 + 감각 묘사 1문장 + 효과 키워드 뱃지 2개 전부. 현행의 기전(Mechanism)/기대효과 표는 전부 삭제하고, 원하는 사람만 보게 ‘기전 자세히 보기’ 접기(아코디언)로 이동. 뱃지 단어(붓기·딥히트·산소·림프·이완)가 ‘남는 한두 단어’의 역할 — 스크롤 끝나면 이 10개 단어만 기억에 남으면 성공.",
     items: [
       { kicker: "DEVICE 01 · CRYO", name: "크라이오", desc: "영하의 3분. 운동 후 달아오른 몸을 한 번에 가라앉힙니다.", tags: ["붓기 진정", "회복"], photo: ["크라이오 실사진", "(전신 냉각 캡슐 · 입장 장면)"] },
@@ -29,6 +32,32 @@ export const PAGE_SINGLE_CONTENT = {
     title: "오늘, 어떤 몸인가요?",
     subtitle: "상황을 고르면, 맞는 조합을 보여드립니다",
     situations: ["🏋 운동한 날", "🧍 종일 서 있던 날", "😩 컨디션 무너진 주", "🔥 감량 중"],
+    combos: [
+      {
+        steps: ["인프라레드 30′", "크라이오 3′"],
+        courseTitle: "CONTRAST — 온냉 교차 · 총 40분",
+        courseDescription: "데운 몸을 한 번에 식히며 순환을 극대화합니다. 운동한 날의 마무리.",
+        photo: ["조합 이미지: 크라이오 입장 장면"],
+      },
+      {
+        steps: ["에어프레셔 30′", "근막 리커버리 15′"],
+        courseTitle: "LYMPHATIC — 하체 순환 · 총 45분",
+        courseDescription: "다리 끝부터 밀어 올려 부종을 빼고 뭉친 근막을 풀어냅니다. 종일 서 있던 날의 리셋.",
+        photo: ["조합 이미지: 에어프레셔 공압 슈트"],
+      },
+      {
+        steps: ["옥시챔버 40′", "인프라레드 20′"],
+        courseTitle: "RECHARGE — 산소 충전 · 총 60분",
+        courseDescription: "진한 산소로 몸을 채우고 깊게 데워 무너진 컨디션을 끌어올립니다. 리셋이 필요한 한 주에.",
+        photo: ["조합 이미지: 옥시챔버 캡슐 내부"],
+      },
+      {
+        steps: ["인프라레드 30′", "에어프레셔 20′"],
+        courseTitle: "BURN — 발한 순환 · 총 50분",
+        courseDescription: "깊은 발한으로 순환을 끌어올리고 하체 부종까지 정리합니다. 감량 중 컨디션 관리.",
+        photo: ["조합 이미지: 인프라레드 발한 장면"],
+      },
+    ],
     steps: ["인프라레드 30′", "크라이오 3′"],
     courseTitle: "CONTRAST — 온냉 교차 · 총 40분",
     courseDescription: "데운 몸을 한 번에 식히며 순환을 극대화합니다. 운동한 날의 마무리.",

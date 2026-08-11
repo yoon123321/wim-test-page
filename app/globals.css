@@ -27,3 +27,35 @@
 
 /** 태블릿 이하 = 모바일 + 태블릿 (1199px 이하) */
 @custom-variant tb-down (@media (max-width: 74.999rem));
+
+@keyframes mobile-card-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .mobile-card-reveal {
+    opacity: 0;
+  }
+
+  .mobile-card-reveal.is-visible {
+    animation: mobile-card-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@media (min-width: 48rem), (prefers-reduced-motion: reduce) {
+  .mobile-card-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mobile-card-reveal.is-visible {
+    animation: none;
+  }
+}

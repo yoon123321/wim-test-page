@@ -3,7 +3,7 @@ import { BP_CHECK_CONTENT as CONTENT } from "@/content/bp-check";
 
 export default function Page() {
   return (
-    <><Hero imagePosition="center" /><main className="p-5 tb:p-8 dt:p-10 font-sans">
+    <><Hero imagePosition="center" /><main className="px-4 py-6 tb:p-8 dt:p-10 font-sans">
       <h1 className="text-xl font-bold">{CONTENT.title}</h1>
 
       {/* 현재 구간이 뭔지 색과 글자로 표시 */}

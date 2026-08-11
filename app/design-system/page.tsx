@@ -130,7 +130,7 @@ function FontTable({ block }: { block: FontFamilyBlock }) {
       <div className="mt-6 flex flex-col gap-3 dt:hidden">
         {block.rows.map((f) => (
           <div key={f.name} className="rounded-2xl border border-neutral-200 p-4">
-            <div className="flex items-center overflow-hidden rounded-xl bg-[#e9f1e0] px-5 py-4">
+            <div className="flex items-center overflow-hidden rounded-xl bg-[#e9f1e0] px-4 py-4">
               <span className="whitespace-nowrap" style={sampleStyle(block, f)}>
                 {f.name}
               </span>
@@ -153,7 +153,7 @@ export default function Page() {
     <main className="w-full bg-white font-['Pretendard_Variable',sans-serif] text-neutral-900">
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-16 px-5 py-12 tb:px-8 tb:py-16 dt:px-10">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-16 px-4 py-12 tb:px-8 tb:py-16 dt:px-10">
         {BLOCKS.map((block) => (
           <FontTable key={block.title} block={block} />
         ))}
