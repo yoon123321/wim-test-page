@@ -73,7 +73,7 @@ export default function Hero({
           </div>
         )}
 
-        <div className="mt-9 flex gap-3">
+        {/* <div className="mt-9 flex gap-3">
           {primaryButton ? (
             <span className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-800">{primaryButton}</span>
           ) : (
@@ -84,7 +84,7 @@ export default function Hero({
           ) : (
             <div className="h-10 w-28 rounded-full border border-white/60" />
           )}
-        </div>
+        </div> */}
       </div>
     </section>
   );

@@ -20,7 +20,7 @@ export default function HomeServices() {
             <Text as="h2" size="3xl" weight="bold" className={`${HEADING} break-keep leading-tight`}>{CONTENT.services.title}</Text>
             <Text size="md" className="leading-relaxed text-neutral-600">{CONTENT.services.description}</Text>
           </div>
-          <div className="grid grid-cols-1 gap-5 tb:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 tb:grid-cols-2 dt:grid-cols-4">
             {CONTENT.services.items.map((item, index) => (
               <RevealOnScroll key={item.id} delay={index * 90}>
               <article className="relative h-[280px] rounded-xl border border-dashed border-neutral-300 bg-neutral-100">

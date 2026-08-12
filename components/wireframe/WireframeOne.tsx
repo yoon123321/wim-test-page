@@ -48,7 +48,6 @@ export default function WireframeOne() {
         fontFamily: "Figtree,system-ui,sans-serif",
       }}
     >
-      {/* 01 히어로 */}
       <Section n="01" pad="60px 105px 40px">
         <Row gap={60} style={{ alignItems: "flex-start" }}>
           <div style={{ flex: "0 0 450px" }}>
@@ -131,11 +130,7 @@ export default function WireframeOne() {
         <Bar w={420} h={26} color={C.barStrong} style={{ marginTop: 22 }} />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", marginTop: 56, alignItems: "start" }}>
           {STEP_W.map((w, i) => (
-            <div
-              key={i}
-              onClick={() => setStep(i)}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, cursor: "pointer" }}
-            >
+            <div key={i} onClick={() => setStep(i)} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, cursor: "pointer" }}>
               <div
                 style={{
                   width: 36,
@@ -193,7 +188,11 @@ export default function WireframeOne() {
               <Bar w={290} h={11} />
             </Stack>
             <Row gap={150} style={{ marginTop: 70 }}>
-              {[[52, 60], [34, 48], [40, 66]].map(([a, b], i) => (
+              {[
+                [52, 60],
+                [34, 48],
+                [40, 66],
+              ].map(([a, b], i) => (
                 <Stack key={i}>
                   <Bar w={a} h={18} color={C.barStrong} />
                   <Bar w={b} />
@@ -243,7 +242,11 @@ export default function WireframeOne() {
             <Bar w={250} h={28} color={C.barStrong} style={{ marginTop: 30 }} />
             <Bar w={280} h={28} color={C.barStrong} style={{ marginTop: 10 }} />
             <div style={{ marginTop: 36 }}>
-              {[[56, 64], [66, 52], [56, 36]].map(([a, b], i) => (
+              {[
+                [56, 64],
+                [66, 52],
+                [56, 36],
+              ].map(([a, b], i) => (
                 <div
                   key={i}
                   style={{

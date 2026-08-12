@@ -42,5 +42,5 @@ interface TextProps {
 }
 
 export default function Text({ as: Tag = "p", size = "md", weight = "normal", className = "", children }: TextProps) {
-  return <Tag className={`${SIZE_MAP[size]} ${WEIGHT_MAP[weight]} ${className}`}>{children}</Tag>;
+  return <Tag className={`whitespace-pre-line ${SIZE_MAP[size]} ${WEIGHT_MAP[weight]} ${className}`}>{children}</Tag>;
 }

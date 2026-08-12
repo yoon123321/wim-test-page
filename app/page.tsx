@@ -88,6 +88,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-2.5">
             <Text as="span" size="xs" weight="bold" className="uppercase tracking-[0.2em] text-neutral-300">{CONTENT.reviews.eyebrow}</Text>
             <Text as="h2" size="3xl" weight="bold" className={`${HEADING} text-white`}>{CONTENT.reviews.title}</Text>
+            <Text size="md" className="max-w-[620px] leading-relaxed text-white/60">{CONTENT.reviews.description}</Text>
           </div>
           <Link
             href="#contact"
