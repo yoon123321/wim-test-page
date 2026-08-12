@@ -1,9 +1,11 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
 import { BODY, Section } from "./primitives";
+import { useCopy } from "./useCopy";
 
 export default function ManagerDeviceSection() {
-  const { managerDevice } = COPY;
+  const { managerDevice } = useCopy();
 
   return (
     <Section label="Manager & Device" className="bg-white" innerClassName="flex flex-col gap-[32px]">

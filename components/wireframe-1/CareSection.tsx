@@ -1,9 +1,11 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { BODY, EYEBROW, HighlightTitle, Section } from "./primitives";
 
 export default function CareSection() {
-  const { manage } = COPY;
+  const { manage } = useCopy();
 
   return (
     <Section label="Care elements" className="bg-white" innerClassName="flex flex-col gap-[40px]">

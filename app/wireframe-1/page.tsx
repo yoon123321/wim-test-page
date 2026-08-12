@@ -1,5 +1,4 @@
-import Hero from "@/components/common/Hero";
-import { WIREFRAME_ONE_HERO as HERO } from "@/content/wireframe-1";
+import HeroSection from "@/components/wireframe-1/HeroSection";
 import ConcernsSection from "@/components/wireframe-1/ConcernsSection";
 import DoctorSection from "@/components/wireframe-1/DoctorSection";
 import RoadmapSection from "@/components/wireframe-1/RoadmapSection";
@@ -32,7 +31,7 @@ export default function Page() {
   return (
     <main>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
-      <Hero imagePosition="center" {...HERO} />
+      <HeroSection />
       <ConcernsSection />
       <DoctorSection />
       <RoadmapSection />

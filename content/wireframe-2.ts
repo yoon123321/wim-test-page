@@ -18,8 +18,8 @@ export const WIREFRAME_TWO_CONTENT = {
   },
   hero: {
     eyebrow: "WIM CENTER",
-    title: "몸의 변화를 만드는 새로운 기준",
-    description: "개인별 몸 상태와 생활 습관을 분석해 지속할 수 있는 관리 방법을 제안합니다.",
+    title: "다이어트 계의 새로운 지평을 열다",
+    description: "다이어트 센터의 목적은 더 이상 체지방 감소에만 머물지 않습니다. \n윔센터로부터 그 목적은, 삶의 질을 끌어올리는 웰니스 경험으로 재정의됩니다.",
     primaryButton: "상담 신청",
     secondaryButton: "프로그램 보기",
     imageDescription: "히어로 대표 이미지",

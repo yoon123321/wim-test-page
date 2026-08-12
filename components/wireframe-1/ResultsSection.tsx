@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { EYEBROW, FlipIcon, Section, Slot } from "./primitives";
 
 const FLIP_BUTTON = "flex items-center gap-[8px] py-[13px] px-[22px] rounded-[999px] text-[14px] font-[700] tracking-[-.01em] cursor-pointer";
@@ -18,7 +18,7 @@ const BAR_STYLES = [
 function BeforeAfterCard() {
   const [flipped, setFlipped] = useState(false);
   const [reveal, setReveal] = useState(50);
-  const { beforeAfter, common } = COPY;
+  const { beforeAfter, common } = useCopy();
   const flipLabel = flipped ? common.flipToPhoto : common.flipToDetails;
 
   return (
@@ -77,7 +77,7 @@ function BeforeAfterCard() {
 }
 
 function BodyCompSummary() {
-  const { bodyComp } = COPY;
+  const { bodyComp } = useCopy();
 
   return (
     <div className="flex flex-col gap-[36px]">
@@ -120,7 +120,7 @@ function BodyCompSummary() {
 }
 
 function BodyCompCases() {
-  const { bodyComp } = COPY;
+  const { bodyComp } = useCopy();
 
   return (
     <div className="flex flex-col gap-8">

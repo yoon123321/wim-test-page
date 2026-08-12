@@ -1,5 +1,7 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 
 const WORRY_PILL = "w-fit whitespace-nowrap rounded-2xl border border-white/[.07] bg-white/[.04] px-6 py-5 text-[16px] text-white/45";
 
@@ -17,7 +19,7 @@ function MarqueeRow({ items, animation }: { items: readonly string[]; animation:
 }
 
 export default function ConcernsSection() {
-  const { concerns, solution } = COPY;
+  const { concerns, solution } = useCopy();
 
   return (
     <section data-screen-label="Worries improved A - wall" className="relative overflow-hidden bg-[#0b1020] pt-[90px] pb-0">

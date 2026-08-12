@@ -4,11 +4,12 @@ import { useState } from "react";
 import Modal from "@/components/common/Modal";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
 import Text from "@/components/common/Text";
-import { HOME_CONTENT as CONTENT } from "@/content/home";
+import { useHomeContent } from "@/components/home/useHomeContent";
 
 const HEADING = "font-['Gowun_Batang',serif] font-bold tracking-[-0.02em]";
 
 export default function HomeServices() {
+  const CONTENT = useHomeContent();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedItem = CONTENT.services.items.find((item) => item.id === selectedId);
 

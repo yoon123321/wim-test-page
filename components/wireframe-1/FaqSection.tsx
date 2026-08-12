@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
 import { Section } from "./primitives";
+import { useCopy } from "./useCopy";
 
 export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const { faq } = COPY;
+  const { faq } = useCopy();
 
   const toggle = (index: number) => setOpenIndex((current) => (current === index ? null : index));
 

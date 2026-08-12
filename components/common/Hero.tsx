@@ -5,9 +5,9 @@ interface HeroProps {
   imagePosition?: string;
   /** 콘텐츠 정렬 (기본 좌측) */
   align?: "left" | "center";
-  eyebrow?: string;
-  title?: string;
-  description?: string;
+  eyebrow?: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   primaryButton?: string;
   secondaryButton?: string;
   imageDescription?: string;

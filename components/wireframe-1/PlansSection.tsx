@@ -1,12 +1,14 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { EYEBROW, Section } from "./primitives";
 
 /** 가운데 요금제를 추천 카드로 강조한다 */
 const FEATURED_INDEX = 1;
 
 export default function PlansSection() {
-  const { plans } = COPY;
+  const { plans } = useCopy();
 
   return (
     <Section label="Plans" className="bg-[#fafafa]" innerClassName="flex flex-col gap-[44px]">

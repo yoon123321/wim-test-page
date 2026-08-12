@@ -1,9 +1,11 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { BODY, EYEBROW, HighlightTitle, Section } from "./primitives";
 
 export default function TeamSection() {
-  const { team } = COPY;
+  const { team } = useCopy();
 
   return (
     <Section label="Manager types" className="bg-[#f7f7f7]" innerClassName="flex flex-col gap-[44px]">

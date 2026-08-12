@@ -1,5 +1,7 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { EYEBROW_SM, INNER, Slot } from "./primitives";
 
 const ICON = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "#525252", strokeWidth: 2.75, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -12,7 +14,7 @@ const CREDENTIAL_ICONS = [
 ];
 
 export default function DoctorSection() {
-  const { doctor } = COPY;
+  const { doctor } = useCopy();
 
   return (
     <section data-screen-label="Doctor" className="bg-white pt-16 pb-16 tb:pt-20 tb:pb-20 dt:pt-[100px] dt:pb-[104px]">

@@ -1,9 +1,11 @@
+"use client";
+
 import Text from "@/components/common/Text";
-import { WIREFRAME_ONE_TEXT as COPY } from "@/content/wireframe-1";
+import { useCopy } from "./useCopy";
 import { EYEBROW, Section, StarRating } from "./primitives";
 
 export default function ReviewsSection() {
-  const { reviews } = COPY;
+  const { reviews } = useCopy();
 
   return (
     <Section label="Reviews" className="bg-[#f7f7f7]" innerClassName="flex flex-col gap-[40px]">

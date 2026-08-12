@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import Hero from "@/components/common/Hero";
 import Text from "@/components/common/Text";
 import HomeServices from "@/components/home/HomeServices";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
-import { HOME_CONTENT as CONTENT } from "@/content/home";
+import { useHomeContent } from "@/components/home/useHomeContent";
 
 const HEADING = "font-['Gowun_Batang',serif] font-bold tracking-[-0.02em]";
 
@@ -13,6 +15,8 @@ function Ph({ className = "" }: { className?: string }) {
 }
 
 export default function HomePage() {
+  const CONTENT = useHomeContent();
+
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
       <Hero imagePosition="center" {...CONTENT.hero} />
