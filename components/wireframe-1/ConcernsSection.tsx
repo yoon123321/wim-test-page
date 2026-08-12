@@ -1,6 +1,8 @@
 "use client";
 
 import Text from "@/components/common/Text";
+import { useAB } from "@/components/common/ABProvider";
+import { WIREFRAME_ONE_TEXT_C } from "@/content/wireframe-1";
 import { useCopy } from "./useCopy";
 
 const WORRY_PILL = "w-fit whitespace-nowrap rounded-2xl border border-white/[.07] bg-white/[.04] px-6 py-5 text-[16px] text-white/45";
@@ -20,6 +22,9 @@ function MarqueeRow({ items, animation }: { items: readonly string[]; animation:
 
 export default function ConcernsSection() {
   const { concerns, solution } = useCopy();
+  const { variant } = useAB();
+  const isC = variant === "C";
+  const staticBlocks = WIREFRAME_ONE_TEXT_C.concerns.staticBlocks;
 
   return (
     <section data-screen-label="Worries improved A - wall" className="relative overflow-hidden bg-[#0b1020] pt-[90px] pb-0">
@@ -37,21 +42,38 @@ export default function ConcernsSection() {
         </Text>
       </div>
 
-      {/* 고민의 벽 — 데스크톱 (좌우로 천천히 흐름) */}
-      <div className="relative mx-auto mt-[64px] hidden w-full max-w-[1000px] flex-col gap-4 overflow-hidden py-1 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] dt:flex">
-        <MarqueeRow items={concerns.worries.slice(0, 7)} animation="worry-marquee-left 40s linear infinite" />
-        <MarqueeRow items={concerns.worries.slice(7)} animation="worry-marquee-right 46s linear infinite" />
-      </div>
+      {isC ? (
+        /* C안 — 흐르는 목록 대신 정적 글귀 두 개 */
+        <div className="relative z-[3] mx-auto mt-[56px] flex max-w-[760px] flex-col items-center gap-12 px-4 text-center">
+          {staticBlocks.map((block, index) => (
+            <Text
+              as="div"
+              key={index}
+              className="text-[17px] leading-[1.9] tracking-[-.01em] text-white/80 tb:text-[19px]"
+            >
+              {block}
+            </Text>
+          ))}
+        </div>
+      ) : (
+        <>
+          {/* 고민의 벽 — 데스크톱 (좌우로 천천히 흐름) */}
+          <div className="relative mx-auto mt-[64px] hidden w-full max-w-[1000px] flex-col gap-4 overflow-hidden py-1 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] dt:flex">
+            <MarqueeRow items={concerns.worries.slice(0, 7)} animation="worry-marquee-left 40s linear infinite" />
+            <MarqueeRow items={concerns.worries.slice(7)} animation="worry-marquee-right 46s linear infinite" />
+          </div>
 
-      {/* 고민의 벽 — 모바일/태블릿 */}
-      <div className="relative mx-auto mt-10 flex max-h-[220px] flex-wrap justify-center gap-2.5 overflow-hidden px-4 dt:hidden">
-        {concerns.worries.map((worry) => (
-          <Text as="span" key={worry} className="rounded-full border border-white/[.07] bg-white/[.05] px-4 py-2.5 text-[13px] text-white/45">
-            {worry}
-          </Text>
-        ))}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] bg-gradient-to-b from-transparent to-[#0b1020]" />
-      </div>
+          {/* 고민의 벽 — 모바일/태블릿 */}
+          <div className="relative mx-auto mt-10 flex max-h-[220px] flex-wrap justify-center gap-2.5 overflow-hidden px-4 dt:hidden">
+            {concerns.worries.map((worry) => (
+              <Text as="span" key={worry} className="rounded-full border border-white/[.07] bg-white/[.05] px-4 py-2.5 text-[13px] text-white/45">
+                {worry}
+              </Text>
+            ))}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] bg-gradient-to-b from-transparent to-[#0b1020]" />
+          </div>
+        </>
+      )}
 
       {/* 아래 섹션으로 이어지는 연결선 */}
       <div className="relative z-[3] mt-8 flex flex-col items-center">

@@ -6,6 +6,7 @@ import CareSection from "@/components/wireframe-1/CareSection";
 import ManagerDeviceSection from "@/components/wireframe-1/ManagerDeviceSection";
 import TeamSection from "@/components/wireframe-1/TeamSection";
 import ResultsSection from "@/components/wireframe-1/ResultsSection";
+import OrangeNoticeSection from "@/components/wireframe-1/OrangeNoticeSection";
 import ReviewsSection from "@/components/wireframe-1/ReviewsSection";
 import PlansSection from "@/components/wireframe-1/PlansSection";
 import FaqSection from "@/components/wireframe-1/FaqSection";
@@ -35,10 +36,12 @@ export default function Page() {
       <ConcernsSection />
       <DoctorSection />
       <RoadmapSection />
+      <OrangeNoticeSection index={1} />
       <CareSection />
       <ManagerDeviceSection />
       <TeamSection />
       <ResultsSection />
+      <OrangeNoticeSection index={0} />
       <ReviewsSection />
       <PlansSection />
       <FaqSection />
