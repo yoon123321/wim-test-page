@@ -1,6 +1,7 @@
 "use client";
 
 import Text from "@/components/common/Text";
+import { useAB } from "@/components/common/ABProvider";
 import { useCopy } from "./useCopy";
 import { EYEBROW_SM, INNER, Slot } from "./primitives";
 
@@ -15,6 +16,8 @@ const CREDENTIAL_ICONS = [
 
 export default function DoctorSection() {
   const { doctor } = useCopy();
+  const { variant } = useAB();
+  if (variant === "C") return null;
 
   return (
     <section data-screen-label="Doctor" className="bg-white pt-16 pb-16 tb:pt-20 tb:pb-20 dt:pt-[100px] dt:pb-[104px]">

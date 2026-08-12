@@ -70,6 +70,7 @@ export const WIREFRAME_ONE_TEXT = {
     titlePrefix: "나만의 다이어트 감량 순서",
     titleHighlight: "",
     titleSuffix: "",
+    description: "검사로 시작해 유지 설계까지, 다섯 단계가 하나로 이어집니다. 각 단계에서 실제로 무엇을 하는지 먼저 확인하세요.",
     steps: [
       { no: "1", label: "유형 파악" },
       { no: "2", label: "1:1 맞춤 코칭" },
@@ -396,6 +397,7 @@ export const WIREFRAME_ONE_TEXT_B = {
     titlePrefix: "나만의 다이어트 감량 순서",
     titleHighlight: "",
     titleSuffix: "",
+    description: "검사로 시작해 유지 설계까지, 다섯 단계가 하나로 이어집니다. 각 단계에서 실제로 무엇을 하는지 먼저 확인하세요.",
     steps: [
       { no: "1", label: "유형 파악" },
       { no: "2", label: "1:1 맞춤 코칭" },
@@ -653,9 +655,9 @@ export const WIREFRAME_ONE_TEXT_B = {
  */
 export const WIREFRAME_ONE_HERO_C = {
   eyebrow: "WIM 통합 다이어트 타워",
-  title: "메디커과 다이어트, \n이제는 하나로",
-  description: "비만을 이해하는 것과 \n실제로 빼는 것은 다른 영역입니다.\n의학적 판단과 생활 관리가 만날 때 \n다이어트는 더 쉽게, 더 오래 갑니다",
-  primaryButton: "",
+  title: "메디컬 따로, 다이어트 따로. \n이제는 하나로 연결되어야 합니다.",
+  description: "",
+  primaryButton: "프로그램 문의 신청하기",
   secondaryButton: "",
   imageDescription: "감량프로그램 히어로 이미지",
 } as const;
@@ -671,8 +673,8 @@ export const WIREFRAME_ONE_TEXT_C = {
   concerns: {
     screenLabel: "고민 A안",
     eyebrow: "ALL OF IT, AT ONCE",
-    titleLines: ["살은 쉽게 찌고, 점점 안 빠집니다. "],
-    explanation: "",
+    titleLines: ["살이 찌는 건 쉬운데, 빠지는 건 점점 어려워집니다. "],
+    explanation: "왜 나는 예전처럼 빠지지 않을까요?",
     worries: [
       "저녁만 되면 무너져요",
       "주말이면 다 무너져요",
@@ -689,8 +691,8 @@ export const WIREFRAME_ONE_TEXT_C = {
       "혼자서는 못 하겠어요",
     ],
     staticBlocks: [
-      "\n'적게 먹으면 빠진다'\n'운동하면 빠진다'\n'참으면 빠진다'\n정말 그럴까요?",
-      "감량과 증가를 반복 하는 동안,\n식욕도, 근육량도, 활동량도\n계속 변합니다.",
+      "\n'적게 먹으면 빠진다'\n'운동하면 빠진다'\n'참으면 빠진다'\n\n정말 그럴까요?",
+      "반복되는 감량과 체중 증가 속에서 \n식욕, 근육량, 활동량, 생활습관은 계속 변합니다. \n그래서 지금의 나에게, 예전의 다이어트가 통하지 않을 수 있습니다.",
     ],
   },
 
@@ -712,7 +714,7 @@ export const WIREFRAME_ONE_TEXT_C = {
     name: "",
     role: "",
     eyebrow: "WHO DESIGNED THIS",
-    titleLines: ["지금의 나는 어떻게 \n뺴야 할까요?"],
+    titleLines: ["지금의 나는 어떻게 뺴야 할까요?"],
     description: "지금의 나를 알야야 제대로 뺄 수 있습니다.",
     quote: "왜 찌고 왜 안빠지는지. \n기질과 성향, 식습관, 몸상태까지 종합적으로 분석해 \n나에게 맞는 감량 방향을 잡습니다",
     credentials: [],
@@ -723,9 +725,10 @@ export const WIREFRAME_ONE_TEXT_C = {
     screenLabel: "로드맵 4단계",
     screenNote: "네 단계가 한 줄로 이어집니다",
     eyebrow: "THE JOURNEY",
-    titlePrefix: "나만의 다이어트 감량 순서",
+    titlePrefix: "지금의 나는 어떻게 뺴야 할까요?",
     titleHighlight: "",
     titleSuffix: "",
+    description: "지금의 나를 먼저 알아야, 제대로 뺄 수 있습니다. 여기서부터 12주 여정이 시작됩니다.",
     steps: [
       { no: "1", label: "유형 파악" },
       { no: "2", label: "1:1 맞춤 코칭" },
@@ -739,11 +742,11 @@ export const WIREFRAME_ONE_TEXT_C = {
       { step: "STEP 04", title: "지표가 고르게 채워집니다", desc: "생활 중재로 종합 지표가 65%에서 79%로 올라옴니다." },
     ],
     compactSteps: [
-      { no: "1", title: "진단", desc: "인바디·체성분과 WIM-I 성향 분석으로, 지금 내 상태부터 정확히 파악합니다" },
-      { no: "2", title: "병목 리포트", desc: "식사·수면·활동 패턴에서 내가 무너지는 지점을 리포트로 정리" },
-      { no: "3", title: "전담 매니저", desc: "나를 이해하는 전담 매니저 배정, 주차별 대면 피드백 시작" },
-      { no: "4", title: "데일리 동행", desc: "앱·CGM으로 매일 기록하고, 흔들리는 순간 바로 피드백" },
-      { no: "5", title: "유지 설계", desc: "종료 후에도 무너지지 않도록 유지관리 기준을 함께 남김" },
+      { no: "1", title: "검사", desc: "나를 아는 것에서 시작합니다. 다이어트 기질 검사로 \n내가 왜 찌고, 왜 빠지지 않는지 \n그 출발점을 확인합니다." },
+      { no: "2", title: "분석", desc: "왜 살이 찌고, 왜 빠지지 않는지. 기질과 성향, 식생활 패턴, 신체 상태 등을 종합적으로 분석해 \n나에게 맞는 감량 전략의 방향을 설정합니다." },
+      { no: "3", title: "관리", desc: "전문가의 시너지가 생활을 바꿉니다. 영양·운동·혈당·생활습관 등 필요한 영역을 \n전문가와 함께 관리하며 \n실제 일상에서 변화가 만들어지도록 돕습니다." },
+      { no: "4", title: "유지", desc: "감량이 끝나도, 관리는 끝나지 않습니다. \n체중 변화와 생활패턴을 다시 점검하고 감량 이후에도 스스로 몸을 관리할 수 있도록 유지 전략을 만들어갑니다. \n결국 우리가 만들고 싶은 것은 '살이 빠진 나'가 아닙니다. \n내 몸을 제대로 이해하고, 스스로 관리할 수 있는 나입니다." },
+     
     ],
   },
 
@@ -779,12 +782,12 @@ export const WIREFRAME_ONE_TEXT_C = {
       {
         eyebrow: "MANAGER",
         title: "대면 관리",
-        desc: "· 영양상담 — 내 식습관·영양상태를 분석해 실제 식사에 적용\n · 운동상담 — 체력에 맞춰 감량과 근육 유지 운동 설계\n · 혈당관리 — 혈당 데이터로 식사·생활이 몸에 주는 영향 확인\n · 기기관리 — 컨디셔닝 관리로 운동·생활관리 효율 향상",
+        desc: "· 영양상담 — 나의 식생활 패턴과 영양상태를 분석하고, 실제 식사에 적용할 수 있는 방법을 설계합니다.\n · 운동상담 — 현재 체력과 움직임을 고려해, 감량과 근육 유지에 필요한 운동을 설계합니다.\n · 혈당관리 — 혈당 데이터를 활용해, 나의 식사와 생활패턴이 몸에 미치는 영향을 확인합니다.\n · 기기관리 — 감량 과정에서 필요한 컨디셔닝 관리를 통해, 운동과 생활관리의 효율을 높입니다.",
       },
       {
         eyebrow: "기기관리",
         title: "비대면 관리",
-        desc: "· 식사관리 — 매일의 식사를 확인하고 필요할 때 피드백\n · 혈당관리 — 혈당 데이터로 식사·생활패턴 점검\n · 매니징 — 일상의 변화와 어려움을 챙겨 감량이 끊기지 않게\n · 전문가 피드백 — 필요한 영역에 영양·운동 전문가 연결",
+        desc: "· 식사관리 — 매일의 식사와 생활을 확인하고, 필요한 순간 피드백을 제공합니다.\n · 혈당관리 — 혈당 데이터를 기반으로, 식사와 생활패턴을 함께 점검합니다.\n · 매니징 — 일상에서 생기는 변화와 어려움을 확인하고, 감량 과정이 끊기지 않도록 관리합니다.\n · 전문가 피드백 — 필요한 영역에 맞춰 영양·운동 등 전문가의 피드백을 연결합니다.",
       },
     ],
   },
@@ -792,10 +795,10 @@ export const WIREFRAME_ONE_TEXT_C = {
   // ── 담당 팀 (Your team) ────────────────────────
   team: {
     eyebrow: "YOUR TEAM",
-    titlePrefix: "전문가의 시너지가 일상을 바꿉니다.",
+    titlePrefix: "한 명의 전문가가 아니라, 하나의 팀이 당신의 감량을 설계합니다",
     titleHighlight: "",
     titleSuffix: "",
-    description: "영양·운동·혈당·생활습관까지 전문가와 함께 관리하며 실제 삶에서 변화를 만듭니다.",
+    description: "내분비·대사에 대한 의학적 판단을 시작으로 \n영양, 운동, 행동관리까지 \n각 분야의 전문가가 하나의 목표를 향해 움직입니다.",
     members: [
       {
         photo: "담당 사진",

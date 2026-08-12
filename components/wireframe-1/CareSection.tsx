@@ -1,11 +1,14 @@
 "use client";
 
 import Text from "@/components/common/Text";
+import { useAB } from "@/components/common/ABProvider";
 import { useCopy } from "./useCopy";
 import { BODY, EYEBROW, HighlightTitle, Section } from "./primitives";
 
 export default function CareSection() {
   const { manage } = useCopy();
+  const { variant } = useAB();
+  if (variant === "C") return null;
 
   return (
     <Section label="Care elements" className="bg-white" innerClassName="flex flex-col gap-[40px]">

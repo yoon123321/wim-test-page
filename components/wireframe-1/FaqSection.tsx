@@ -15,7 +15,7 @@ export default function FaqSection() {
     <Section label="FAQ" className="bg-[#fafafa]" innerClassName="flex flex-col gap-[44px]">
       <div className="flex flex-col gap-[16px]">
         <Text as="div" className="text-[15px] font-[600] italic tracking-[.14em] text-[#737373]">{faq.eyebrow}</Text>
-        <Text as="div" className="text-[46px] font-[800] tracking-[-.035em] text-[#161616] leading-[1.3]">{faq.title}</Text>
+        <Text as="div" className="text-[26px] tb:text-[36px] dt:text-[46px] font-[800] tracking-[-.035em] text-[#161616] leading-[1.3]">{faq.title}</Text>
       </div>
 
       <div className="flex flex-col gap-[14px]">

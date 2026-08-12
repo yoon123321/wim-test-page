@@ -3,7 +3,7 @@
 import Text from "@/components/common/Text";
 import ProcessRoadmap from "@/components/common/ProcessRoadmap";
 import { useCopy } from "./useCopy";
-import { EYEBROW, HighlightTitle, Section } from "./primitives";
+import { BODY, EYEBROW, HighlightTitle, Section } from "./primitives";
 
 export default function RoadmapSection() {
   const { roadmap } = useCopy();
@@ -13,6 +13,7 @@ export default function RoadmapSection() {
       <div className="flex flex-col gap-[10px]">
         <Text as="div" className={EYEBROW}>{roadmap.eyebrow}</Text>
         <HighlightTitle prefix={roadmap.titlePrefix} highlight={roadmap.titleHighlight} suffix={roadmap.titleSuffix} />
+        <Text as="div" className={BODY}>{roadmap.description}</Text>
       </div>
 
       {/* 기존 4단계 진행 바 — 비교를 위해 잠시 보존

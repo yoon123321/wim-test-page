@@ -1,4 +1,5 @@
 import HeroSection from "@/components/wireframe-1/HeroSection";
+import DifferenceSection from "@/components/wireframe-1/DifferenceSection";
 import ConcernsSection from "@/components/wireframe-1/ConcernsSection";
 import DoctorSection from "@/components/wireframe-1/DoctorSection";
 import RoadmapSection from "@/components/wireframe-1/RoadmapSection";
@@ -6,10 +7,10 @@ import CareSection from "@/components/wireframe-1/CareSection";
 import ManagerDeviceSection from "@/components/wireframe-1/ManagerDeviceSection";
 import TeamSection from "@/components/wireframe-1/TeamSection";
 import ResultsSection from "@/components/wireframe-1/ResultsSection";
-import OrangeNoticeSection from "@/components/wireframe-1/OrangeNoticeSection";
 import ReviewsSection from "@/components/wireframe-1/ReviewsSection";
 import PlansSection from "@/components/wireframe-1/PlansSection";
 import FaqSection from "@/components/wireframe-1/FaqSection";
+import FinalCtaSection from "@/components/wireframe-1/FinalCtaSection";
 
 /* ------------------------------------------------------------------
    WIM 통합 다이어트 타워 — 랜딩 페이지
@@ -33,18 +34,18 @@ export default function Page() {
     <main>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <HeroSection />
+      <DifferenceSection />
       <ConcernsSection />
       <DoctorSection />
       <RoadmapSection />
-      <OrangeNoticeSection index={1} />
       <CareSection />
       <ManagerDeviceSection />
       <TeamSection />
       <ResultsSection />
-      <OrangeNoticeSection index={0} />
       <ReviewsSection />
       <PlansSection />
       <FaqSection />
+      <FinalCtaSection />
     </main>
   );
 }

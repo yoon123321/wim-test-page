@@ -171,32 +171,34 @@ export const HOME_CONTENT_B = {
 export const HOME_CONTENT_C = {
   hero: {
     eyebrow: "WIM CENTER",
-    title: "의사가 설계하고,전문 인력이 끝까지 관리 합니다",
-    description: "살을 빼는 방법보다, 왜  살이  빠지지 않는지 부터 봅니다",
+    title: "의사가 설계하고, 전문 인력이 끝까지 관리합니다.",
+    description: "살은, 당신의 의지가 부족해서 그런 게 아닙니다 \n살을 빼는 방법보다, 왜  살이  빠지지 않는지 부터 봅니다",
     primaryButton: "",
     secondaryButton: "",
     imageDescription: "메인 히어로 이미지",
   },
   about: {
-    eyebrow: "PERSONALIZED DIET COACHING",
+    eyebrow: "나는 왜 항상 다이어트에 실패할까?",
     titleLines: ["당신의 다이어트가 자꾸 실패하는 이유,", "의지가 부족해서가 아닙니다"],
-    description: "윔센터 강남은 체중만 보지 않습니다. \n‘다이어트 기질, 자기조절력, 식생활 습관을 함께 분석해\n나에게 맞는 감량 방법을 찾아드립니다.",
+    description:
+      "우리는 이미, 살이 찔 수밖에 없는 환경에 살고 있으니까요. \n내분비내과·정신건강의학과 의료진의 전문성을 바탕으로 \n영양·운동·생활습관을 전문 인력이 개인의 몸과 생활에 맞춰 밀착 관리합니다.",
     tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
     buttonLabel: "상담 신청하기",
     image: "/images/home-consultation.jpg",
     imageAlt: "코치와 회원이 마주 앉아 상담하는 모습",
   },
   services: {
-    title: "윔센터 강남의 관리는 하나로 정해져 있지 않습니다",
-    description: "",
+    title: "'나만의 감량 방법'을 찾아드립니다",
+    description: "다이어트 기질, 자기조절력, 식생활 습관을 고객님의 환경과 생활 패턴에 접목·분석해\n당신에게만 맞는 감량 방향을 설계합니다.",
     buttonLabel: "더 알아보기",
     modal: {
       placeholder: "상세 내용이 들어갈 자리입니다.",
       closeLabel: "모달 닫기",
     },
     items: [
-      { id: "svc-1", title: "감량  목적", desc: "체중만 줄이는 다이어트가 아니라 내 몸의 문제를 찾고, 감량이 지속 될 수 있도록 ", image: "/images/service-1.jpg" },
-      { id: "svc-2", title: "유지/컨디셔닝이 목적", desc: "무저진 몸의 컨디션을 회복하고 꾸준히 관리 할 수 있는 환경을 만들어드립니다", image: "/images/service-2.jpg" },
+      { id: "svc-1", title: "대면 관리", desc: "건강과 감량을 위한 집중 관리", image: "/images/service-1.jpg" },
+      { id: "svc-2", title: "비대면 관리", desc: "바쁜 일상 속에서도 놓치지 않는 꾸준한 관리", image: "/images/service-2.jpg" },
+      { id: "svc-3", title: "기기 관리", desc: "지치고 무너진 컨디션을 되살리는 부스터 관리", image: "/images/service-2.jpg" },
     ],
   },
   results: {
@@ -205,15 +207,15 @@ export const HOME_CONTENT_C = {
     description: "",
     items: [
       { value: "4.91", unit: "", label: "네이버 고객 평점", note: "" },
-      { value: "32%", unit: "", label: "매니저 만족도", note: "" },
+      { value: "4.97", unit: "", label: "매니저 만족도", note: "" },
       { value: "4.73", unit: "", label: "프로그램 만족도", note: "" },
-      { value: "4.6", unit: "", label: "기기 관리 만족도", note: " " },
+      { value: "4.6", unit: "", label: "기기관리 만족도", note: " " },
     ],
   },
   reviews: {
     eyebrow: "reviews",
-    title: "고객이 직접 경험하고 평가한  윔센터 강남",
-    description: "",
+    title: "고객이 직접 경험하고 평가한 윔센터 강남",
+    description: "네이버와 블로그 속 진짜 목소리를 확인하세요.",
     buttonLabel: "리뷰 전체 보기 ⟶",
     items: [
       { tag: "체중 클리닉", body: "다이어트 할 때마다 요요가 와요. 이번엔 검사부터 하고 시작하니 확실히 달랐어요.", meta: "30대 여성 · 12주", bg: "var(--green-500)", fg: "#fff", offset: 0 },
