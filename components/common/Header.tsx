@@ -99,7 +99,7 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
 
           {/* 문구 A/B 미리보기 토글 (목업 전용) */}
           <div className="ml-auto mr-3 flex items-center gap-1 rounded-full border border-neutral-300 p-1 dt:ml-6 dt:mr-0">
-            {(["A", "B", "C"] as const).map((v) => (
+            {(["A", "B", "C", "D"] as const).map((v) => (
               <button
                 key={v}
                 type="button"

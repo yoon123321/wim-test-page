@@ -5,12 +5,12 @@ import { useAB } from "@/components/common/ABProvider";
 import { Section } from "./primitives";
 
 /**
- * 히어로 바로 아래 — "왜 하나로 연결되어야 하나" 차별점 인트로.
- * C안에서만 노출한다.
+ * "왜 하나로 연결되어야 하나" 차별점 인트로.
+ * only 로 지정한 변형에서만 노출한다. (C는 히어로 아래, D는 고민의 벽 아래에 배치)
  */
-export default function DifferenceSection() {
+export default function DifferenceSection({ only = "C" }: { only?: "C" | "D" }) {
   const { variant } = useAB();
-  if (variant !== "C") return null;
+  if (variant !== only) return null;
 
   return (
     <Section label="Difference - why connected" className="bg-[#fafaf8]" innerClassName="flex flex-col items-center text-center">

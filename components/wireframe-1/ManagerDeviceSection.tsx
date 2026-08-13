@@ -1,11 +1,15 @@
 "use client";
 
 import Text from "@/components/common/Text";
+import { useAB } from "@/components/common/ABProvider";
 import { BODY, Section } from "./primitives";
 import { useCopy } from "./useCopy";
 
 export default function ManagerDeviceSection() {
   const { managerDevice } = useCopy();
+  const { variant } = useAB();
+
+  if (variant === "D") return null;
 
   return (
     <Section label="Manager & Device" className="bg-white" innerClassName="flex flex-col gap-[32px]">

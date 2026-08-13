@@ -1,8 +1,10 @@
 import HeroSection from "@/components/wireframe-1/HeroSection";
 import DifferenceSection from "@/components/wireframe-1/DifferenceSection";
+import DResultSection from "@/components/wireframe-1/DResultSection";
 import ConcernsSection from "@/components/wireframe-1/ConcernsSection";
 import DoctorSection from "@/components/wireframe-1/DoctorSection";
 import RoadmapSection from "@/components/wireframe-1/RoadmapSection";
+import DataReportSection from "@/components/wireframe-1/DataReportSection";
 import CareSection from "@/components/wireframe-1/CareSection";
 import ManagerDeviceSection from "@/components/wireframe-1/ManagerDeviceSection";
 import TeamSection from "@/components/wireframe-1/TeamSection";
@@ -34,10 +36,13 @@ export default function Page() {
     <main>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <HeroSection />
-      <DifferenceSection />
+      <DifferenceSection only="C" />
       <ConcernsSection />
+      <DifferenceSection only="D" />
+      <DResultSection />
       <DoctorSection />
       <RoadmapSection />
+      <DataReportSection />
       <CareSection />
       <ManagerDeviceSection />
       <TeamSection />

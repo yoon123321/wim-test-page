@@ -2,7 +2,7 @@
 
 import Text from "@/components/common/Text";
 import { useAB } from "@/components/common/ABProvider";
-import { WIREFRAME_ONE_TEXT_C } from "@/content/wireframe-1";
+import { WIREFRAME_ONE_TEXT, WIREFRAME_ONE_TEXT_C } from "@/content/wireframe-1";
 import { useCopy } from "./useCopy";
 
 const WORRY_PILL = "w-fit whitespace-nowrap rounded-2xl border border-white/[.07] bg-white/[.04] px-6 py-5 text-[16px] text-white/45";
@@ -21,8 +21,10 @@ function MarqueeRow({ items, animation }: { items: readonly string[]; animation:
 }
 
 export default function ConcernsSection() {
-  const { concerns, solution } = useCopy();
+  const copy = useCopy();
   const { variant } = useAB();
+  // D안 고민의 벽은 A와 동일한 문구·레이아웃으로 노출
+  const { concerns, solution } = variant === "D" ? WIREFRAME_ONE_TEXT : copy;
   const isC = variant === "C";
   const staticBlocks = WIREFRAME_ONE_TEXT_C.concerns.staticBlocks;
 

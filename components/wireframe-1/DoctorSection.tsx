@@ -17,7 +17,7 @@ const CREDENTIAL_ICONS = [
 export default function DoctorSection() {
   const { doctor } = useCopy();
   const { variant } = useAB();
-  if (variant === "C") return null;
+  if (variant === "C" || variant === "D") return null;
 
   return (
     <section data-screen-label="Doctor" className="bg-white pt-16 pb-16 tb:pt-20 tb:pb-20 dt:pt-[100px] dt:pb-[104px]">
