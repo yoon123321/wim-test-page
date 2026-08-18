@@ -86,7 +86,7 @@ export interface FaqItem {
 export const HERO = {
   eyebrow: "WIM 통합 다이어트 타워",
   title: "정교한 데이터가 만드는\n나만의 다이어트",
-  body: "체중 감량을 넘어, 대사와 생활 습관까지\n함께 보는 프로그램입니다.",
+  body: "체중 감량을 넘어, 대사와 생활 습관까지\n함께 만들어가는 프로그램입니다.",
 } as const;
 
 export const WORRIES: string[] = [
@@ -110,14 +110,14 @@ export const WORRIES_COPY = {
   title: "전부 다른 고민 같지만,\n원인은 하나로 모입니다.",
   sub: "이 모든 고민의 원인은 현재의 나를 모르는 것입니다",
   domeTitle: "그래서 현재의 나를 아는 것이 중요합니다.",
-  domeSub: "지금의 나에게 예전의 다이어트가 통하지 않을 수 있습니다.",
+  domeSub: "지금의 나에게 일반적인 다이어트는 통하지 않을 수 있습니다",
 } as const;
 
 export const DIFFERENCE = {
   kicker: "아는 것에서, 실제로 빼는 것까지",
   steps: [
-    { kicker: "STEP 1", title: "아는 것", desc: "검사로 원인과\n방향을 확인" },
-    { kicker: "STEP 2", title: "하는 것", desc: "전략을 짜고\n매일 실행" },
+    { kicker: "STEP 1", title: "나를 아는 것", desc: "검사로 원인과\n방향을 확인" },
+    { kicker: "STEP 2", title: "살을 빼는 것", desc: "전략을 짜고\n매일 실행" },
     { kicker: "RESULT", title: "유지되는 감량", desc: "더 편하고\n더 지속 가능하게" },
   ],
   title: "나를 아는 데서",
@@ -316,9 +316,9 @@ export const PLAN_FEATURES: string[] = [
 
 export const PLANS_COPY = {
   kicker: "PLANS & PRICING",
-  title: "플랜보다,",
-  titleAccent: "진단이 먼저입니다.",
-  sub: "가격은 상품이 아니라 진단에서 나옵니다 — 필요 없는 관리를 더하지 않기 위해서입니다.\n플랜은 관리 강도의 차이일 뿐, 여섯 축을 함께 보는 방식은 같습니다.",
+  title: "당신에게 맞는",
+  titleAccent: " 프로그램을 찾아보세요.",
+  sub: "",
   refundLead: "환불 규정도 먼저 말씀드립니다.",
   refundBody:
     " 시작 전 전액, 진행 중에는 잔여 회차 기준으로 환불됩니다. 연기·중도 변경 규정도 계약 전에 문서로 안내드립니다 — 확신이 있어서 조건을 숨기지 않습니다.",

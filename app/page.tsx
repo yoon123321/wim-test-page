@@ -110,7 +110,7 @@ export default function HomePage() {
         </div>
         <div className="grid grid-cols-1 items-start gap-5 tb:grid-cols-3 dt:grid-cols-5">
           {CONTENT.reviews.items.map((r, index) => (
-            <RevealOnScroll key={r.tag + r.meta} delay={index * 70}>
+            <RevealOnScroll key={r.tag + r.meta} delay={index * 70} className={index >= 2 ? "hidden dt:block" : ""}>
               <figure className="relative m-0 flex min-w-0 flex-col gap-3 rounded-2xl bg-neutral-600 p-5 text-neutral-100 shadow-lg">
                 <div className="flex items-start justify-between gap-2.5">
                   <Text as="span" size="xs" weight="bold" className="uppercase tracking-widest opacity-60">

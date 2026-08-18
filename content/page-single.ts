@@ -80,6 +80,15 @@ export const PAGE_SINGLE_CONTENT = {
   },
   passes: {
     sectionLabel: "④ 다회권 — 횟수제 (1·3·5·10회)",
+    trialEyebrow: "DEVICE TRIAL",
+    trialTitle: "기기 5종 체험가",
+    trials: [
+      { name: "크라이오테라피", time: "3분", price: "00,000원" },
+      { name: "인프라레드", time: "30분", price: "00,000원" },
+      { name: "고압산소 챔버", time: "40분", price: "00,000원" },
+      { name: "에어프레셔", time: "30분", price: "00,000원" },
+      { name: "윔펄스테라피", time: "15분", price: "00,000원" },
+    ],
     title: "회복은 이벤트가 아니라 루틴입니다",
     subtitle: "자주 올수록, 회당 가격이 내려갑니다",
     featuredLabel: "추천",

@@ -63,6 +63,7 @@ export default function WimDeviceWireframe() {
   const [situation, setSituation] = useState(0);
   const [faq, setFaq] = useState(0);
   const [selectedDevice, setSelectedDevice] = useState<number | null>(null);
+  const [priceTab, setPriceTab] = useState<"device" | "allInOne">("device");
 
   return (
     <div className="w-full bg-white text-neutral-800">
@@ -70,9 +71,9 @@ export default function WimDeviceWireframe() {
       <section className={`${section} order-2`}>
         <div className={inner}>
           <Heading title={CONTENT.devices.title} subtitle={CONTENT.devices.subtitle} />
-          <div className="mt-10 space-y-8 tb:space-y-10">
+          <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden tb:mt-10 tb:block tb:space-y-10 tb:overflow-visible tb:pb-0">
             {CONTENT.devices.items.map((device, deviceIndex) => (
-              <article key={device.name} className="grid gap-5 rounded-2xl border border-neutral-300 p-4 tb:grid-cols-2 tb:items-center tb:gap-8 tb:p-6">
+              <article key={device.name} className="grid w-[84vw] max-w-[330px] shrink-0 snap-start gap-5 rounded-2xl border border-neutral-300 bg-white p-4 tb:w-auto tb:max-w-none tb:grid-cols-2 tb:items-center tb:gap-8 tb:p-6">
                 <Photo lines={device.photo} className="h-56 tb:h-64" />
                 <div className="flex h-full flex-col">
                   <p className="text-[11px] font-semibold tracking-[.16em] text-neutral-500">{device.kicker}</p>
@@ -124,58 +125,57 @@ export default function WimDeviceWireframe() {
         </div>
       </section>
 
-      <section className={`${section} order-1 bg-neutral-100`}>
+      <section className={`${section} order-1 bg-neutral-100 py-8 tb:py-16 dt:py-20`}>
         <div className={inner}>
-          <Heading
-            title={CONTENT.combinations.title}
-            subtitle={
-              <>
-                {CONTENT.combinations.subtitle}
-                <br />
-                {CONTENT.combinations.guidancePrefix}
-                <strong>{CONTENT.combinations.guidanceStrong}</strong>
-              </>
-            }
-          />
-          <div className="mt-9 flex flex-wrap justify-center gap-2.5">
+          <div className="text-center">
+            <h2 className="text-xl font-bold tracking-tight tb:text-3xl">{CONTENT.combinations.title}</h2>
+            <p className="mt-2 text-xs leading-5 text-neutral-500 tb:mt-3 tb:text-base tb:leading-7">
+              {CONTENT.combinations.subtitle}
+              <br className="hidden tb:block" />
+              <span className="hidden tb:inline">{CONTENT.combinations.guidancePrefix}<strong>{CONTENT.combinations.guidanceStrong}</strong></span>
+            </p>
+          </div>
+          <div className="mt-4 flex flex-nowrap justify-start gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden tb:mt-9 tb:flex-wrap tb:justify-center tb:gap-2.5 tb:overflow-visible tb:pb-0">
             {CONTENT.combinations.situations.map((item, index) => (
               <button
                 key={item}
                 onClick={() => setSituation(index)}
-                className={`rounded-full border px-5 py-3 text-xs font-semibold transition tb:px-6 tb:text-sm ${situation === index ? "border-neutral-700 bg-neutral-700 text-white" : "border-neutral-300 bg-white hover:border-neutral-500"}`}
+                className={`shrink-0 rounded-full border px-4 py-2.5 text-xs font-semibold transition tb:px-6 tb:py-3 tb:text-sm ${situation === index ? "border-neutral-700 bg-neutral-700 text-white" : "border-neutral-300 bg-white hover:border-neutral-500"}`}
               >
                 {item}
               </button>
             ))}
           </div>
-          <div className="mt-7 overflow-hidden rounded-[24px] border border-neutral-300 bg-white">
-            <div className="grid gap-7 p-5 tb:grid-cols-[1fr_290px] tb:items-center tb:p-8">
-              <div>
+          <div className="mt-3 overflow-hidden rounded-[20px] border border-neutral-300 bg-white tb:mt-7 tb:rounded-[24px]">
+            <div className="relative grid min-h-[260px] overflow-hidden tb:min-h-0 tb:grid-cols-[1fr_290px] tb:items-center tb:gap-7 tb:p-8">
+              <div className="absolute inset-0 z-10 order-2 flex flex-col justify-end bg-gradient-to-t from-black/85 via-black/35 to-transparent p-4 text-white tb:static tb:order-1 tb:block tb:bg-none tb:p-0 tb:text-neutral-800">
                 <div className="flex flex-wrap items-center gap-2">
                   {CONTENT.combinations.combos[situation].steps.map((step) => (
-                    <span key={step} className="rounded-full bg-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-700">{step}</span>
+                    <span key={step} className="rounded-full bg-white/90 px-4 py-2 text-xs font-semibold text-neutral-800 tb:bg-neutral-200 tb:text-neutral-700">{step}</span>
                   ))}
                 </div>
-                <h3 className="mt-7 text-xl font-bold tb:text-2xl">{CONTENT.combinations.combos[situation].courseTitle}</h3>
-                <p className="mt-4 max-w-[720px] text-sm leading-7 text-neutral-600 tb:text-base">{CONTENT.combinations.combos[situation].courseDescription}</p>
-                <a href="#contact" className="mt-7 inline-flex rounded-full border border-neutral-400 px-5 py-3 text-xs font-semibold transition hover:bg-neutral-100">더 알아보기</a>
+                <h3 className="mt-3 text-base font-bold tb:mt-7 tb:text-2xl">{CONTENT.combinations.combos[situation].courseTitle}</h3>
+                <p className="mt-2 line-clamp-2 max-w-[720px] text-xs leading-5 text-white/85 tb:mt-4 tb:line-clamp-none tb:text-base tb:leading-7 tb:text-neutral-600">{CONTENT.combinations.combos[situation].courseDescription}</p>
+                <a href="#contact" className="mt-3 inline-flex self-start rounded-full border border-white/70 px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-white/10 tb:mt-7 tb:border-neutral-400 tb:px-5 tb:py-3 tb:text-xs tb:text-neutral-800 tb:hover:bg-neutral-100">더 알아보기</a>
               </div>
-              <Photo lines={CONTENT.combinations.combos[situation].photo} className="h-44 tb:h-40" />
+              <div className="absolute inset-0 order-1 tb:static tb:order-2">
+                <Photo lines={CONTENT.combinations.combos[situation].photo} className="h-full min-h-0 rounded-none border-0 tb:h-40 tb:rounded-xl tb:border" />
+              </div>
             </div>
-            <div className="border-t border-neutral-200 bg-neutral-50 p-5 tb:p-8">
+            <div className="border-t border-neutral-200 bg-neutral-50 p-3 tb:p-8">
               <div className="flex flex-col gap-2 tb:flex-row tb:items-center tb:justify-between">
-                <h3 className="text-base font-bold tb:text-lg">이 목적으로 받은 후기</h3>
-                <p className="text-xs text-neutral-500">선택한 목적으로 방문한 회원 후기</p>
+                <h3 className="text-sm font-bold tb:text-lg">이 목적으로 받은 후기</h3>
+                <p className="hidden text-xs text-neutral-500 tb:block">선택한 목적으로 방문한 회원 후기</p>
               </div>
-              <div className="mt-6 grid gap-7 tb:grid-cols-2 tb:gap-10">
-                {COMBINATION_REVIEWS[situation].map((review) => (
-                  <figure key={review.label} className="m-0">
+              <div className="mt-2 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden tb:mt-6 tb:grid tb:grid-cols-2 tb:gap-10 tb:overflow-visible tb:pb-0">
+                {COMBINATION_REVIEWS[situation].map((review, reviewIndex) => (
+                  <figure key={review.label} className={`m-0 w-full shrink-0 snap-start rounded-xl border border-neutral-200 bg-white p-3 tb:w-auto tb:rounded-none tb:border-0 tb:bg-transparent tb:p-0 ${reviewIndex > 0 ? "hidden tb:block" : ""}`}>
                     <div className="flex items-center gap-3 text-xs font-bold text-neutral-600">
                       <span className="tracking-[.12em]">★★★★★</span>
                       <span>{review.label}</span>
                     </div>
-                    <blockquote className="mt-4 text-sm leading-7 text-neutral-700 tb:text-base">{review.body}</blockquote>
-                    <figcaption className="mt-4 text-xs text-neutral-500">{review.meta}</figcaption>
+                    <blockquote className="mt-2 line-clamp-2 text-xs leading-5 text-neutral-700 tb:mt-4 tb:line-clamp-none tb:text-base tb:leading-7">{review.body}</blockquote>
+                    <figcaption className="mt-2 text-[11px] text-neutral-500 tb:mt-4 tb:text-xs">{review.meta}</figcaption>
                   </figure>
                 ))}
               </div>
@@ -187,6 +187,29 @@ export default function WimDeviceWireframe() {
 
       <section className={section}>
         <div className={inner}>
+          <div className="mb-10 flex justify-center">
+            <div className="inline-flex rounded-full border border-neutral-300 bg-neutral-100 p-1">
+              <button type="button" onClick={() => setPriceTab("device")} className={`rounded-full px-7 py-3 text-sm font-bold transition ${priceTab === "device" ? "bg-neutral-700 text-white shadow-sm" : "text-neutral-500"}`}>기기</button>
+              <button type="button" onClick={() => setPriceTab("allInOne")} className={`rounded-full px-7 py-3 text-sm font-bold transition ${priceTab === "allInOne" ? "bg-neutral-700 text-white shadow-sm" : "text-neutral-500"}`}>올인원</button>
+            </div>
+          </div>
+
+          {priceTab === "device" ? (
+          <div>
+            <p className="text-center text-[11px] font-bold tracking-[.18em] text-neutral-500">{CONTENT.passes.trialEyebrow}</p>
+            <h2 className="mt-3 text-center text-2xl font-bold tracking-tight tb:text-3xl">{CONTENT.passes.trialTitle}</h2>
+            <div className="mt-7 grid grid-cols-2 gap-3 tb:grid-cols-5">
+              {CONTENT.passes.trials.map((trial) => (
+                <article key={trial.name} className="rounded-2xl border border-neutral-300 bg-white p-4 last:col-span-2 tb:p-5 tb:last:col-span-1">
+                  <p className="text-sm font-bold text-neutral-800">{trial.name}</p>
+                  <p className="mt-2 text-xs text-neutral-500">{trial.time} 체험</p>
+                  <p className="mt-4 text-lg font-bold tracking-tight text-neutral-900 tb:mt-5 tb:text-xl">{trial.price}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+          ) : (
+          <div>
           <Heading
             title={CONTENT.passes.title}
             subtitle={
@@ -199,8 +222,8 @@ export default function WimDeviceWireframe() {
               </>
             }
           />
-          <div className="mt-9 grid gap-4 tb:grid-cols-2 dt:grid-cols-4">
-            {CONTENT.passes.items.map((pass) => (
+          <div className="mx-auto mt-9 grid max-w-[720px] gap-4 tb:grid-cols-2">
+            {CONTENT.passes.items.slice(-2).map((pass) => (
               <article key={pass.name} className={`relative rounded-2xl border p-6 text-center ${pass.featured ? "border-2 border-neutral-700" : "border-neutral-300"}`}>
                 {pass.featured && (
                   <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700 px-3 py-1.5 text-[11px] font-bold text-white">
@@ -215,6 +238,8 @@ export default function WimDeviceWireframe() {
               </article>
             ))}
           </div>
+          </div>
+          )}
         </div>
       </section>
       <section className={`${section} bg-neutral-100`}>

@@ -341,5 +341,81 @@ export const HOME_CONTENT_D = {
   },
 } as const;
 
-/** 홈(/) E 테스트 문구. D안을 시작점으로 사용합니다. */
-export const HOME_CONTENT_E = HOME_CONTENT_D;
+/** 홈(/) E 테스트 문구. 이 블록에서 E안 문구만 직접 수정할 수 있습니다. */
+export const HOME_CONTENT_E = {
+  hero: {
+    eyebrow: "WIM CENTER",
+    title: "의사가 설계하고, 전문 인력이 끝까지 관리합니다.",
+    description: "나만의 위해 설계하는 단하나의 다이어트",
+    primaryButton: "",
+    secondaryButton: "",
+    imageDescription: "메인 히어로 이미지",
+  },
+  about: {
+    eyebrow: "나는 왜 항상 다이어트에 실패할까?",
+    title: "우리는 이미 살이 찔 수밖에 없는 \n환경에서 살고 있습니다",
+    description:
+      "이러한 환경 속에서 내분비내과, 정신건강의학과 의료진이  설계한 프로그램으로 영양 운동 생활 습관을 전문 인력이 관리하여 살찌지 않는 몸으로 만들어 드립니다",
+    tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
+    buttonLabel: "상담 신청하기",
+    image: "/images/home-consultation.jpg",
+    imageAlt: "코치와 회원이 마주 앉아 상담하는 모습",
+  },
+  services: {
+    title: "나를 위한 다이어트, \n이렇게 설계합니다",
+    description: "",
+    buttonLabel: "더 알아보기",
+    modal: {
+      placeholder: "상세 내용이 들어갈 자리입니다.",
+      closeLabel: "모달 닫기",
+    },
+    items: [
+      { id: "svc-1", title: "대면 관리", desc: "건강과 감량을 위한 집중 관리", image: "/images/service-1.jpg" },
+      { id: "svc-2", title: "비대면 관리", desc: "바쁜 일상 속에서도 놓치지 않는 꾸준한 관리", image: "/images/service-2.jpg" },
+      { id: "svc-3", title: "기기 관리", desc: "지치고 무너진 컨디션을 되살리는 부스터 관리", image: "/images/service-2.jpg" },
+    ],
+  },
+  results: {
+    eyebrow: "RESULTS",
+    title: "말보다 숫자로 보여 드리곘습니다",
+    description: "",
+    items: [
+      { value: "4.91", unit: "", label: "네이버 고객 평점", note: "" },
+      { value: "4.97", unit: "", label: "매니저 만족도", note: "" },
+      { value: "4.73", unit: "", label: "프로그램 만족도", note: "" },
+      { value: "4.6", unit: "", label: "기기관리 만족도", note: " " },
+    ],
+  },
+  reviews: {
+    eyebrow: "REVIEWS",
+    title: "고객이 직접 경험하고 평가한 윔센터 강남",
+    description: "네이버와 블로그 속 진짜 목소리를 확인하세요.",
+    buttonLabel: "리뷰 전체 보기 ⟶",
+    items: [
+      { tag: "체중 클리닉", body: "다이어트 할 때마다 요요가 와요. 이번엔 검사부터 하고 시작하니 확실히 달랐어요.", meta: "30대 여성 · 12주", bg: "var(--green-500)", fg: "#fff", offset: 0 },
+      { tag: "메디컬", body: "수술은 무서워서 시술만으로 가능할지 걱정했는데 단계별로 설명해 주셔서 마음이 놓였어요.", meta: "40대 여성 · 8주", bg: "#fff", fg: "var(--green-900)", offset: 48 },
+      { tag: "대사 관리", body: "살은 빠졌는데 피곤하고 힘이 없었어요. 여기선 체력 회복까지 같이 봐줍니다.", meta: "30대 남성 · 16주", bg: "rgba(255,255,255,.08)", fg: "#fff", offset: 18 },
+      { tag: "체형 관리", body: "울퉁불퉁 셀룰라이트가 보기 싫었어요. 부위별로 계획을 따로 잡아 주셨습니다.", meta: "20대 여성 · 6주", bg: "#fff", fg: "var(--green-900)", offset: 86 },
+      { tag: "갱년기", body: "오후만 되면 무너지는데 오늘은 컨디션이 좋습니다. 상담 예약 잡길 잘했어요.", meta: "50대 여성 · 12주", bg: "var(--green-700)", fg: "#fff", offset: 6 },
+    ],
+  },
+  cases: {
+    eyebrow: "CASES",
+    titleLines: ["당신에게 맞는 프로그램을 \n제안합니다"],
+    description: "목표와 몸 상태에 따라, \n서로 다른 프로그램을 제안합니다.",
+    items: [
+      { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/wireframe-1" },
+      { id: "case-2", title: "닥터 윔 비대면 프로그램", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
+      { id: "case-3", title: "롱제비티케어", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
+    ],
+  },
+  cta: {
+    titleLines: ["나만을 위한 감량 솔루션을 찾아 보세요"],
+    description: "",
+    buttonLabel: "상담 신청",
+  },
+  footer: {
+    brand: "윔센터 WIM CENTER",
+    copyright: "© 2026 WIM CENTER. All rights reserved.",
+  },
+} as const;

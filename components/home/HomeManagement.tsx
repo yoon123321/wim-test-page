@@ -43,7 +43,7 @@ function ManagementVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) 
   );
 }
 
-export default function HomeManagement() {
+export default function HomeManagement({ embedded = false }: { embedded?: boolean }) {
   const { variant } = useAB();
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -64,7 +64,7 @@ export default function HomeManagement() {
   };
 
   return (
-    <div className="mt-20 border-t border-neutral-300 pt-14">
+    <div className={embedded ? "" : "mt-20 border-t border-neutral-300 pt-14"}>
       <Text as="span" size="xs" weight="bold" className="tracking-[0.18em] text-neutral-500">STEP 02 · 관리</Text>
       <div className="mt-4 flex items-end justify-between gap-5">
         <div>

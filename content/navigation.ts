@@ -9,5 +9,5 @@ export const NAVIGATION_CONTENT = [
   },
   { href: "/before-after", label: "비포앤애프터" },
   { href: "/promotion", label: "프로모션" },
-  { href: "/contact", label: "상담문의" },
+  { href: "/contact", label: "찾아오는 길" },
 ] as const;

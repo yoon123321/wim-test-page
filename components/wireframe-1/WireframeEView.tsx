@@ -23,6 +23,7 @@
 
 import { useState } from "react";
 import { useAB } from "@/components/common/ABProvider";
+import HomeManagement from "@/components/home/HomeManagement";
 
 
 import {
@@ -77,6 +78,11 @@ function HeroSection() {
           {HERO.title}
         </h1>
         <p className={"wd-heroText"}>{HERO.body}</p>
+        <div className={"wd-heroActions"}>
+          <a href="/bp-check" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>1분 다이어트 유형 검사 (무료)</a>
+          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonSecondary"}`}>프로그램 상담 문의</a>
+        </div>
+        <p className={"wd-heroNote"}>기질·식습관 1분 · 비용 없음 · 유형 리포트 제공</p>
       </div>
     </section>
   );
@@ -118,6 +124,8 @@ function WorriesSection() {
         <div className={"wd-domeBody"}>
           <p className={"wd-domeTitle"}>{WORRIES_COPY.domeTitle}</p>
           <p className={"wd-domeSub"}>{WORRIES_COPY.domeSub}</p>
+          <p className={"wd-domeCtaText"}>다이어트가 자꾸 막혔다면, 지금의 나부터 확인해보세요.</p>
+          <a href="/bp-check" className={"wd-domeCtaButton"}>1분 다이어트 유형 검사</a>
         </div>
       </div>
     </section>
@@ -405,34 +413,9 @@ function TeamSection({ variant = "cards" }: { variant?: TeamVariant }) {
 function CareSection() {
   return (
     <section className={`${"wd-section"} ${"wd-care"}`} aria-labelledby="care-title">
-      <div className={`${"wd-inner"} ${"wd-gap40"}`}>
-        <div className={`${"wd-col"} ${"wd-gap16"}`}>
-          <div className={`${"wd-col"} ${"wd-gap10"}`}>
-            <div className={"wd-kicker"}>{CARE.kicker}</div>
-            <h2 id="care-title" className={"wd-h2"}>{CARE.title}</h2>
-          </div>
-          <p className={"wd-lead"}>{CARE.sub}</p>
-        </div>
-
-        <div className={"wd-methodGrid"}>
-          {CARE.methods.map((m) => (
-            <article key={m.title} className={"wd-methodCard"}>
-              <h3 className={"wd-methodTitle"}>{m.title}</h3>
-              <p className={"wd-methodDesc"}>{m.desc}</p>
-            </article>
-          ))}
-        </div>
-
-        <div className={`${"wd-wrapRow"} ${"wd-gap12"}`}>
-          {CARE.programs.map((p) => (
-            <div key={p.name} className={"wd-programChip"}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#262626" }}>{p.name}</span>
-              <span style={{ fontSize: 14, color: "#737373" }}>· {p.desc}</span>
-            </div>
-          ))}
-        </div>
-
-        <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: "#737373" }}>{CARE.note}</p>
+      <div className={"wd-inner"}>
+        <h2 id="care-title" className="sr-only">{CARE.title}</h2>
+        <HomeManagement embedded />
       </div>
     </section>
   );
@@ -627,9 +610,11 @@ function PlansSection() {
             <br />
             <span style={{ color: "#525252" }}>{PLANS_COPY.titleAccent}</span>
           </h2>
-          <p className={"wd-pre"} style={{ margin: 0, fontSize: 16, lineHeight: 1.8, letterSpacing: "-0.01em", color: "#6b6b6b" }}>
-            {PLANS_COPY.sub}
-          </p>
+          {PLANS_COPY.sub && (
+            <p className={`${"wd-pre"} ${"wd-planIntro"}`}>
+              {PLANS_COPY.sub}
+            </p>
+          )}
         </div>
 
         <div className={"wd-planGrid"}>
@@ -868,6 +853,13 @@ const STYLES = `
   white-space: pre-line;
   color: rgba(255,255,255,0.9);
 }
+.wd-heroActions { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 34px; }
+.wd-heroButton { display: inline-flex; min-height: 58px; align-items: center; justify-content: center; border-radius: 999px; padding: 0 38px; font-size: 15px; font-weight: 700; text-decoration: none; transition: transform .2s, background .2s, border-color .2s; }
+.wd-heroButton:hover { transform: translateY(-2px); }
+.wd-heroButtonPrimary { border: 1px solid #fff; background: #fff; color: #171717; }
+.wd-heroButtonSecondary { border: 1px solid rgba(255,255,255,.55); background: rgba(255,255,255,.06); color: #fff; }
+.wd-heroButtonSecondary:hover { border-color: #fff; background: rgba(255,255,255,.14); }
+.wd-heroNote { margin: 16px 0 0; font-size: 13px; color: rgba(255,255,255,.62); }
 
 /* ── 고민의 벽 ────────────────────────── */
 .wd-worries { position: relative; overflow: hidden; background: #0b1020; padding: 90px 0 0; }
@@ -908,6 +900,9 @@ const STYLES = `
 }
 .wd-domeTitle { padding-top: 24px; font-size: 30px; font-weight: 700; color: rgba(255,255,255,0.85); }
 .wd-domeSub { font-size: 14px; line-height: 1.4; letter-spacing: -0.02em; color: #fff; }
+.wd-domeCtaText { margin: 20px 0 0; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,.72); }
+.wd-domeCtaButton { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; margin-top: 4px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; padding: 0 28px; background: rgba(255,255,255,.08); color: #fff; font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .2s, background .2s, border-color .2s; }
+.wd-domeCtaButton:hover { transform: translateY(-2px); border-color: #fff; background: rgba(255,255,255,.16); }
 
 /* ── 차별점 ───────────────────────────── */
 .wd-difference { background: #fafaf8; }
@@ -1116,6 +1111,7 @@ const STYLES = `
 
 /* ── 플랜 ─────────────────────────────── */
 .wd-plans { background: #fafafa; }
+.wd-planIntro { max-width: 820px; margin: 8px 0 0; border-left: 3px solid #737373; border-radius: 0 14px 14px 0; background: #f0f0f0; padding: 16px 20px; font-size: 18px; font-weight: 600; line-height: 1.8; letter-spacing: -0.02em; color: #404040; }
 .wd-planGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
 .wd-planCard { position: relative; display: flex; flex-direction: column; gap: 26px; border-radius: 22px; background: #fff; padding: 36px 34px 34px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
 .wd-planCardFeatured { border: 2px solid #525252; box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
@@ -1205,6 +1201,9 @@ const STYLES = `
   .wd-heroEyebrow { font-size: 11px; }
   .wd-heroTitle { font-size: 30px; }
   .wd-heroText { font-size: 14px; }
+  .wd-heroActions { width: 100%; flex-direction: column; gap: 10px; margin-top: 28px; }
+  .wd-heroButton { width: 100%; min-height: 52px; padding: 0 18px; font-size: 14px; }
+  .wd-heroNote { font-size: 11px; line-height: 1.6; }
 
   .wd-worriesTitle { font-size: 24px; }
   .wd-worriesSub { font-size: 14px; }
@@ -1218,6 +1217,8 @@ const STYLES = `
   .wd-worryChip { border-radius: 999px; padding: 10px 16px; font-size: 13px; }
   .wd-domeBody { padding: 64px 16px 0; }
   .wd-domeTitle { font-size: 22px; }
+  .wd-domeCtaText { margin-top: 16px; font-size: 13px; }
+  .wd-domeCtaButton { width: 100%; max-width: 320px; }
 
   .wd-difference .wd-diffSteps { flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
   .wd-difference .wd-diffSteps .wd-rowCenter { flex-direction: column; width: 100%; gap: 12px; }
@@ -1275,8 +1276,10 @@ const STYLES = `
   .wd-reviewHighlight { grid-column: span 1; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px 16px; }
   .wd-reviewHighlightAuthor { margin-left: 0; text-align: left; font-size: 12px; }
 
-  .wd-planGrid { grid-template-columns: 1fr; }
-  .wd-planCard { padding: 36px 24px 28px; }
+  .wd-planGrid { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .wd-planGrid::-webkit-scrollbar { display: none; }
+  .wd-planIntro { padding: 14px 16px; font-size: 15px; line-height: 1.75; }
+  .wd-planCard { width: 82vw; max-width: 320px; flex: 0 0 auto; scroll-snap-align: start; padding: 36px 24px 28px; }
   .wd-planSubtitle { font-size: 20px; }
   .wd-planFeature { font-size: 12px; padding: 12px 0; }
   .wd-planPrice { font-size: 20px; }
