@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type ABVariant = "A" | "B" | "C" | "D";
+export type ABVariant = "A" | "B" | "C" | "D" | "E";
 
 interface ABContextValue {
   variant: ABVariant;
@@ -25,7 +25,7 @@ export function ABProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("ab-variant");
-    if (saved === "A" || saved === "B" || saved === "C" || saved === "D") setVariantState(saved);
+    if (saved === "A" || saved === "B" || saved === "C" || saved === "D" || saved === "E") setVariantState(saved);
   }, []);
 
   const setVariant = (v: ABVariant) => {

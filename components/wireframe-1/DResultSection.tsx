@@ -25,7 +25,7 @@ function PhotoSlot({ label }: { label: string }) {
  */
 export default function DResultSection() {
   const { variant } = useAB();
-  if (variant !== "D") return null;
+  if (variant !== "D" && variant !== "E") return null;
 
   return (
     <Section label="D - real result" className="bg-[#fafafa]" innerClassName="flex flex-col">

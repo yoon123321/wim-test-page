@@ -41,9 +41,9 @@ export const PAGE_SINGLE_CONTENT = {
   },
   combinations: {
     sectionLabel: "③ 조합 — 상황 선택형 (확정 · 탭 실제 작동)",
-    title: "오늘, 어떤 몸인가요?",
+    title: "오늘, 무엇이 필요한가요?",
     subtitle: "그날의 컨디션과 회복 상태에 따라, 가장 효율적인 순서와 조합을 적용합니다.",
-    situations: ["🏋 운동한 날", "🧍 종일 서 있던 날", "😩 컨디션 무너진 주", "🔥 감량 중"],
+    situations: ["근육 회복", "붓기 제거", "피로 회복", "순환·대사"],
     combos: [
       {
         steps: ["인프라레드 30′", "크라이오 3′"],

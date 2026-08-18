@@ -9,7 +9,7 @@ export default function ManagerDeviceSection() {
   const { managerDevice } = useCopy();
   const { variant } = useAB();
 
-  if (variant === "D") return null;
+  if (variant === "D" || variant === "E") return null;
 
   return (
     <Section label="Manager & Device" className="bg-white" innerClassName="flex flex-col gap-[32px]">

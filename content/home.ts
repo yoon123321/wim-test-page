@@ -10,7 +10,7 @@ export const HOME_CONTENT = {
   },
   about: {
     eyebrow: "PERSONALIZED DIET COACHING",
-    titleLines: ["누구에게나", "같은 다이어트는 없습니다."],
+    title: "누구에게나\n같은 다이어트는 없습니다.",
     description: "체중은 의지만으로 조절되지 않습니다. \n대사와 호르몬, 그리고 스트레스나 식습관 같은 \n심리적 요인이 함께 작용하기 때문입니다.",
     tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
     buttonLabel: "상담 신청하기",
@@ -98,7 +98,7 @@ export const HOME_CONTENT_B = {
   },
   about: {
     eyebrow: "PERSONALIZED DIET COACHING",
-    titleLines: ["내 몸에 딱 맞춘 정밀 분석 솔루션"],
+    title: "내 몸에 딱 맞춘 정밀 분석 솔루션",
     description: "체질과 수면, 생활 패턴까지 분석하여 \n나에게 꼭 필요한 회복과 감량 루틴을 완성합니다.",
     tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
     buttonLabel: "상담 신청하기",
@@ -179,7 +179,7 @@ export const HOME_CONTENT_C = {
   },
   about: {
     eyebrow: "나는 왜 항상 다이어트에 실패할까?",
-    titleLines: ["당신의 다이어트가 자꾸 실패하는 이유,", "의지가 부족해서가 아닙니다"],
+    title: "당신의 다이어트가 자꾸 실패하는 이유,\n의지가 부족해서가 아닙니다",
     description:
       "우리는 이미, 살이 찔 수밖에 없는 환경에 살고 있으니까요. \n내분비내과·정신건강의학과 의료진의 전문성을 바탕으로 \n영양·운동·생활습관을 전문 인력이 개인의 몸과 생활에 맞춰 밀착 관리합니다.",
     tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
@@ -262,7 +262,7 @@ export const HOME_CONTENT_D = {
   },
   about: {
     eyebrow: "나는 왜 항상 다이어트에 실패할까?",
-    titleLines: ["당신의 다이어트가 자꾸 실패하는 이유,", "의지가 부족해서가 아닙니다"],
+    title: "당신의 다이어트가\n자꾸 실패하는 이유,\n의지가 부족해서가 아닙니다",
     description:
       "우리는 이미 살이 찔 수 밖에 없는 환경에서 살고 있습니다. \n내분비내과, 정신건강의학과 의료진이 설계한 프로그램으로 \n영양 운동 생활 습관을 전문 인력이 관리하여 \n살찌지 않는 몸으로 만들어 드립니다",
     tags: ["1:1 감량 상담", "정밀 체성분 분석", "생활 패턴 맞춤 코칭"],
@@ -271,8 +271,8 @@ export const HOME_CONTENT_D = {
     imageAlt: "코치와 회원이 마주 앉아 상담하는 모습",
   },
   services: {
-    title: "나를 위한 다이어트, 이렇게 설계합니다",
-    description: "검사부터 관리까지, 오직 한 사람에게 집중하는 과정입니다.",
+    title: "나를 위한 다이어트, \n이렇게 설계합니다",
+    description: "",
     buttonLabel: "더 알아보기",
     modal: {
       placeholder: "상세 내용이 들어갈 자리입니다.",
@@ -310,8 +310,8 @@ export const HOME_CONTENT_D = {
   },
   cases: {
     eyebrow: "CASES",
-    titleLines: ["당신에게 맞는 프로그램을 제안합니다"],
-    description: "목표와 몸 상태에 따라, 서로 다른 프로그램을 제안합니다.",
+    titleLines: ["당신에게 맞는 프로그램을 \n제안합니다"],
+    description: "목표와 몸 상태에 따라, \n서로 다른 프로그램을 제안합니다.",
     items: [
       { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/wireframe-1" },
       {
@@ -340,3 +340,6 @@ export const HOME_CONTENT_D = {
     copyright: "© 2026 WIM CENTER. All rights reserved.",
   },
 } as const;
+
+/** 홈(/) E 테스트 문구. D안을 시작점으로 사용합니다. */
+export const HOME_CONTENT_E = HOME_CONTENT_D;

@@ -9,6 +9,33 @@ import ProcessRoadmap from "@/components/common/ProcessRoadmap";
 const section = "border-t border-dashed border-neutral-300 px-4 py-12 tb:px-8 tb:py-16 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-20";
 const inner = "mx-auto w-full max-w-[1200px]";
 
+const COMBINATION_REVIEWS = [
+  [
+    { label: "근육 회복", body: "웨이트 끝나고 인프라레드 30분 후 크라이오로 마무리했는데, 다음 날 근육통이 거의 없었습니다. 순서를 정해주셔서 고민할 게 없었어요.", meta: "30대 남성 · 5회권 이용" },
+    { label: "Contrast Therapy", body: "몸을 데운 다음 한 번에 식히는 흐름이 확실히 다릅니다. 3분이 짧게 느껴질 정도로 개운했어요.", meta: "40대 남성 · 10회권 이용" },
+  ],
+  [
+    { label: "붓기 제거", body: "오래 서 있으면 다리가 무거웠는데 관리 후 신발이 헐렁하게 느껴졌어요. 다음 날까지 가벼움이 이어졌습니다.", meta: "30대 여성 · 5회권 이용" },
+    { label: "Lymphatic Care", body: "그날 붓기 상태를 먼저 확인하고 압력을 조절해 주셔서 편안하게 받을 수 있었습니다.", meta: "40대 여성 · 3회권 이용" },
+  ],
+  [
+    { label: "피로 회복", body: "일이 몰린 주에 몸이 무겁고 집중도 안 됐는데, 관리받고 나니 잠도 깊게 잤습니다.", meta: "30대 남성 · 10회권 이용" },
+    { label: "Recovery Protocol", body: "무조건 강한 관리가 아니라 그날 컨디션에 맞춰 순서를 바꿔주는 점이 좋았습니다.", meta: "40대 여성 · 5회권 이용" },
+  ],
+  [
+    { label: "순환·대사", body: "손발이 차고 몸이 잘 붓는 편인데 관리 후 몸이 따뜻해지고 훨씬 가벼웠습니다.", meta: "30대 여성 · 5회권 이용" },
+    { label: "Metabolic Boost", body: "운동하기 힘든 날에도 부담 없이 받을 수 있어 꾸준히 관리하기 좋았습니다.", meta: "50대 여성 · 10회권 이용" },
+  ],
+] as const;
+
+const INSTAGRAM_RECORDS = [
+  { handle: "@runner_jw", body: "운동 끝나고 크라이오 3분. 다음 날이 다르다", photo: "인스타 게시물\n(크라이오 캡슐 앞)" },
+  { handle: "@seoyeon.log", body: "종아리 붓기 관리 4주차 기록", photo: "인스타 게시물\n(에어프레셔 이용 중)" },
+  { handle: "@mindful_hj", body: "야근 주간 리셋. 옥시챔버 40분", photo: "인스타 게시물\n(옥시챔버 내부)" },
+  { handle: "@daily_kyu", body: "사우나보다 짧고 확실한 인프라레드", photo: "인스타 게시물\n(인프라레드 캡슐)" },
+  { handle: "@yoonso_fit", body: "감량 정체기에 찾은 회복 루틴", photo: "인스타 게시물\n(윔펄스테라피)" },
+] as const;
+
 function Photo({ lines, className = "" }: { lines: readonly string[]; className?: string }) {
   return (
     <div
@@ -39,7 +66,8 @@ export default function WimDeviceWireframe() {
 
   return (
     <div className="w-full bg-white text-neutral-800">
-      <section className={section}>
+      <div className="flex flex-col">
+      <section className={`${section} order-2`}>
         <div className={inner}>
           <Heading title={CONTENT.devices.title} subtitle={CONTENT.devices.subtitle} />
           <div className="mt-10 space-y-8 tb:space-y-10">
@@ -71,7 +99,32 @@ export default function WimDeviceWireframe() {
         </div>
       </section>
 
-      <section className={`${section} bg-neutral-100`}>
+      <section className={`${section} order-3 overflow-hidden bg-neutral-100`}>
+        <div className={inner}>
+          <Heading title="다녀간 사람들의 기록" subtitle="인스타그램에 올라온 방문 후기를 그대로 가져옵니다" />
+          <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {INSTAGRAM_RECORDS.map((record) => (
+              <article key={record.handle} className="w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-2xl bg-white shadow-sm tb:w-[calc((100%_-_32px)/3)] tb:max-w-none dt:w-[calc((100%_-_48px)/4)]">
+                <div className="grid aspect-square place-content-center bg-[repeating-linear-gradient(135deg,#fafafa_0_8px,#ededed_8px_16px)] px-5 text-center text-xs leading-6 text-neutral-500">
+                  <span className="whitespace-pre-line">{record.photo}</span>
+                </div>
+                <div className="min-h-[94px] p-4">
+                  <p className="text-xs font-bold text-neutral-500">{record.handle}</p>
+                  <p className="mt-2 break-keep text-sm leading-6 text-neutral-700">{record.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="mt-7 flex justify-center">
+            <a href="#contact" className="inline-flex items-center gap-2 rounded-full border border-neutral-400 bg-white px-6 py-3 text-sm font-semibold transition hover:bg-neutral-200">
+              <span aria-hidden="true">◎</span>
+              인스타그램에서 더 보기
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className={`${section} order-1 bg-neutral-100`}>
         <div className={inner}>
           <Heading
             title={CONTENT.combinations.title}
@@ -84,34 +137,53 @@ export default function WimDeviceWireframe() {
               </>
             }
           />
-          <div className="mt-7 flex flex-wrap justify-center gap-2">
+          <div className="mt-9 flex flex-wrap justify-center gap-2.5">
             {CONTENT.combinations.situations.map((item, index) => (
               <button
                 key={item}
                 onClick={() => setSituation(index)}
-                className={`rounded-full border px-4 py-3 text-xs font-semibold tb:text-sm ${situation === index ? "border-neutral-700 bg-neutral-700 text-white" : "border-neutral-300 bg-white"}`}
+                className={`rounded-full border px-5 py-3 text-xs font-semibold transition tb:px-6 tb:text-sm ${situation === index ? "border-neutral-700 bg-neutral-700 text-white" : "border-neutral-300 bg-white hover:border-neutral-500"}`}
               >
                 {item}
               </button>
             ))}
           </div>
-          <div className="mt-6 grid gap-5 rounded-2xl border border-neutral-300 bg-white p-5 tb:grid-cols-[1fr_220px] tb:items-center tb:p-7">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                {CONTENT.combinations.combos[situation].steps.map((step, index) => (
-                  <span key={step} className="contents">
-                    {index > 0 && <span>→</span>}
-                    <span className="rounded-full bg-neutral-200 px-3 py-2 text-xs font-semibold">{step}</span>
-                  </span>
+          <div className="mt-7 overflow-hidden rounded-[24px] border border-neutral-300 bg-white">
+            <div className="grid gap-7 p-5 tb:grid-cols-[1fr_290px] tb:items-center tb:p-8">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {CONTENT.combinations.combos[situation].steps.map((step) => (
+                    <span key={step} className="rounded-full bg-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-700">{step}</span>
+                  ))}
+                </div>
+                <h3 className="mt-7 text-xl font-bold tb:text-2xl">{CONTENT.combinations.combos[situation].courseTitle}</h3>
+                <p className="mt-4 max-w-[720px] text-sm leading-7 text-neutral-600 tb:text-base">{CONTENT.combinations.combos[situation].courseDescription}</p>
+                <a href="#contact" className="mt-7 inline-flex rounded-full border border-neutral-400 px-5 py-3 text-xs font-semibold transition hover:bg-neutral-100">더 알아보기</a>
+              </div>
+              <Photo lines={CONTENT.combinations.combos[situation].photo} className="h-44 tb:h-40" />
+            </div>
+            <div className="border-t border-neutral-200 bg-neutral-50 p-5 tb:p-8">
+              <div className="flex flex-col gap-2 tb:flex-row tb:items-center tb:justify-between">
+                <h3 className="text-base font-bold tb:text-lg">이 목적으로 받은 후기</h3>
+                <p className="text-xs text-neutral-500">선택한 목적으로 방문한 회원 후기</p>
+              </div>
+              <div className="mt-6 grid gap-7 tb:grid-cols-2 tb:gap-10">
+                {COMBINATION_REVIEWS[situation].map((review) => (
+                  <figure key={review.label} className="m-0">
+                    <div className="flex items-center gap-3 text-xs font-bold text-neutral-600">
+                      <span className="tracking-[.12em]">★★★★★</span>
+                      <span>{review.label}</span>
+                    </div>
+                    <blockquote className="mt-4 text-sm leading-7 text-neutral-700 tb:text-base">{review.body}</blockquote>
+                    <figcaption className="mt-4 text-xs text-neutral-500">{review.meta}</figcaption>
+                  </figure>
                 ))}
               </div>
-              <h3 className="mt-5 text-lg font-bold">{CONTENT.combinations.combos[situation].courseTitle}</h3>
-              <p className="mt-3 text-sm leading-7 text-neutral-600">{CONTENT.combinations.combos[situation].courseDescription}</p>
             </div>
-            <Photo lines={CONTENT.combinations.combos[situation].photo} className="h-36" />
           </div>
         </div>
       </section>
+      </div>
 
       <section className={section}>
         <div className={inner}>

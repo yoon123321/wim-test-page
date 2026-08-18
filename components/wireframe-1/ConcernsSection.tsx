@@ -24,7 +24,7 @@ export default function ConcernsSection() {
   const copy = useCopy();
   const { variant } = useAB();
   // D안 고민의 벽은 A와 동일한 문구·레이아웃으로 노출
-  const { concerns, solution } = variant === "D" ? WIREFRAME_ONE_TEXT : copy;
+  const { concerns, solution } = variant === "D" || variant === "E" ? WIREFRAME_ONE_TEXT : copy;
   const isC = variant === "C";
   const staticBlocks = WIREFRAME_ONE_TEXT_C.concerns.staticBlocks;
 

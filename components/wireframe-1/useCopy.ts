@@ -17,6 +17,7 @@ export function useCopy() {
   if (variant === "B") return WIREFRAME_ONE_TEXT_B;
   if (variant === "C") return WIREFRAME_ONE_TEXT_C;
   if (variant === "D") return WIREFRAME_ONE_TEXT_D;
+  if (variant === "E") return WIREFRAME_ONE_TEXT_D;
   return WIREFRAME_ONE_TEXT;
 }
 
@@ -25,6 +26,6 @@ export function useHero() {
   const { variant } = useAB();
   if (variant === "B") return WIREFRAME_ONE_HERO_B;
   if (variant === "C") return WIREFRAME_ONE_HERO_C;
-  // D안 히어로는 A와 동일하게 노출
+  // D/E안 히어로는 A와 동일하게 노출
   return WIREFRAME_ONE_HERO;
 }

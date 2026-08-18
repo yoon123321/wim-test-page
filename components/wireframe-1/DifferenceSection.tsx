@@ -10,7 +10,7 @@ import { Section } from "./primitives";
  */
 export default function DifferenceSection({ only = "C" }: { only?: "C" | "D" }) {
   const { variant } = useAB();
-  if (variant !== only) return null;
+  if (variant !== only && !(only === "D" && variant === "E")) return null;
 
   return (
     <Section label="Difference - why connected" className="bg-[#fafaf8]" innerClassName="flex flex-col items-center text-center">
