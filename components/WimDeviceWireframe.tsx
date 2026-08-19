@@ -202,39 +202,38 @@ export default function WimDeviceWireframe() {
               {CONTENT.passes.trials.map((trial) => (
                 <article key={trial.name} className="rounded-2xl border border-neutral-300 bg-white p-4 last:col-span-2 tb:p-5 tb:last:col-span-1">
                   <p className="text-sm font-bold text-neutral-800">{trial.name}</p>
-                  <p className="mt-2 text-xs text-neutral-500">{trial.time} 체험</p>
-                  <p className="mt-4 text-lg font-bold tracking-tight text-neutral-900 tb:mt-5 tb:text-xl">{trial.price}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">{trial.desc}</p>
+                  {trial.duration && (
+                    <p className="mt-2 text-[11px] text-neutral-400">※시술 시간은 {trial.duration}입니다.</p>
+                  )}
+                  <p className="mt-4 text-xs text-neutral-400 line-through">{trial.originalPrice}</p>
+                  <p className="mt-1 text-lg font-bold tracking-tight text-neutral-900 tb:text-xl">
+                    {trial.discountPercent} {trial.price}
+                  </p>
                 </article>
               ))}
             </div>
           </div>
           ) : (
           <div>
-          <Heading
-            title={CONTENT.passes.title}
-            subtitle={
-              <>
-                {CONTENT.passes.subtitle}
-                <br />
-                {CONTENT.passes.policyPrefix}
-                <strong>{CONTENT.passes.policyStrong}</strong>
-                {CONTENT.passes.policySuffix}
-              </>
-            }
-          />
+          <Heading title={CONTENT.passes.allInOneTitle} subtitle="" />
           <div className="mx-auto mt-9 grid max-w-[720px] gap-4 tb:grid-cols-2">
-            {CONTENT.passes.items.slice(-2).map((pass) => (
-              <article key={pass.name} className={`relative rounded-2xl border p-6 text-center ${pass.featured ? "border-2 border-neutral-700" : "border-neutral-300"}`}>
-                {pass.featured && (
-                  <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700 px-3 py-1.5 text-[11px] font-bold text-white">
-                    {CONTENT.passes.featuredLabel}
-                  </span>
-                )}
-                <h3 className="text-lg font-bold">{pass.name}</h3>
-                <p className="mt-2 text-xs text-neutral-500">{pass.sub}</p>
-                <p className="mt-6 text-xl font-bold">{pass.price}</p>
-                <p className="mt-2 text-xs text-neutral-500">{pass.per}</p>
-                {pass.off && <p className="mt-2 text-sm font-bold">{pass.off}</p>}
+            {CONTENT.passes.allInOnePackages.map((pkg) => (
+              <article key={pkg.name} className="rounded-2xl border border-neutral-300 p-6">
+                <h3 className="text-lg font-bold">{pkg.name}</h3>
+                <p className="mt-2 text-xs text-neutral-500">시술시간 {pkg.duration}</p>
+                <p className="mt-5 text-xs text-neutral-400 line-through">정가 {pkg.originalPrice}</p>
+                <p className="mt-1 text-xl font-bold text-neutral-900">
+                  ({pkg.discountPercent} OFF) 특가 {pkg.salePrice}
+                </p>
+                <p className="mt-4 text-xs font-semibold text-neutral-600">
+                  프로그램 구성: [{pkg.composition.join("+")}]
+                </p>
+                <div className="mt-4 space-y-2 text-left text-sm leading-relaxed text-neutral-600">
+                  {pkg.description.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
               </article>
             ))}
           </div>
