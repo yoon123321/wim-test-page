@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Sidebar from "./Sidebar";
+import { useVariant, VARIANT_LABELS, type HomeVariant } from "./VariantProvider";
 import { DEFAULT_NAV, type NavLink } from "./types";
 import { COMMON_CONTENT } from "@/content/common";
 
@@ -20,6 +21,7 @@ interface HeaderProps {
 export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_NAV }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const { variant, setVariant } = useVariant();
 
   const activeLink = navLinks.find((link) => link.label === openMenu && link.children);
 
@@ -94,6 +96,24 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
               )
             )}
           </nav>
+
+          {/* 기존안/개선안 미리보기 스위치 (목업 전용) */}
+          <div className="ml-auto mr-3 flex items-center gap-1 rounded-full border border-neutral-300 p-1 dt:ml-6 dt:mr-0">
+            {(["base", "improved"] as HomeVariant[]).map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setVariant(v)}
+                aria-pressed={variant === v}
+                title={`${VARIANT_LABELS[v]} 문구 보기`}
+                className={`h-7 rounded-full px-3 text-xs font-bold transition ${
+                  variant === v ? "bg-neutral-900 text-white" : "bg-transparent text-neutral-500 hover:text-neutral-900"
+                }`}
+              >
+                {VARIANT_LABELS[v]}
+              </button>
+            ))}
+          </div>
 
           {/* 태블릿/모바일: 햄버거 */}
           <button

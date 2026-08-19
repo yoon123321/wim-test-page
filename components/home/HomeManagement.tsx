@@ -2,11 +2,9 @@
 
 import { useRef, useState } from "react";
 import Text from "@/components/common/Text";
-import { HOME_MANAGEMENT } from "@/content/home";
+import { useHomeManagement } from "@/components/home/useHomeContent";
 
-const ITEMS = HOME_MANAGEMENT.items;
-
-function ManagementVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
+function ManagementVisual({ type }: { type: string }) {
   if (type === "timeline") return (
     <svg viewBox="0 0 280 130" className="h-28 w-full tb:h-32" aria-hidden="true">
       <path d="M30 70h220" stroke="#d4d4d4" strokeWidth="3"/>
@@ -38,6 +36,8 @@ function ManagementVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) 
 }
 
 export default function HomeManagement({ embedded = false }: { embedded?: boolean }) {
+  const HOME_MANAGEMENT = useHomeManagement();
+  const ITEMS = HOME_MANAGEMENT.items;
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 

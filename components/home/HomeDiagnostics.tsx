@@ -3,11 +3,9 @@
 import { useState } from "react";
 import Text from "@/components/common/Text";
 import Modal from "@/components/common/Modal";
-import { HOME_DIAGNOSTICS } from "@/content/home";
+import { useHomeDiagnostics } from "@/components/home/useHomeContent";
 
-const ITEMS = HOME_DIAGNOSTICS.items;
-
-function CardVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
+function CardVisual({ type }: { type: string }) {
   if (type === "radar") return (
     <svg viewBox="0 0 240 120" className="h-24 w-full tb:h-28" aria-hidden="true">
       <g fill="none" stroke="#d4d4d4"><path d="m120 12 47 27v54l-47 27-47-27V39Z"/><path d="m120 31 31 18v35l-31 18-31-18V49Z"/><path d="M120 12v108M73 39l94 54M167 39 73 93"/></g>
@@ -46,6 +44,8 @@ function CardVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
 }
 
 export default function HomeDiagnostics() {
+  const HOME_DIAGNOSTICS = useHomeDiagnostics();
+  const ITEMS = HOME_DIAGNOSTICS.items;
   const [selectedNumber, setSelectedNumber] = useState<string | null>(null);
   const selectedItem = ITEMS.find((item) => item.number === selectedNumber);
 
