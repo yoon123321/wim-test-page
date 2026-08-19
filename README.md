@@ -2,6 +2,21 @@
 
 Next.js App Router + TypeScript 기준. 별도 라이브러리·Tailwind 불필요 (모두 인라인 스타일).
 
+## 설치 및 실행
+
+```bash
+npm install     # 의존성 설치 (최초 1회)
+npm run dev     # 개발 서버 실행 → http://localhost:3000
+```
+
+그 외 스크립트:
+
+```bash
+npm run build   # 프로덕션 빌드
+npm run start   # 빌드 결과 실행 (build 이후)
+npm run lint    # 린트 검사
+```
+
 ## 파일
 
 ```

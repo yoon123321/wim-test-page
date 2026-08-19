@@ -1,14 +1,6 @@
-"use client";
+import { HOME_CONTENT_E } from "@/content/home";
 
-import { useAB } from "@/components/common/ABProvider";
-import { HOME_CONTENT, HOME_CONTENT_B, HOME_CONTENT_C, HOME_CONTENT_D, HOME_CONTENT_E } from "@/content/home";
-
-/** 헤더 A/B/C/D 토글에 따라 홈 문구 세트(A, B, C 또는 D)를 돌려줍니다. */
+/** 홈 문구 세트(E안)를 돌려줍니다. 문구는 content/home.ts 상수에서 수정합니다. */
 export function useHomeContent() {
-  const { variant } = useAB();
-  if (variant === "B") return HOME_CONTENT_B;
-  if (variant === "C") return HOME_CONTENT_C;
-  if (variant === "D") return HOME_CONTENT_D;
-  if (variant === "E") return HOME_CONTENT_E;
-  return HOME_CONTENT;
+  return HOME_CONTENT_E;
 }

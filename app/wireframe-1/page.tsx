@@ -1,16 +1,10 @@
-import DefaultView from "@/components/wireframe-1/DefaultView";
 import WireframeEView from "@/components/wireframe-1/WireframeEView";
 
 /* ------------------------------------------------------------------
-   WIM 통합 다이어트 타워 — 랜딩 페이지
-   A/B/C/D 안은 DefaultView(섹션 조합), E안은 WireframeEView(단일 파일)로 분기.
+   WIM 통합 다이어트 타워 — 랜딩 페이지 (E안 단일 파일)
+   문구·데이터는 content/wireframe-e.ts 상수에서 수정합니다.
 ------------------------------------------------------------------- */
 
 export default function Page() {
-  return (
-    <>
-      <DefaultView />
-      <WireframeEView />
-    </>
-  );
+  return <WireframeEView />;
 }

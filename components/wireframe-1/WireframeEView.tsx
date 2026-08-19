@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 감량 프로그램 랜딩 — D안 (단일 파일)
+ * 감량 프로그램 랜딩 — E안 (단일 파일)
  * Next.js App Router · React · TypeScript
  *
  * 설치
@@ -22,7 +22,6 @@
  */
 
 import { useState } from "react";
-import { useAB } from "@/components/common/ABProvider";
 import HomeManagement from "@/components/home/HomeManagement";
 
 
@@ -79,10 +78,10 @@ function HeroSection() {
         </h1>
         <p className={"wd-heroText"}>{HERO.body}</p>
         <div className={"wd-heroActions"}>
-          <a href="/bp-check" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>1분 다이어트 유형 검사 (무료)</a>
-          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonSecondary"}`}>프로그램 상담 문의</a>
+          <a href="/bp-check" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>{HERO.primaryCta}</a>
+          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonSecondary"}`}>{HERO.secondaryCta}</a>
         </div>
-        <p className={"wd-heroNote"}>기질·식습관 1분 · 비용 없음 · 유형 리포트 제공</p>
+        <p className={"wd-heroNote"}>{HERO.note}</p>
       </div>
     </section>
   );
@@ -124,8 +123,8 @@ function WorriesSection() {
         <div className={"wd-domeBody"}>
           <p className={"wd-domeTitle"}>{WORRIES_COPY.domeTitle}</p>
           <p className={"wd-domeSub"}>{WORRIES_COPY.domeSub}</p>
-          <p className={"wd-domeCtaText"}>다이어트가 자꾸 막혔다면, 지금의 나부터 확인해보세요.</p>
-          <a href="/bp-check" className={"wd-domeCtaButton"}>1분 다이어트 유형 검사</a>
+          <p className={"wd-domeCtaText"}>{WORRIES_COPY.domeCtaText}</p>
+          <a href="/bp-check" className={"wd-domeCtaButton"}>{WORRIES_COPY.domeCtaButton}</a>
         </div>
       </div>
     </section>
@@ -181,7 +180,7 @@ function DifferenceSection() {
 
 function RadarChart() {
   return (
-    <svg viewBox="0 0 300 290" style={{ width: "100%" }} role="img" aria-label="6개 지표 전후 비교 그래프">
+    <svg viewBox="0 0 300 290" style={{ width: "100%" }} role="img" aria-label={RESULT.radar.ariaLabel}>
       <polygon points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90" fill="none" stroke="#e5e5e5" strokeWidth="1" />
       <polygon points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107" fill="none" stroke="#eeeeee" strokeWidth="1" />
       <polygon points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5" fill="none" stroke="#f0f0f0" strokeWidth="1" />
@@ -363,8 +362,8 @@ function TeamSection({ variant = "cards" }: { variant?: TeamVariant }) {
 
             <div className={"wd-convergeHub"}>
               <div className={`${"wd-col"} ${"wd-gap8"}`}>
-                <div className={"wd-convergeHubKicker"}>ONE DESIGN</div>
-                <div className={"wd-convergeHubTitle"}>{"하나의\n프로그램 설계"}</div>
+                <div className={"wd-convergeHubKicker"}>{TEAM.convergeHub.kicker}</div>
+                <div className={"wd-convergeHubTitle"}>{TEAM.convergeHub.title}</div>
               </div>
             </div>
 
@@ -507,13 +506,13 @@ function CasesSection({ variant = "featured" }: { variant?: CasesVariant }) {
                   </div>
                 </div>
                 <div className={"wd-personaControls"}>
-                  <button type="button" aria-label="이전 사례" onClick={() => setPersonaIndex((personaIndex - 1 + personas.length) % personas.length)} className={"wd-personaArrow"}>←</button>
+                  <button type="button" aria-label={CASES.prevAriaLabel} onClick={() => setPersonaIndex((personaIndex - 1 + personas.length) % personas.length)} className={"wd-personaArrow"}>←</button>
                   <div className={"wd-personaDots"}>
                     {personas.map((p, index) => (
-                      <button key={p.persona} type="button" aria-label={`${index + 1}번째 사례 보기`} onClick={() => setPersonaIndex(index)} className={`${"wd-personaDot"} ${personaIndex === index ? "wd-personaDotActive" : ""}`} />
+                      <button key={p.persona} type="button" aria-label={`${index + 1}${CASES.dotAriaSuffix}`} onClick={() => setPersonaIndex(index)} className={`${"wd-personaDot"} ${personaIndex === index ? "wd-personaDotActive" : ""}`} />
                     ))}
                   </div>
-                  <button type="button" aria-label="다음 사례" onClick={() => setPersonaIndex((personaIndex + 1) % personas.length)} className={"wd-personaArrow"}>→</button>
+                  <button type="button" aria-label={CASES.nextAriaLabel} onClick={() => setPersonaIndex((personaIndex + 1) % personas.length)} className={"wd-personaArrow"}>→</button>
                 </div>
               </div>
 
@@ -535,7 +534,7 @@ function CasesSection({ variant = "featured" }: { variant?: CasesVariant }) {
                     {item.details.map((d) => (
                       <div key={d.label} className={"wd-recordRow"}>
                         <span className={"wd-recordRowLabel"}>{d.label}</span>
-                        <span className={`${"wd-recordRowValue"} ${d.label === "한마디" ? "wd-recordRowQuote" : ""}`}>{d.value}</span>
+                        <span className={`${"wd-recordRowValue"} ${d.label === CASES.quoteLabel ? "wd-recordRowQuote" : ""}`}>{d.value}</span>
                       </div>
                     ))}
                   </div>
@@ -638,7 +637,7 @@ function PlansSection() {
                         {off ? "—" : "✓"}
                       </span>
                       {text}
-                      {state === "option" && <span className={"wd-planOption"}>*옵션</span>}
+                      {state === "option" && <span className={"wd-planOption"}>{PLANS_COPY.optionLabel}</span>}
                     </div>
                   );
                 })}
@@ -725,8 +724,6 @@ function FinalCtaSection() {
 /* ─── 페이지 ────────────────────────────────────────────── */
 
 export default function WireframeEView() {
-  const { variant } = useAB();
-  if (variant !== "E") return null;
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />

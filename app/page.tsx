@@ -7,7 +7,6 @@ import Text from "@/components/common/Text";
 import HomeServices from "@/components/home/HomeServices";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
 import { useHomeContent } from "@/components/home/useHomeContent";
-import { useAB } from "@/components/common/ABProvider";
 
 const HEADING = "font-['Gowun_Batang',serif] font-bold tracking-[-0.02em]";
 
@@ -17,7 +16,6 @@ function Ph({ className = "" }: { className?: string }) {
 
 export default function HomePage() {
   const CONTENT = useHomeContent();
-  const { variant } = useAB();
 
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
@@ -33,23 +31,13 @@ export default function HomePage() {
             {CONTENT.about.title}
           </Text>
           <Text as="p" size="md" className="max-w-[560px] leading-8 text-neutral-600">
-            {CONTENT.about.description.startsWith("우리는 이미") ? (
-              <>
-                <strong className="font-bold">{CONTENT.about.description.split("\n")[0]}</strong>
-                {CONTENT.about.description.slice(CONTENT.about.description.indexOf("\n"))}
-              </>
-            ) : (
-              CONTENT.about.description
-            )}
+            {CONTENT.about.description}
           </Text>
         </div>
         <div className="relative h-[280px] overflow-hidden rounded-xl tb:h-[360px] dt:h-[440px]">
           <Image src={CONTENT.about.image} alt={CONTENT.about.imageAlt} fill sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw" className="object-cover grayscale" />
         </div>
       </section>
-
-      {/* 진료 항목 */}
-      {variant !== "E" && <HomeServices />}
 
       {/* 숫자 */}
       <section className="bg-neutral-700 px-4 py-16 text-white tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-[88px]">
@@ -132,8 +120,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* E안: 결과와 리뷰 다음에 검사·관리 배치 */}
-      {variant === "E" && <HomeServices />}
+      {/* 결과와 리뷰 다음에 검사·관리 배치 */}
+      <HomeServices />
 
       {/* 사례 */}
       <section id="cases" className="bg-white px-4 py-16 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-24">
@@ -144,9 +132,12 @@ export default function HomePage() {
                 {CONTENT.cases.eyebrow}
               </Text>
               <Text as="h2" size="3xl" weight="bold" className={`${HEADING} leading-tight`}>
-                {CONTENT.cases.titleLines[0]}
-                <br />
-                {CONTENT.cases.titleLines[1]}
+                {CONTENT.cases.titleLines.map((line, i) => (
+                  <span key={line}>
+                    {i > 0 && <br />}
+                    {line}
+                  </span>
+                ))}
               </Text>
             </div>
             <Text size="md" className="max-w-[560px] leading-relaxed text-neutral-600">
@@ -184,9 +175,12 @@ export default function HomePage() {
         className="flex flex-col items-center gap-5 border-t border-neutral-200 bg-neutral-100 px-4 py-16 text-center tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-[88px]"
       >
         <Text as="h2" size="3xl" weight="bold" className={`${HEADING} leading-snug text-neutral-900`}>
-          {CONTENT.cta.titleLines[0]}
-          <br />
-          {CONTENT.cta.titleLines[1]}
+          {CONTENT.cta.titleLines.map((line, i) => (
+            <span key={line}>
+              {i > 0 && <br />}
+              {line}
+            </span>
+          ))}
         </Text>
         <Text size="md" className="max-w-[520px] leading-relaxed text-neutral-700">
           {CONTENT.cta.description}

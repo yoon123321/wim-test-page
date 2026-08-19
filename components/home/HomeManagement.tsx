@@ -2,15 +2,9 @@
 
 import { useRef, useState } from "react";
 import Text from "@/components/common/Text";
-import { useAB } from "@/components/common/ABProvider";
+import { HOME_MANAGEMENT } from "@/content/home";
 
-const ITEMS = [
-  { number: "01", badge: "대면", caption: "주차별 조정 흐름", title: "대면 관리", description: "매주 만나 계획을 다시 맞춥니다", visual: "timeline" },
-  { number: "02", badge: "비대면 · 앱", caption: "앱 기록 · 혈당 추적", title: "비대면 관리", description: "매일의 기록을 앱으로 봅니다", visual: "app" },
-  { number: "03", badge: "기기", caption: "피로 · 회복 곡선", title: "기기 관리", description: "피로와 부종을 먼저 풀어줍니다", visual: "recovery" },
-  { number: "04", badge: "영양", caption: "탄단지 구성", title: "영양 교육", description: "오늘 저녁에 쓸 기준을 배웁니다", visual: "nutrition" },
-  { number: "05", badge: "운동", caption: "개인별 운동 가이드", title: "운동 교육", description: "내 몸에 맞는 운동 기준을 배웁니다", visual: "maintain" },
-] as const;
+const ITEMS = HOME_MANAGEMENT.items;
 
 function ManagementVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
   if (type === "timeline") return (
@@ -44,10 +38,8 @@ function ManagementVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) 
 }
 
 export default function HomeManagement({ embedded = false }: { embedded?: boolean }) {
-  const { variant } = useAB();
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  if (variant !== "E") return null;
 
   const move = (direction: number) => {
     const track = trackRef.current;
@@ -65,15 +57,15 @@ export default function HomeManagement({ embedded = false }: { embedded?: boolea
 
   return (
     <div className={embedded ? "" : "mt-20 border-t border-neutral-300 pt-14"}>
-      <Text as="span" size="xs" weight="bold" className="tracking-[0.18em] text-neutral-500">STEP 02 · 관리</Text>
+      <Text as="span" size="xs" weight="bold" className="tracking-[0.18em] text-neutral-500">{HOME_MANAGEMENT.step}</Text>
       <div className="mt-4 flex items-end justify-between gap-5">
         <div>
-          <Text as="h3" size="3xl" weight="bold" className="break-keep leading-tight text-neutral-900">맞춤 설계로 이렇게 관리합니다</Text>
-          <Text size="sm" className="mt-6 text-neutral-500">{String(active + 1).padStart(2, "0")} / {String(ITEMS.length).padStart(2, "0")} · 옆으로 넘겨 관리 방식을 확인하세요</Text>
+          <Text as="h3" size="3xl" weight="bold" className="break-keep leading-tight text-neutral-900">{HOME_MANAGEMENT.title}</Text>
+          <Text size="sm" className="mt-6 text-neutral-500">{String(active + 1).padStart(2, "0")} / {String(ITEMS.length).padStart(2, "0")} · {HOME_MANAGEMENT.swipeHint}</Text>
         </div>
         <div className="hidden shrink-0 gap-2 tb:flex">
-          <button type="button" onClick={() => move(-1)} aria-label="이전 카드" className="grid h-12 w-12 place-items-center rounded-full border border-neutral-300 bg-white text-xl transition hover:bg-neutral-200">←</button>
-          <button type="button" onClick={() => move(1)} aria-label="다음 카드" className="grid h-12 w-12 place-items-center rounded-full border border-neutral-300 bg-white text-xl transition hover:bg-neutral-200">→</button>
+          <button type="button" onClick={() => move(-1)} aria-label={HOME_MANAGEMENT.prevAriaLabel} className="grid h-12 w-12 place-items-center rounded-full border border-neutral-300 bg-white text-xl transition hover:bg-neutral-200">←</button>
+          <button type="button" onClick={() => move(1)} aria-label={HOME_MANAGEMENT.nextAriaLabel} className="grid h-12 w-12 place-items-center rounded-full border border-neutral-300 bg-white text-xl transition hover:bg-neutral-200">→</button>
         </div>
       </div>
 
@@ -89,7 +81,7 @@ export default function HomeManagement({ embedded = false }: { embedded?: boolea
             <div className="mt-auto pt-10">
               <Text as="h4" size="xl" weight="bold" className="text-neutral-900">{item.title}</Text>
               <Text size="sm" className="mt-3 break-keep leading-relaxed text-neutral-600">{item.description}</Text>
-              <span className="mt-6 flex justify-end text-sm font-semibold text-neutral-600">자세히 보기&nbsp;→</span>
+              <span className="mt-6 flex justify-end text-sm font-semibold text-neutral-600">{HOME_MANAGEMENT.detailLabel}</span>
             </div>
           </a>
         ))}

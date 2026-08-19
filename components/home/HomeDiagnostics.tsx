@@ -2,17 +2,10 @@
 
 import { useState } from "react";
 import Text from "@/components/common/Text";
-import { useAB } from "@/components/common/ABProvider";
 import Modal from "@/components/common/Modal";
+import { HOME_DIAGNOSTICS } from "@/content/home";
 
-const ITEMS = [
-  { number: "01", badge: "WIM-I", caption: "6축 기질 분포", title: "기질과 성향", description: "내가 무너지는 순간을 찾습니다", visual: "radar" },
-  { number: "02", badge: "WIM-S", caption: "생활 5축 기록", title: "현재 생활 습관", description: "하루 중 새는 지점을 찾습니다", visual: "bars" },
-  { number: "03", badge: "인바디", caption: "체성분 구성", title: "현재 몸 상태", description: "뺄 것과 지킬 것을 나눕니다", visual: "body" },
-  { number: "04", badge: "시그니처", caption: "유전 정보", title: "타고난 유전자", description: "나에게 무리인 방식을 걸러냅니다", visual: "dna" },
-  { number: "05", badge: "CGM", caption: "식후 혈당 곡선", title: "혈당 변화", description: "내 몸이 반응하는 음식을 찾습니다", visual: "curve" },
-  { number: "06", badge: "운동 리포트", caption: "체력 지표", title: "현재 체력", description: "지금 가능한 강도를 정합니다", visual: "gauge" },
-] as const;
+const ITEMS = HOME_DIAGNOSTICS.items;
 
 function CardVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
   if (type === "radar") return (
@@ -53,16 +46,14 @@ function CardVisual({ type }: { type: (typeof ITEMS)[number]["visual"] }) {
 }
 
 export default function HomeDiagnostics() {
-  const { variant } = useAB();
   const [selectedNumber, setSelectedNumber] = useState<string | null>(null);
   const selectedItem = ITEMS.find((item) => item.number === selectedNumber);
-  if (variant !== "E") return null;
 
   return (
     <>
     <div>
-      <Text as="span" size="xs" weight="bold" className="tracking-[0.18em] text-neutral-500">STEP 01 · 검사</Text>
-      <Text as="h3" size="3xl" weight="bold" className="mt-4 break-keep leading-tight text-neutral-900">나만의 다이어트 전략을 위한 검사</Text>
+      <Text as="span" size="xs" weight="bold" className="tracking-[0.18em] text-neutral-500">{HOME_DIAGNOSTICS.step}</Text>
+      <Text as="h3" size="3xl" weight="bold" className="mt-4 break-keep leading-tight text-neutral-900">{HOME_DIAGNOSTICS.title}</Text>
       <div className="mt-10 grid grid-cols-2 gap-3 tb:gap-4 dt:grid-cols-3">
         {ITEMS.map((item) => (
           <article key={item.number} className="flex min-h-[340px] flex-col rounded-[24px] border border-dashed border-neutral-300 bg-white p-4 transition duration-300 hover:-translate-y-1 hover:border-neutral-400 hover:shadow-lg tb:min-h-[390px] tb:rounded-[28px] tb:p-8">
@@ -75,13 +66,13 @@ export default function HomeDiagnostics() {
             <div className="mt-auto pt-6 tb:pt-10">
               <Text as="h4" size="lg" weight="bold" className="break-keep text-neutral-900 tb:text-xl">{item.title}</Text>
               <Text size="xs" className="mt-2 break-keep leading-relaxed text-neutral-600 tb:mt-3 tb:text-sm">{item.description}</Text>
-              <button type="button" onClick={() => setSelectedNumber(item.number)} className="mt-4 inline-flex w-full items-center justify-end whitespace-nowrap text-xs font-semibold text-neutral-600 transition hover:text-neutral-950 tb:mt-6 tb:text-sm">자세히 보기&nbsp;→</button>
+              <button type="button" onClick={() => setSelectedNumber(item.number)} className="mt-4 inline-flex w-full items-center justify-end whitespace-nowrap text-xs font-semibold text-neutral-600 transition hover:text-neutral-950 tb:mt-6 tb:text-sm">{HOME_DIAGNOSTICS.detailLabel}</button>
             </div>
           </article>
         ))}
       </div>
     </div>
-    <Modal open={selectedItem !== undefined} title={selectedItem?.title ?? ""} closeLabel="검사 상세 닫기" onClose={() => setSelectedNumber(null)}>
+    <Modal open={selectedItem !== undefined} title={selectedItem?.title ?? ""} closeLabel={HOME_DIAGNOSTICS.modal.closeLabel} onClose={() => setSelectedNumber(null)}>
       {selectedItem && (
         <div className="grid gap-6 tb:grid-cols-[220px_1fr] tb:items-center">
           <div className="rounded-2xl bg-neutral-100 p-5">
@@ -93,7 +84,7 @@ export default function HomeDiagnostics() {
               <Text as="span" size="xs" className="text-neutral-500">{selectedItem.caption}</Text>
             </div>
             <Text size="md" className="mt-5 break-keep leading-8 text-neutral-700">{selectedItem.description}</Text>
-            <Text size="sm" className="mt-3 break-keep leading-7 text-neutral-500">검사 결과를 바탕으로 현재 상태와 생활 패턴을 확인하고, 무리 없이 지속할 수 있는 감량 방향을 함께 설계합니다.</Text>
+            <Text size="sm" className="mt-3 break-keep leading-7 text-neutral-500">{HOME_DIAGNOSTICS.modal.note}</Text>
           </div>
         </div>
       )}

@@ -87,6 +87,9 @@ export const HERO = {
   eyebrow: "WIM 통합 다이어트 타워",
   title: "정교한 데이터가 만드는\n나만의 다이어트",
   body: "체중 감량을 넘어, 대사와 생활 습관까지\n함께 만들어가는 프로그램입니다.",
+  primaryCta: "1분 다이어트 유형 검사 (무료)",
+  secondaryCta: "프로그램 상담 문의",
+  note: "기질·식습관 1분 · 비용 없음 · 유형 리포트 제공",
 } as const;
 
 export const WORRIES: string[] = [
@@ -111,6 +114,8 @@ export const WORRIES_COPY = {
   sub: "이 모든 고민의 원인은 현재의 나를 모르는 것입니다",
   domeTitle: "그래서 현재의 나를 아는 것이 중요합니다.",
   domeSub: "지금의 나에게 일반적인 다이어트는 통하지 않을 수 있습니다",
+  domeCtaText: "다이어트가 자꾸 막혔다면, 지금의 나부터 확인해보세요.",
+  domeCtaButton: "1분 다이어트 유형 검사",
 } as const;
 
 export const DIFFERENCE = {
@@ -141,6 +146,7 @@ export const RESULT = {
     { label: "허리둘레", value: "86cm → 70cm" },
   ],
   radar: {
+    ariaLabel: "6개 지표 전후 비교 그래프",
     title: "여섯 축의 데이터가 함께 바뀝니다",
     body: "12주간 측정한 여섯 지표를 그대로 겹쳐 그린 그래프입니다. 체중과 체지방률만 내려가고 근육·대사·활동량·수면이 무너지면 유지되지 않습니다.",
     axes: ["체중", "체지방률", "골격근량", "기초대사량", "활동량", "수면의 질"],
@@ -194,6 +200,7 @@ export const TEAM = {
     { kicker: "EXERCISE", name: "운동처방사 팀", role: "체력과 통증 기준의 운동 설계", note: "연예인 및 운동선수 다수 관리" },
   ] satisfies Specialist[],
   convergeTitle: "하나의 프로그램 설계",
+  convergeHub: { kicker: "ONE DESIGN", title: "하나의\n프로그램 설계" },
   deliveryTitle: "전담 매니저가 하루 단위로 전달",
   outcomeTitle: "고객의 행동 변화",
   outcomeSub: "매일의 선택이 바뀌는 지점",
@@ -234,6 +241,10 @@ export const CASES = {
     ],
   },
   disclaimer: "※ 실제 기록 일부를 옮긴 것으로, 결과는 개인에 따라 다를 수 있습니다.",
+  prevAriaLabel: "이전 사례",
+  nextAriaLabel: "다음 사례",
+  dotAriaSuffix: "번째 사례 보기",
+  quoteLabel: "한마디",
   records: [
     {
       profile: "30대 직장인 · 박OO",
@@ -323,6 +334,7 @@ export const PLANS_COPY = {
   refundBody:
     " 시작 전 전액, 진행 중에는 잔여 회차 기준으로 환불됩니다. 연기·중도 변경 규정도 계약 전에 문서로 안내드립니다 — 확신이 있어서 조건을 숨기지 않습니다.",
   featuredBadge: "가장 많이 시작하는 플랜",
+  optionLabel: "*옵션",
   plans: [
     {
       name: "Wellness Lite",
