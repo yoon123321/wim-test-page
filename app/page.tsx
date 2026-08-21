@@ -8,6 +8,7 @@ import HomeServices from "@/components/home/HomeServices";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
 import { useHomeContent } from "@/components/home/useHomeContent";
 import { useVariant } from "@/components/common/VariantProvider";
+import WimMainNew from "@/components/home/WimMainNew";
 
 const HEADING = "font-['Gowun_Batang',serif] font-bold tracking-[-0.02em]";
 
@@ -18,6 +19,9 @@ function Ph({ className = "" }: { className?: string }) {
 export default function HomePage() {
   const CONTENT = useHomeContent();
   const { variant } = useVariant();
+
+  // 개선안: 새 메인페이지 시안(WimMainNew)을 통째로 렌더
+  if (variant === "improved") return <WimMainNew />;
 
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
@@ -40,9 +44,6 @@ export default function HomePage() {
           <Image src={CONTENT.about.image} alt={CONTENT.about.imageAlt} fill sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw" className="object-cover grayscale" />
         </div>
       </section>
-
-      {/* 개선안: 검사·관리(STEP 01/02)를 숫자 섹션 위로 배치 */}
-      {variant === "improved" && <HomeServices />}
 
       {/* 숫자 */}
       <section className="bg-neutral-700 px-4 py-16 text-white tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-[88px]">
@@ -125,8 +126,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 기존안: 결과와 리뷰 다음에 검사·관리 배치 */}
-      {variant !== "improved" && <HomeServices />}
+      {/* 결과와 리뷰 다음에 검사·관리 배치 */}
+      <HomeServices />
 
       {/* 사례 */}
       <section id="cases" className="bg-white px-4 py-16 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-24">

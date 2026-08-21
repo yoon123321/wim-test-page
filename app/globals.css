@@ -17,6 +17,24 @@
   --breakpoint-*: initial;
   --breakpoint-tb: 48rem; /* 768px */
   --breakpoint-dt: 75rem; /* 1200px */
+
+  /**
+   * 01-1. Color — 디자인 시스템 팔레트
+   * 사용 예: bg-primary-main, text-primary-sub-01, border-gray-01, bg-black ...
+   * hex 값은 레퍼런스 이미지 기준 근사치이므로, 확정 컬러 값이 있으면 여기서만 바꾸면 된다.
+   */
+  --color-primary-main: #2c5e3b;
+  --color-primary-sub-01: #7a8577;
+  --color-primary-sub-02: #b9cf97;
+  --color-primary-sub-03: #e4f0e3;
+
+  --color-gray-03: #5d5d5d;
+  --color-gray-02: #a9a9a9;
+  --color-gray-01: #e2e0db;
+  --color-gray-00: #f8f8f8;
+
+  --color-black: #1b1c1b; /* 디자인 시스템 Black (순수 #000 대신 사용) */
+  --color-white: #ffffff;
 }
 
 /** 모바일에만 적용해야 할 때 쓰는 max-width 변형 (767px 이하) */
@@ -27,6 +45,16 @@
 
 /** 태블릿 이하 = 모바일 + 태블릿 (1199px 이하) */
 @custom-variant tb-down (@media (max-width: 74.999rem));
+
+/** 감량 개선안 — 고민 문구 무한 흐름(마퀴) */
+@keyframes wim-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
 
 @keyframes mobile-card-pop {
   0% {
