@@ -65,6 +65,7 @@ export const WIM_NEW_ICONS = {
   arrow: `${IMG}/icons/icon-arrow.svg`,
   arrowGreen: `${IMG}/icons/icon-arrow-sm.svg`,
   arrowBox: `${IMG}/icons/icon-arrow-box.svg`,
+  careArrow: `${IMG}/icons/icon-care-arrow.svg`,
   chevron: `${IMG}/icons/icon-chevron.svg`,
   plus: `${IMG}/icons/icon-plus.svg`,
   logoWim: `${IMG}/icons/footer-logo-2.svg`,
