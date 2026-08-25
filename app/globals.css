@@ -72,6 +72,17 @@
 /** 태블릿 이하 = 모바일 + 태블릿 (1199px 이하) */
 @custom-variant tb-down (@media (max-width: 74.999rem));
 
+/** 관리 캐러셀 끝 카드 페이드 — 1280px 전후로 노출 농도를 다르게 적용 */
+.care-peek-fade {
+  background: transparent;
+}
+
+@media (min-width: 1200px) {
+  .care-peek-content {
+    filter: blur(3px);
+  }
+}
+
 /** 감량 개선안 — 고민 문구 무한 흐름(마퀴) */
 @keyframes wim-marquee {
   from {

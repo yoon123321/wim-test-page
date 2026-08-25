@@ -266,7 +266,10 @@ export default function WimMainNew() {
     // 늘어나는 끝은 "화면 끝"까지
     const cardLeft = lastVisible * step;
     const screenRight = track.scrollLeft + track.clientWidth;
-    const w = Math.max(first.offsetWidth * 1.25, screenRight - cardLeft);
+    const w = Math.min(
+      first.offsetWidth * 1.5,
+      Math.max(first.offsetWidth * 1.25, screenRight - cardLeft),
+    );
     return { index: lastVisible, width: Math.round(w) };
   };
 
@@ -483,7 +486,7 @@ export default function WimMainNew() {
           <div
             ref={careTrackRef}
             onScroll={updateCareActive}
-            className="mt-[36px] mr-[calc(50%-50vw)] flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-3 pr-[calc(50vw-50%)] [scrollbar-width:none] tb:gap-[15px] [&::-webkit-scrollbar]:hidden">
+            className="mt-[36px] mr-[calc(50%-50vw)] flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-3 pr-[calc(50vw-50%)] [scrollbar-width:none] tb:gap-[15px] dt:mr-0 dt:pr-0 [&::-webkit-scrollbar]:hidden">
             {WIM_NEW_CARES.map((care, careIndex) => {
               // 마지막 카드는 끝에 닿기 전까지 옆으로 늘어나 "더 있다"는 신호를 준다.
               // 높이는 aspect 대신 h-* 로 고정해서, 폭이 변해도 줄 높이가 흔들리지 않는다.
@@ -495,41 +498,65 @@ export default function WimMainNew() {
                 onClick={() => setActiveCare(care)}
                 aria-label={`${care.title} 자세히 보기`}
                 style={{
-                  filter: isPeek ? "blur(3px)" : "blur(0px)",
                   ...(isPeek ? { width: carePeek.width } : null),
                 }}
-                className={`relative isolate h-[150px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-[10px] border-0 p-0 text-left font-inherit transition-[filter] duration-300 ease-out tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
+                className={`relative isolate h-[150px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-[10px] border-0 p-0 text-left font-inherit tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
                   isPeek ? "" : "w-[205px] tb:w-[calc((100%-15px)/2)] dt:w-[calc((100%-45px)/4)]"
                 }`}>
-                <CardPhoto src={care.image} mobileSrc={care.imageMobile} alt={care.imageAlt} />
-                <div className={CARE_SCRIM} />
+                <div className={`absolute inset-0 ${isPeek ? "care-peek-content" : ""}`}>
+                  <CardPhoto src={care.image} mobileSrc={care.imageMobile} alt={care.imageAlt} />
+                  <div className={CARE_SCRIM} />
 
-                <span className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px] text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-display-01">
-                  {care.no}
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                <img
-                  src={WIM_NEW_ICONS.plus}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
-                />
-
-                <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[37px]">
-                  <h3 className="break-keep text-white text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-title-02">
-                    {care.title}
-                  </h3>
-                  <p className="mt-[6px] break-keep text-[13px] text-white dt:mt-[8px] dt:text-pretendard-regular-body-02">
-                    {care.line}
-                  </p>
-                  <span className="mt-[14px] hidden flex-col text-white dt:flex text-mo-pretendard-regular-body-03">
-                    {COPY.step2.detailLabel}
-                    <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
+                  <span className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px] text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-display-01">
+                    {care.no}
                   </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                  <img
+                    src={WIM_NEW_ICONS.plus}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
+                  />
+
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[37px]">
+                    <h3 className="break-keep text-white text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-title-02">
+                      {care.title}
+                    </h3>
+                    <p className="mt-[6px] break-keep text-[13px] text-white dt:mt-[8px] dt:text-pretendard-regular-body-02">
+                      {care.line}
+                    </p>
+                    <span className="mt-[14px] hidden flex-col text-white dt:flex text-mo-pretendard-regular-body-03">
+                      {COPY.step2.detailLabel}
+                      <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
+                    </span>
+                  </div>
                 </div>
+
+                {isPeek && (
+                  <span
+                    aria-hidden="true"
+                    className="care-peek-fade pointer-events-none absolute inset-y-0 right-0 z-10 w-3/4"
+                  />
+                )}
+
+                {isPeek && (
+                  // eslint-disable-next-line @next/next/no-img-element -- 피그마 원본
+                  <img
+                    src={WIM_NEW_ICONS.careArrow}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute left-[200px] top-1/2 z-20 hidden h-[36px] w-[36px] -translate-y-1/2 dt:block"
+                  />
+                )}
               </button>
               );
             })}
+            {careActive < WIM_NEW_CARES.length - 1 && (
+              <span className="pointer-events-none sticky right-[20px] z-20 -ml-[36px] block h-[36px] w-[36px] shrink-0 self-center dt:hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
+              </span>
+            )}
           </div>
 
           <div className="mt-[10px] flex items-center justify-center gap-2 dt:hidden" aria-hidden="true">
