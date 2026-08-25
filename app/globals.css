@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./typography.css";
 
 /**
  * 브레이크포인트 정의 (3단계)
@@ -23,18 +24,43 @@
    * 사용 예: bg-primary-main, text-primary-sub-01, border-gray-01, bg-black ...
    * hex 값은 레퍼런스 이미지 기준 근사치이므로, 확정 컬러 값이 있으면 여기서만 바꾸면 된다.
    */
-  --color-primary-main: #2c5e3b;
-  --color-primary-sub-01: #7a8577;
-  --color-primary-sub-02: #b9cf97;
-  --color-primary-sub-03: #e4f0e3;
+  /* 피그마 WIM-Center-DESIGN 확정값 (center_main1 / center_sub1~3 / center_gray00~03 / center_black) */
+  --color-primary-main: #155e35;
+  --color-primary-sub-01: #737e72;
+  --color-primary-sub-02: #bedc9f;
+  --color-primary-sub-03: #e7f3e2;
 
   --color-gray-03: #5d5d5d;
-  --color-gray-02: #a9a9a9;
-  --color-gray-01: #e2e0db;
+  --color-gray-02: #a1a0a1;
+  --color-gray-01: #e3e2e0;
   --color-gray-00: #f8f8f8;
 
-  --color-black: #1b1c1b; /* 디자인 시스템 Black (순수 #000 대신 사용) */
+  --color-black: #1d1e1e; /* 디자인 시스템 Black (순수 #000 대신 사용) */
   --color-white: #ffffff;
+
+  /**
+   * 01-2. Color — 시안 확장
+   * 코어 팔레트(center_*)에는 없지만 메인 시안에서 반복해 쓰이는 표면색이다.
+   * 피그마에서도 변수가 아닌 raw hex 로 칠해져 있어, 정식 편입이 정해지면 위 블록으로 옮긴다.
+   */
+  --color-primary-deep: #2f5f44; /* RESULTS 배경 그라데이션 시작 */
+  --color-primary-deeper: #20362a; /* RESULTS 배경 그라데이션 끝 */
+  --color-primary-accent: #177e19; /* CTA 버튼 그라데이션 끝 */
+  --color-primary-tint: #f1f7ef; /* CASES 안쪽 박스 */
+  --color-review-surface: #3e875f; /* 후기 카드 배경 */
+  --color-review-line: #4f8867; /* 후기 카드 테두리 */
+
+  /**
+   * 02. Typography — 서체 패밀리
+   *
+   * 크기 · 굵기 · 줄높이가 합쳐진 텍스트 유틸리티는 app/typography.css 에 있다.
+   *   text-pretendard-bold-headline-02  형태로 한 번에 지정한다.
+   * 아래 변수는 그 유틸리티가 참조하는 폰트 스택이다.
+   */
+  --font-pretendard: "Pretendard Variable", Pretendard, sans-serif;
+  --font-franklin: "ITC Franklin Gothic LT Pro", "Libre Franklin", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  --font-garamond: "EB Garamond", serif;
+
 }
 
 /** 모바일에만 적용해야 할 때 쓰는 max-width 변형 (767px 이하) */
