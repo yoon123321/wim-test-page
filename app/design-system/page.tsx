@@ -13,6 +13,10 @@ interface FontFamilyBlock {
   title: string;
   weightsLabel: string;
   lineHeightNote: string;
+  /** 미지정 시 "자간 0%" */
+  trackingNote?: string;
+  /** 견본에 적용할 자간 (미지정 시 normal) */
+  tracking?: string;
   fontFamily: string;
   italic?: boolean;
   rows: FontRow[];
@@ -41,6 +45,8 @@ const BLOCKS: FontFamilyBlock[] = [
     title: "PRETENDARD",
     weightsLabel: "Regular, Medium, Bold",
     lineHeightNote: "줄높이 140%, 150%",
+    trackingNote: "자간 -2%",
+    tracking: "-0.02em",
     fontFamily: "'Pretendard Variable', sans-serif",
     rows: buildRows(
       ["디스플레이 01", "디스플레이 02", "타이틀 01", "타이틀 02", "헤드라인 01", "헤드라인 02", "헤드라인 03", "바디 01", "바디 02", "바디 03"],
@@ -84,6 +90,7 @@ const sampleStyle = (block: FontFamilyBlock, f: FontRow) => ({
   lineHeight: f.lineHeight,
   fontWeight: sampleWeight(block, f.weight),
   fontStyle: block.italic ? ("italic" as const) : ("normal" as const),
+  letterSpacing: block.tracking ?? "normal",
 });
 
 function FontTable({ block }: { block: FontFamilyBlock }) {
@@ -96,7 +103,9 @@ function FontTable({ block }: { block: FontFamilyBlock }) {
           <span className="h-4 w-px bg-white/50" />
           <span className="text-[15px] text-white/90">{block.weightsLabel}</span>
         </div>
-        <div className="text-[13px] text-white/85">{block.lineHeightNote}&emsp;자간 0%</div>
+        <div className="text-[13px] text-white/85">
+          {block.lineHeightNote}&emsp;{block.trackingNote ?? "자간 0%"}
+        </div>
       </div>
 
       {/* PC: 표 형태 */}
