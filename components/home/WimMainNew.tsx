@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { Typography } from "@/components/common/Typography";
 import {
   WIM_NEW_COPY,
   WIM_NEW_TESTS,
@@ -87,7 +88,7 @@ function CardPhoto({
 
 function Eyebrow({ text, tone = "green" }: { text: string; tone?: "green" | "gray" | "light" }) {
   const color = tone === "green" ? "text-primary-main" : tone === "light" ? "text-gray-01" : "text-black";
-  return <span className={`block text-mo-franklin-book-body-02 ${color}`}>{text}</span>;
+  return <Typography font="franklin" mobile="body-02" weight="book" className={`block ${color}`}>{text}</Typography>;
 }
 
 /** 섹션 공통 — 모바일 20px 사이드 여백, PC 1280 컨테이너 */
@@ -140,22 +141,28 @@ function TestDetailModal({ test, onClose }: { test: WimNewTest; onClose: () => v
           <span className="text-[16px] font-light leading-none">×</span>
         </button>
         <div className="flex flex-col">
-          <h3
+          <Typography
+            as="h3"
             id="test-modal-title"
-            className="break-keep pr-8 text-primary-main text-pretendard-bold-headline-03 dt:font-pretendard dt:text-[26px] dt:font-bold dt:leading-[150%]">
+            mobile="headline-03"
+            desktop="title-02"
+            weight="bold"
+            className="break-keep pr-8 text-primary-main">
             {detail.title}
-          </h3>
-          <p className="mt-[18px] break-keep text-black text-mo-pretendard-regular-body-02 dt:font-pretendard dt:text-[16px] dt:font-normal dt:leading-[150%]">
+          </Typography>
+          <Typography as="p" mobile="body-02" desktop="body-02" className="mt-[18px] break-keep text-black dt:!leading-[150%]">
             <Lines items={detail.descLines} />
-          </p>
+          </Typography>
           <div className="mt-[35px]">
             <div className="flex flex-wrap gap-[6px]">
               {detail.tags.map((tag) => (
-                <span
+                <Typography
+                  as="span"
                   key={tag}
-                  className="rounded-[4px] bg-primary-sub-03 px-[10px] py-[6px] text-primary-main text-mo-pretendard-regular-body-03 dt:inline-flex dt:h-[35px] dt:items-center dt:justify-center dt:gap-[10px] dt:px-[15px] dt:py-[5px]">
+                  mobile="body-03"
+                  className="rounded-[4px] bg-primary-sub-03 px-[10px] py-[6px] text-primary-main dt:inline-flex dt:h-[35px] dt:items-center dt:justify-center dt:gap-[10px] dt:px-[15px] dt:py-[5px]">
                   {tag}
-                </span>
+                </Typography>
               ))}
             </div>
           </div>
@@ -191,22 +198,28 @@ function CareDetailModal({ care, onClose }: { care: WimNewCare; onClose: () => v
           <span className="text-[16px] font-light leading-none dt:text-[20px]">×</span>
         </button>
 
-        <h3
+        <Typography
+          as="h3"
           id="care-modal-title"
-          className="break-keep pr-8 text-primary-main text-pretendard-bold-headline-03 dt:font-pretendard dt:text-[26px] dt:font-bold dt:leading-[150%]">
+          mobile="headline-03"
+          desktop="title-02"
+          weight="bold"
+          className="break-keep pr-8 text-primary-main">
           {care.detail.title}
-        </h3>
-        <p className="mt-[10px] break-keep text-black text-mo-pretendard-regular-body-02 dt:mt-3 dt:font-pretendard dt:text-[16px] dt:font-normal dt:leading-[150%]">
+        </Typography>
+        <Typography as="p" mobile="body-02" desktop="body-02" className="mt-[10px] break-keep text-black dt:mt-3 dt:!leading-[150%]">
           {care.detail.description}
-        </p>
+        </Typography>
         <div className="mt-7 dt:mt-7">
           <div className="flex flex-wrap gap-[6px]">
             {care.detail.tags.map((tag) => (
-              <span
+              <Typography
+                as="span"
                 key={tag}
-                className="rounded-[4px] bg-white px-[10px] py-[6px] text-primary-main text-mo-pretendard-regular-body-03 dt:inline-flex dt:h-[35px] dt:items-center dt:justify-center dt:gap-[10px] dt:px-[15px] dt:py-[5px]">
+                mobile="body-03"
+                className="rounded-[4px] bg-white px-[10px] py-[6px] text-primary-main dt:inline-flex dt:h-[35px] dt:items-center dt:justify-center dt:gap-[10px] dt:px-[15px] dt:py-[5px]">
                 {tag}
-              </span>
+              </Typography>
             ))}
           </div>
         </div>
@@ -230,12 +243,21 @@ export default function WimMainNew() {
   const [carePeek, setCarePeek] = useState<{ index: number; width: number }>({ index: -1, width: 0 });
   const [activeTest, setActiveTest] = useState<WimNewTest | null>(null);
   const [activeCare, setActiveCare] = useState<WimNewCare | null>(null);
+  const [reviewsExpanded, setReviewsExpanded] = useState(false);
 
   const careStep = () => {
     const track = careTrackRef.current;
     const card = track?.firstElementChild as HTMLElement | null;
     return card ? card.offsetWidth + 15 : 0;
   };
+  /** 화살표 클릭 — 카드 한 장만큼 다음으로 넘긴다 */
+  const moveCareNext = () => {
+    const track = careTrackRef.current;
+    const step = careStep();
+    if (!track || !step) return;
+    track.scrollBy({ left: step, behavior: "smooth" });
+  };
+
   const updateCareActive = () => {
     const track = careTrackRef.current;
     const step = careStep();
@@ -312,18 +334,18 @@ export default function WimMainNew() {
         {/* <div className={HERO_SCRIM} /> */}
 
         <div className="relative flex flex-col items-center px-5">
-          <h1 className="break-keep text-white text-mo-pretendard-bold-headline-02 tb:text-pretendard-bold-display-01">
+          <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="break-keep text-white">
             <Lines items={COPY.hero.titleLines} />
-          </h1>
-          <p className="mt-[18px] text-white tb:mt-[26px] text-mo-pretendard-regular-body-03 tb:text-pretendard-regular-headline-02">
+          </Typography>
+          <Typography as="p" mobile="body-03" tablet="headline-02" className="mt-[18px] text-white tb:mt-[26px]">
             {COPY.hero.sub}
-          </p>
+          </Typography>
 
           <div className="mt-12 flex flex-col items-center gap-2.5 tb:mt-[76px] tb:flex-row tb:gap-[18px]">
             <a
               href="#contact"
-              className="flex h-[35px]  items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent text-white no-underline transition hover:opacity-90 tb:h-[50px] px-[23px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main text-mo-pretendard-bold-body-03 tb:text-pretendard-medium-headline-03">
-              {COPY.hero.primaryCta}
+              className="flex h-[35px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:h-[50px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main">
+              <Typography mobile="body-03" tablet="headline-03" weight="bold" tabletWeight="medium">{COPY.hero.primaryCta}</Typography>
               {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
               <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[11px] w-[11px] tb:hidden" />
               {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
@@ -336,8 +358,8 @@ export default function WimMainNew() {
             </a>
             <a
               href="#services"
-              className="flex w-[170px]  h-[35px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:px-6 tb:border-[1.5px] text-mo-pretendard-medium-body-03 tb:text-pretendard-medium-headline-03 tb:w-[200px]">
-              {COPY.hero.secondaryCta}
+              className="flex h-[35px] w-[170px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:w-[200px] tb:border-[1.5px] tb:px-6">
+              <Typography mobile="body-03" tablet="headline-03" weight="medium">{COPY.hero.secondaryCta}</Typography>
             </a>
           </div>
         </div>
@@ -355,15 +377,15 @@ export default function WimMainNew() {
       <section className="bg-white px-5 py-[54px] tb:py-[110px]">
         <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
           <div className="flex flex-col dt:flex-1">
-            <span className="text-gray-02 tb:text-gray-03 text-mo-pretendard-regular-body-03 tb:text-pretendard-regular-body-02">
+            <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
               {COPY.intro.eyebrow}
-            </span>
-            <h2 className="mt-2 break-keep text-primary-main tb:mt-[9px] text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-01">
+            </Typography>
+            <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-2 break-keep text-primary-main tb:mt-[9px]">
               <Lines items={COPY.intro.titleLines} />
-            </h2>
-            <p className="mt-[28px] break-keep text-black tb:mt-[36px] text-mo-pretendard-medium-body-03 tb:text-pretendard-medium-headline-03">
+            </Typography>
+            <Typography as="p" mobile="body-03" tablet="headline-03" weight="medium" className="mt-[28px] break-keep text-black tb:mt-[36px]">
               <Lines items={COPY.intro.descLines} />
-            </p>
+            </Typography>
           </div>
           <div className="relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:aspect-[640/360] dt:w-[640px] dt:shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
@@ -381,20 +403,20 @@ export default function WimMainNew() {
         <Container>
           {/* 브랜드 선언 */}
           <p className="break-keep text-black">
-            <span className="tb:hidden text-mo-pretendard-medium-headline-03">
+            <Typography mobile="headline-03" weight="medium" className="tb:hidden">
               <Lines items={COPY.philosophy.normalLines} />
-            </span>
+            </Typography>
             <br className="tb:hidden" />
-            <span className="tb:hidden text-mo-pretendard-bold-headline-03">
+            <Typography mobile="headline-03" weight="bold" className="tb:hidden">
               <Lines items={COPY.philosophy.boldLines} />
-            </span>
-            <span className="hidden tb:inline text-pretendard-medium-display-01">
+            </Typography>
+            <Typography mobile="title-01" desktop="display-01" weight="medium" className="hidden tb:inline">
               {COPY.philosophy.normalLines.join(" ")}
-            </span>
+            </Typography>
             <br className="hidden tb:inline" />
-            <span className="hidden tb:inline text-pretendard-bold-display-01">
+            <Typography mobile="title-01" desktop="display-01" weight="bold" className="hidden tb:inline">
               {COPY.philosophy.boldLines.join(" ")}
-            </span>
+            </Typography>
           </p>
 
           {/* STEP 01 — 6가지 검사 */}
@@ -402,9 +424,9 @@ export default function WimMainNew() {
             <StepDivider />
             <div className="min-w-0 flex-1">
               <Eyebrow text={COPY.step1.label} tone="gray" />
-              <h2 className="mt-1.5 break-keep text-primary-main text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-02">
+              <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
                 {COPY.step1.title}
-              </h2>
+              </Typography>
             </div>
           </div>
 
@@ -433,17 +455,17 @@ export default function WimMainNew() {
                     aria-hidden="true"
                     className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
                   />
-                  <span className="absolute right-[32px] top-[35px] hidden flex-col items-end font-pretendard text-[14px] font-normal text-white dt:flex">
+                  <Typography mobile="body-03" className="absolute right-[32px] top-[35px] hidden flex-col items-end text-white dt:flex">
                     <span className="flex items-center gap-[7px]">
                       {COPY.step1.detailLabel.replace("-->", "").trim()}
                       {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
                       <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[12px] w-[12px]" />
                     </span>
                     <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
-                  </span>
+                  </Typography>
 
                   <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[30px]">
-                    <h3 className="break-keep text-white text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-title-02">
+                    <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
                       {test.title === "자율 신경 및 스트레스 측정" ? (
                         <>
                           <span className="dt:hidden">
@@ -455,13 +477,13 @@ export default function WimMainNew() {
                       ) : (
                         test.title
                       )}
-                    </h3>
-                    <p className="mt-[6px] break-keep text-[13px] text-white dt:mt-2.5 dt:text-pretendard-regular-body-02">
+                    </Typography>
+                    <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-2.5">
                       <span className="dt:hidden">
                         <Lines items={test.lines} />
                       </span>
                       <span className="hidden dt:inline">{test.lines.join(" ")}</span>
-                    </p>
+                    </Typography>
                   </div>
                 </button>
               </li>
@@ -473,14 +495,14 @@ export default function WimMainNew() {
             <StepDivider className="hidden tb:block" />
             <div className="min-w-0 flex-1">
               <Eyebrow text={COPY.step2.label} tone="gray" />
-              <h2 className="mt-1.5 break-keep text-primary-main text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-02">
+              <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
                 {COPY.step2.title}
-              </h2>
+              </Typography>
             </div>
             {/* 모바일에서는 캐러셀 아래에 따로 노출한다 */}
-            <span className="hidden shrink-0 self-end text-primary-main text-mo-pretendard-regular-body-03 dt:block">
+            <Typography mobile="body-03" className="hidden shrink-0 self-end text-primary-main dt:block">
               {COPY.step2.swipeHint}
-            </span>
+            </Typography>
           </div>
 
           <div
@@ -492,24 +514,26 @@ export default function WimMainNew() {
               // 높이는 aspect 대신 h-* 로 고정해서, 폭이 변해도 줄 높이가 흔들리지 않는다.
               const isPeek = careIndex === carePeek.index;
               return (
-              <button
-                type="button"
+              <div
                 key={care.no}
-                onClick={() => setActiveCare(care)}
-                aria-label={`${care.title} 자세히 보기`}
                 style={{
                   ...(isPeek ? { width: carePeek.width } : null),
                 }}
-                className={`relative isolate h-[150px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-[10px] border-0 p-0 text-left font-inherit tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
+                className={`relative isolate h-[150px] shrink-0 snap-start overflow-hidden rounded-[10px] tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
                   isPeek ? "" : "w-[205px] tb:w-[calc((100%-15px)/2)] dt:w-[calc((100%-45px)/4)]"
                 }`}>
+              <button
+                type="button"
+                onClick={() => setActiveCare(care)}
+                aria-label={`${care.title} 자세히 보기`}
+                className="absolute inset-0 h-full w-full cursor-pointer border-0 bg-transparent p-0 text-left font-inherit">
                 <div className={`absolute inset-0 ${isPeek ? "care-peek-content" : ""}`}>
                   <CardPhoto src={care.image} mobileSrc={care.imageMobile} alt={care.imageAlt} />
                   <div className={CARE_SCRIM} />
 
-                  <span className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px] text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-display-01">
+                  <Typography mobile="body-02" desktop="display-01" weight="bold" className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px]">
                     {care.no}
-                  </span>
+                  </Typography>
                   {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
                   <img
                     src={WIM_NEW_ICONS.plus}
@@ -519,18 +543,20 @@ export default function WimMainNew() {
                   />
 
                   <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[37px]">
-                    <h3 className="break-keep text-white text-mo-pretendard-bold-body-02 dt:text-pretendard-bold-title-02">
+                    <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
                       {care.title}
-                    </h3>
-                    <p className="mt-[6px] break-keep text-[13px] text-white dt:mt-[8px] dt:text-pretendard-regular-body-02">
+                    </Typography>
+                    <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-[8px]">
                       {care.line}
-                    </p>
-                    <span className="mt-[14px] hidden flex-col text-white dt:flex text-mo-pretendard-regular-body-03">
+                    </Typography>
+                    <Typography mobile="body-03" className="mt-[14px] hidden flex-col text-white dt:flex">
                       {COPY.step2.detailLabel}
                       <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
-                    </span>
+                    </Typography>
                   </div>
                 </div>
+
+              </button>
 
                 {isPeek && (
                   <span
@@ -540,22 +566,27 @@ export default function WimMainNew() {
                 )}
 
                 {isPeek && (
-                  // eslint-disable-next-line @next/next/no-img-element -- 피그마 원본
-                  <img
-                    src={WIM_NEW_ICONS.careArrow}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute left-[200px] top-1/2 z-20 hidden h-[36px] w-[36px] -translate-y-1/2 dt:block"
-                  />
+                  <button
+                    type="button"
+                    onClick={moveCareNext}
+                    aria-label="다음 관리 방식 보기"
+                    className="absolute left-[200px] top-1/2 z-20 hidden h-[36px] w-[36px] -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0 transition hover:opacity-80 dt:block">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                    <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
+                  </button>
                 )}
-              </button>
+              </div>
               );
             })}
             {careActive < WIM_NEW_CARES.length - 1 && (
-              <span className="pointer-events-none sticky right-[20px] z-20 -ml-[36px] block h-[36px] w-[36px] shrink-0 self-center dt:hidden">
+              <button
+                type="button"
+                onClick={moveCareNext}
+                aria-label="다음 관리 방식 보기"
+                className="sticky right-[20px] z-20 -ml-[36px] block h-[36px] w-[36px] shrink-0 cursor-pointer self-center border-0 bg-transparent p-0 transition hover:opacity-80 dt:hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
                 <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
-              </span>
+              </button>
             )}
           </div>
 
@@ -579,15 +610,15 @@ export default function WimMainNew() {
           {/* RESULTS */}
           <div className="flex flex-col items-center text-center">
             <Eyebrow text={COPY.results.eyebrow} tone="light" />
-            <h2 className="mt-2 break-keep text-white tb:mt-4 text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-01">
+            <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-2 break-keep text-white tb:mt-4">
               {COPY.results.title}
-            </h2>
-            <p className="mt-[18px] break-keep text-gray-02 tb:mt-8 tb:opacity-55 text-mo-pretendard-regular-body-03 tb:text-pretendard-regular-headline-03">
+            </Typography>
+            <Typography as="p" mobile="body-03" tablet="headline-03" className="mt-[18px] break-keep text-gray-02 tb:mt-8 tb:opacity-55">
               <span className="tb:hidden">
                 <Lines items={COPY.results.footnoteLines} />
               </span>
               <span className="hidden tb:inline">{COPY.results.footnoteLines.join(" ")}</span>
-            </p>
+            </Typography>
           </div>
 
           <ul className="mt-[42px] grid list-none grid-cols-2 gap-[10px] p-0 tb:mt-12 tb:gap-[16px] dt:grid-cols-4">
@@ -596,28 +627,26 @@ export default function WimMainNew() {
                 key={n.label}
                 className="flex h-[80px] flex-col items-center justify-center rounded-[10px] bg-white shadow-[0_4px_7.3px_rgba(0,0,0,0.15)] tb:h-[165px] tb:rounded-[20px] pb-1">
                 <span className="flex items-baseline gap-1">
-                  <span
-                    className={`text-primary-main ${n.small ? "text-mo-pretendard-bold-headline-01 tb:text-[50px]" : "text-mo-pretendard-bold-title-02 tb:text-[56px]"}`}>
+                  <Typography mobile={n.small ? "headline-01" : "title-02"} weight="bold" tabletSize={n.small ? 50 : 56} className="text-primary-main">
                     {n.value}
-                  </span>
+                  </Typography>
                   {n.unit ? (
-                    <span className="text-gray-02 tb:text-[32px] text-mo-pretendard-semibold-body-02">{n.unit}</span>
+                    <Typography mobile="body-02" weight="semibold" tabletSize={32} className="text-gray-02">{n.unit}</Typography>
                   ) : null}
                 </span>
-                <span className="mt-[2px] break-keep text-primary-main  text-mo-pretendard-semibold-body-03 tb:text-pretendard-medium-headline-01">
+                <Typography mobile="body-03" tablet="headline-01" weight="semibold" tabletWeight="medium" className="mt-[2px] break-keep text-primary-main">
                   {n.label}
-                </span>
+                </Typography>
               </li>
             ))}
           </ul>
 
           <ul className="mt-[20px] flex list-none flex-wrap justify-center gap-[8px] p-0 tb:mt-[30px] tb:gap-[14px]">
             {WIM_NEW_RATINGS.map((r) => (
-              <li
-                key={r.label}
-                className="flex h-[26px] items-center justify-center rounded-full border-[0.75px] border-gray-01 px-[13px] text-gray-01 tb:h-[36px] tb:px-[21px] text-mo-pretendard-regular-body-03 tb:text-pretendard-medium-headline-03">
-                {r.label}&nbsp;
-                <span className="font-pretendard-semibold tb:font-pretendard-bold">{r.value}</span>
+              <li key={r.label} className="flex h-[26px] items-center justify-center rounded-full border-[0.75px] border-gray-01 px-[13px] text-gray-01 tb:h-[36px] tb:px-[21px]">
+                <Typography mobile="body-03" tablet="headline-03" tabletWeight="medium">
+                  {r.label}&nbsp;<span className="font-semibold tb:font-bold">{r.value}</span>
+                </Typography>
               </li>
             ))}
           </ul>
@@ -625,15 +654,15 @@ export default function WimMainNew() {
           {/* REVIEWS */}
           <div className="mt-[72px] flex flex-col items-center text-center tb:mt-[110px]">
             <Eyebrow text={COPY.reviews.eyebrow} tone="light" />
-            <h2 className="mt-[10px] break-keep text-white tb:mt-6 text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-01">
+            <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-[10px] break-keep text-white tb:mt-6">
               <span className="tb:hidden">
                 <Lines items={COPY.reviews.titleLines} />
               </span>
               <span className="hidden tb:inline">{COPY.reviews.titleLines.join(" ")}</span>
-            </h2>
-            <p className="mt-[16px] break-keep text-white tb:mt-7 text-mo-pretendard-regular-body-03 tb:text-pretendard-medium-headline-03">
+            </Typography>
+            <Typography as="p" mobile="body-03" tablet="headline-03" tabletWeight="medium" className="mt-[16px] break-keep text-white tb:mt-7">
               {COPY.reviews.sub}
-            </p>
+            </Typography>
           </div>
 
           <div className="relative mt-[50px] tb:left-1/2 tb:w-screen tb:-translate-x-1/2 tb:overflow-hidden tb:mt-16">
@@ -641,7 +670,7 @@ export default function WimMainNew() {
               {visibleReviews.map((review, index) => (
                 <li
                   key={review.tag}
-                  className={`flex min-h-[110px] flex-col rounded-[10px] border border-review-line bg-review-surface p-[14px] tb:min-h-[205px] tb:w-[246px] tb:shrink-0 tb:rounded-[20px] tb:p-[20px] ${
+                  className={`${!reviewsExpanded && index >= 2 ? "hidden tb:flex" : "flex"} min-h-[110px] flex-col rounded-[10px] border border-review-line bg-review-surface p-[14px] tb:min-h-[205px] tb:w-[246px] tb:shrink-0 tb:rounded-[20px] tb:p-[20px] ${
                     Math.abs(index - reviewCenterIndex) === 0
                       ? "tb:bg-review-surface"
                       : Math.abs(index - reviewCenterIndex) === 1
@@ -649,19 +678,19 @@ export default function WimMainNew() {
                         : "tb:bg-review-line"
                   }`}>
                   <div className="flex items-start justify-between gap-3">
-                    <span className="flex h-[23px] shrink-0 items-center rounded-full border-[0.75px] border-white px-[10px] text-[13px] text-white tb:h-[30px] font-pretendard-medium tb:text-pretendard-medium-body-03">
+                    <Typography mobile="body-03" weight="medium" mobileSize={13} className="flex h-[23px] shrink-0 items-center rounded-full border-[0.75px] border-white px-[10px] text-white tb:h-[30px]">
                       {review.tag}
-                    </span>
-                    <span className="text-right text-gray-01 tb:hidden text-mo-pretendard-regular-body-03">
+                    </Typography>
+                    <Typography mobile="body-03" className="text-right text-gray-01 tb:hidden">
                       {review.who}
-                    </span>
+                    </Typography>
                   </div>
-                  <p className="mt-[16px] break-keep text-white tb:mt-[24px] text-mo-pretendard-semibold-body-03">
+                  <Typography as="p" mobile="body-03" weight="semibold" className="mt-[16px] break-keep text-white tb:mt-[24px]">
                     {review.body}
-                  </p>
-                  <span className="mt-auto hidden pt-[12px] text-gray-00 tb:block text-mo-pretendard-regular-body-03">
+                  </Typography>
+                  <Typography mobile="body-03" className="mt-auto hidden pt-[12px] text-gray-00 tb:block">
                     {review.who}
-                  </span>
+                  </Typography>
                 </li>
               ))}
             </ul>
@@ -674,6 +703,16 @@ export default function WimMainNew() {
               className="pointer-events-none absolute right-0 top-0 z-10 hidden h-[205px] w-[120px] bg-primary-deep/25 backdrop-blur-[6px] [-webkit-mask-image:linear-gradient(to_left,#000_0%,#000_12%,transparent_100%)] [mask-image:linear-gradient(to_left,#000_0%,#000_12%,transparent_100%)] tb:block"
             />
           </div>
+
+          {!reviewsExpanded && visibleReviews.length > 2 && (
+            <button
+              type="button"
+              onClick={() => setReviewsExpanded(true)}
+              aria-expanded={reviewsExpanded}
+              className="mx-auto mt-[20px] flex h-[35px] items-center justify-center rounded-full border border-gray-01 px-[24px] text-white transition hover:bg-white/10 tb:hidden">
+              <Typography mobile="body-03" weight="medium">더 알아보기</Typography>
+            </button>
+          )}
         </Container>
       </section>
 
@@ -683,18 +722,18 @@ export default function WimMainNew() {
           <div className="rounded-[10px] bg-primary-tint px-5 py-[26px] tb:rounded-[25px] tb:px-[40px] tb:py-[56px] dt:px-[27px]">
             <div className="flex flex-col items-center text-center">
               <Eyebrow text={COPY.cases.eyebrow} tone="gray" />
-              <h2 className="mt-[2px] break-keep text-primary-main text-mo-pretendard-bold-headline-01 tb:text-pretendard-bold-display-01">
+              <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-[2px] break-keep text-primary-main">
                 <span className="tb:hidden">
                   <Lines items={COPY.cases.titleLines} />
                 </span>
                 <span className="hidden tb:inline">{COPY.cases.titleLines.join(" ")}</span>
-              </h2>
-              <p className="mt-[19px] break-keep text-black tb:mt-[43px] tb:text-primary-main text-mo-pretendard-regular-body-03 tb:text-pretendard-medium-headline-03">
+              </Typography>
+              <Typography as="p" mobile="body-03" tablet="headline-03" tabletWeight="medium" className="mt-[19px] break-keep text-black tb:mt-[43px] tb:text-primary-main">
                 <span className="tb:hidden">
                   <Lines items={COPY.cases.descLines} />
                 </span>
                 <span className="hidden tb:inline">{COPY.cases.descLines.join(" ")}</span>
-              </p>
+              </Typography>
             </div>
 
             <ul className="mt-[43px] flex list-none flex-col gap-[11px] p-0 tb:mt-[90px] tb:gap-[20px] dt:flex-row">
@@ -719,15 +758,15 @@ export default function WimMainNew() {
                   />
 
                   <div className="absolute inset-x-0 bottom-0 flex flex-col px-[20px] pb-[20px] tb:px-[39px] tb:pb-[42px]">
-                    <h3 className="break-keep text-white text-mo-pretendard-bold-headline-03 tb:text-pretendard-bold-display-02">
+                    <Typography as="h3" mobile="headline-03" tablet="display-02" weight="bold" className="break-keep text-white">
                       {program.title}
-                    </h3>
-                    <p className="mt-[8px] break-keep text-white tb:mt-[16px] text-mo-pretendard-regular-body-03 tb:text-pretendard-regular-body-02">
+                    </Typography>
+                    <Typography as="p" mobile="body-03" tablet="body-02" className="mt-[8px] break-keep text-white tb:mt-[16px]">
                       <span className="tb:hidden">{program.descLines.join(" ")}</span>
                       <span className="hidden tb:inline">
                         <Lines items={program.descLines} />
                       </span>
-                    </p>
+                    </Typography>
                   </div>
                 </li>
               ))}
@@ -739,13 +778,13 @@ export default function WimMainNew() {
       {/* ─────────────── FINAL CTA ─────────────── */}
       <section id="contact" className="bg-primary-sub-03 px-5 py-[32px] tb:py-[62px]">
         <Container className="flex flex-col items-center text-center">
-          <h2 className="break-keep text-primary-main text-mo-pretendard-bold-body-01 tb:text-pretendard-bold-display-01">
+          <Typography as="h2" mobile="body-01" tablet="display-01" weight="bold" className="break-keep text-primary-main">
             {COPY.cta.title}
-          </h2>
+          </Typography>
           <a
             href="#contact"
-            className="mt-[14px] flex h-[26px] items-center justify-center gap-[5px] rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:mt-[28px] tb:h-[50px] tb:gap-[10px] text-mo-pretendard-regular-body-03 tb:text-pretendard-medium-headline-03">
-            {COPY.cta.buttonLabel}
+            className="mt-[14px] flex h-[26px] items-center justify-center gap-[5px] rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:mt-[28px] tb:h-[50px] tb:gap-[10px]">
+            <Typography mobile="body-03" tablet="headline-03" tabletWeight="medium">{COPY.cta.buttonLabel}</Typography>
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
             <img
               src={WIM_NEW_ICONS.arrow}
@@ -772,42 +811,43 @@ export default function WimMainNew() {
             <div className="flex flex-col  gap-[32px] dt:flex-row  dt:gap-10">
               {COPY.footer.info.map((block) => (
                 <div key={block.label} className="flex gap-[24px] dt:gap-[25px]">
-                  <span className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px] text-mo-pretendard-bold-body-03 tb:text-pretendard-bold-body-02">
+                  <Typography mobile="body-03" tablet="body-02" weight="bold" className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px]">
                     {block.label}
-                  </span>
+                  </Typography>
                   <div className="flex flex-col">
-                    <span className="text-white text-mo-pretendard-bold-body-03 tb:text-pretendard-bold-body-02">
+                    <Typography mobile="body-03" tablet="body-02" weight="bold" className="text-white">
                       {block.strong}
-                    </span>
+                    </Typography>
                     {block.rows.map((row) => (
-                      <span
+                      <Typography
                         key={row.day}
-                        className="mt-[8px] flex gap-[16px] tb:gap-[27px] text-mo-pretendard-regular-body-03">
+                        mobile="body-03"
+                        className="mt-[8px] flex gap-[16px] tb:gap-[27px]">
                         <span className="w-[75px] shrink-0 text-white font-semibold">{row.day}</span>
                         <span className="text-gray-01">{row.time}</span>
-                      </span>
+                      </Typography>
                     ))}
                   </div>
                 </div>
               ))}
 
               <div className="flex gap-[24px] dt:gap-[25px]">
-                <span className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px] text-mo-pretendard-bold-body-03 tb:text-pretendard-bold-body-02">
+                <Typography mobile="body-03" tablet="body-02" weight="bold" className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px]">
                   {COPY.footer.address.label}
-                </span>
+                </Typography>
                 <div className="flex flex-col">
-                  <span className="break-keep text-white text-mo-pretendard-bold-body-03 tb:text-pretendard-bold-body-02">
+                  <Typography mobile="body-03" tablet="body-02" weight="bold" className="break-keep text-white">
                     <span className="dt:hidden">
                       <Lines items={COPY.footer.address.strongLines} />
                     </span>
                     <span className="hidden dt:inline">{COPY.footer.address.strongLines.join(" ")}</span>
-                  </span>
-                  <span className="mt-[8px] text-white text-mo-pretendard-medium-body-03">
+                  </Typography>
+                  <Typography mobile="body-03" weight="medium" className="mt-[8px] text-white">
                     {COPY.footer.address.walk}
-                  </span>
-                  <span className="mt-[8px] text-gray-01 text-mo-pretendard-regular-body-03">
+                  </Typography>
+                  <Typography mobile="body-03" className="mt-[8px] text-gray-01">
                     {COPY.footer.address.parking}
-                  </span>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -830,19 +870,17 @@ export default function WimMainNew() {
 
             <div className="mt-[11px] flex flex-col gap-[10px] tb:mt-[24px]">
               <div className="flex flex-col gap-[8px]">
-                <div className="flex justify-between gap-[11px] text-[11px] text-gray-01 tb:text-pretendard-regular-body-03">
+                <Typography as="div" mobile="body-03" mobileSize={11} className="flex justify-between gap-[11px] text-gray-01">
                   <span>{COPY.footer.copyright}</span>
-                  <a
-                    href="#contact"
-                    className="text-gray-01 underline decoration-gray-01 underline-offset-[4px] font-pretendard-bold">
-                    {COPY.footer.terms}
+                  <a href="#contact" className="text-gray-01 underline decoration-gray-01 underline-offset-[4px]">
+                    <Typography mobile="body-03" mobileSize={11} weight="bold">{COPY.footer.terms}</Typography>
                   </a>
-                </div>
-                <div className="flex flex-wrap gap-x-[14px] gap-y-[4px] text-[9px] text-gray-01 tb:text-pretendard-regular-body-03">
+                </Typography>
+                <Typography as="div" mobile="body-03" mobileSize={9} className="flex flex-wrap gap-x-[14px] gap-y-[4px] text-gray-01">
                   {COPY.footer.business.map((line) => (
                     <span key={line}>{line}</span>
                   ))}
-                </div>
+                </Typography>
               </div>
             </div>
           </div>

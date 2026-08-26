@@ -17,6 +17,7 @@ import Sidebar from "./Sidebar";
 import { NAVIGATION_MAIN, NAVIGATION_MAIN_CTA } from "@/content/navigation";
 import { COMMON_CONTENT } from "@/content/common";
 import type { NavLink } from "./types";
+import { Typography } from "./Typography";
 
 const ICONS = "/images/main/icons";
 
@@ -51,9 +52,8 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
           <nav className="ml-auto hidden items-center gap-[35px] dt:flex">
             {navLinks.map((link) => {
               const active = isActive(link);
-              const labelClass = active
-                ? "text-primary-main text-pretendard-extrabold-body-01"
-                : "text-black text-pretendard-regular-body-01";
+              const labelClass = active ? "text-primary-main" : "text-black";
+              const labelWeight = active ? ("extrabold" as const) : ("regular" as const);
 
               return link.children ? (
                 <div
@@ -62,7 +62,7 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
                   onMouseEnter={() => setOpenMenu(link.label)}
                 >
                   <button type="button" className={`flex cursor-pointer items-center gap-2 border-0 bg-transparent p-0 ${labelClass}`}>
-                    {link.label}
+                    <Typography mobile="body-01" weight={labelWeight}>{link.label}</Typography>
                     <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true" className={`transition ${openMenu === link.label ? "rotate-180" : ""}`}>
                       <path d="M2 4 5.5 7.5 9 4" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -75,9 +75,9 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
                           <Link
                             href={child.href}
                             onClick={() => setOpenMenu(null)}
-                            className="block whitespace-nowrap text-gray-03 no-underline transition hover:text-primary-main text-pretendard-regular-body-02"
+                            className="block whitespace-nowrap text-gray-03 no-underline transition hover:text-primary-main"
                           >
-                            {child.label}
+                            <Typography mobile="body-02">{child.label}</Typography>
                           </Link>
                         </li>
                       ))}
@@ -91,10 +91,10 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
                   onMouseEnter={() => setOpenMenu(null)}
                   className={`flex h-[80px] items-center no-underline ${labelClass}`}
                 >
-                  <span className="relative flex flex-col items-center gap-1">
+                  <Typography mobile="body-01" weight={labelWeight} className="relative flex flex-col items-center gap-1">
                     {link.label}
                     {active && <span className="absolute -bottom-1 h-[3px] w-full rounded-full bg-primary-main" />}
-                  </span>
+                  </Typography>
                 </Link>
               );
             })}
@@ -103,9 +103,9 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
           {/* PC CTA */}
           <Link
             href={NAVIGATION_MAIN_CTA.href}
-            className="ml-[35px] hidden items-center justify-center rounded-full bg-primary-main px-[23px] py-[5px] text-white no-underline transition hover:opacity-90 dt:flex text-pretendard-medium-headline-03"
+            className="ml-[35px] hidden items-center justify-center rounded-full bg-primary-main px-[23px] py-[5px] text-white no-underline transition hover:opacity-90 dt:flex"
           >
-            {NAVIGATION_MAIN_CTA.label}
+            <Typography mobile="headline-03" weight="medium">{NAVIGATION_MAIN_CTA.label}</Typography>
           </Link>
 
           {/* 기존안/개선안 스위치 (목업 전용) */}

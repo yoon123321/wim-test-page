@@ -53,9 +53,7 @@
   /**
    * 02. Typography — 서체 패밀리
    *
-   * 크기 · 굵기 · 줄높이가 합쳐진 텍스트 유틸리티는 app/typography.css 에 있다.
-   *   text-pretendard-bold-headline-02  형태로 한 번에 지정한다.
-   * 아래 변수는 그 유틸리티가 참조하는 폰트 스택이다.
+   * Typography 컴포넌트가 아래 폰트 스택을 사용한다.
    */
   --font-pretendard: "Pretendard Variable", Pretendard, sans-serif;
   --font-franklin: "ITC Franklin Gothic LT Pro", "Libre Franklin", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;

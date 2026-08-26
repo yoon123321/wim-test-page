@@ -93,7 +93,7 @@ export const WIM_NEW_COPY = {
     imageAlt: "윔 앱으로 검사 결과를 확인하는 모습",
   },
   philosophy: {
-    normalLines: ["의료진이 정밀하게 진단해", "나에게 딱 맞는 방법을 설계하고,"],
+    normalLines: ["의료진이 설계한 프로그램을 바탕으로"],
     boldLines: ["전문 관리사가 감량의 전 과정을", "끝까지 케어합니다."],
   },
   step1: {
