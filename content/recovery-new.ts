@@ -134,6 +134,19 @@ export const RECOVERY_COMBO_REVIEWS = [
   ],
 ] as const;
 
+export const RECOVERY_INSTAGRAM_REVIEW = {
+  title: "앰버서더 크라이오테라피 후기",
+  label: "Instagram Review",
+  video: "/videos/ambassador-cryotherapy.mp4",
+  href: "https://www.instagram.com/wim_center/",
+} as const;
+
+export const RECOVERY_HERO_VIDEO = {
+  video: "/videos/device-oxygen-chamber-hero.mp4",
+  href: "https://www.instagram.com/wim_center/",
+  label: "옥시젠챔버 Instagram 영상 보기",
+} as const;
+
 export const RECOVERY_SIGNS = [
   { title: "다음 날이 무겁다", combo: "피로 회복" },
   { title: "다리가 붓는다", combo: "붓기 제거" },

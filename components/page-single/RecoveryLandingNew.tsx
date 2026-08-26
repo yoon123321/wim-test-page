@@ -9,12 +9,15 @@
  */
 
 import { useRef, useState } from "react";
+import { useMobileViewportHeight } from "@/components/common/useMobileViewportHeight";
 import {
   RECOVERY_COPY,
   RECOVERY_DEVICES,
   RECOVERY_SITUATIONS,
   RECOVERY_COMBOS,
   RECOVERY_COMBO_REVIEWS,
+  RECOVERY_INSTAGRAM_REVIEW,
+  RECOVERY_HERO_VIDEO,
   RECOVERY_SIGNS,
   RECOVERY_INTRO_FACTS,
   RECOVERY_JOURNEY,
@@ -60,6 +63,7 @@ export default function RecoveryLandingNew() {
   const [tab, setTab] = useState<"theme" | "single">("theme");
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
   const COPY = RECOVERY_COPY;
+  const viewportHeight = useMobileViewportHeight();
 
   const combo = RECOVERY_COMBOS[situation];
 
@@ -93,38 +97,35 @@ export default function RecoveryLandingNew() {
     <div className="bg-white font-['Pretendard_Variable',Pretendard,sans-serif] text-black antialiased">
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
-      {/* 페이지 내 앵커 내비 (전역 헤더 아래 고정) */}
-      <div className="sticky top-16 z-20 border-b border-gray-01 bg-white/90 backdrop-blur-[10px]">
-        <div className="mx-auto flex h-[56px] w-full items-center justify-between gap-6 px-5 tb:px-6 dt:max-w-[1280px]">
-          <nav className="hidden items-center gap-7 dt:flex">
-            {COPY.nav.map((n) => (
-              <a key={n.href} href={n.href} className="text-[14.5px] font-medium text-gray-03 no-underline transition hover:opacity-90">{n.label}</a>
-            ))}
-          </nav>
-          <a href="#contact" className="ml-auto flex-none rounded-full bg-primary-main px-[22px] py-[11px] text-[14px] font-bold text-white no-underline transition hover:opacity-90">
-            {COPY.navCta}
-          </a>
-        </div>
-      </div>
-
       {/* HERO */}
-      <section id="top" className="relative overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <ImageSlot label={COPY.hero.imageLabel} className="h-full w-full rounded-none" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/85" />
-        <div className="relative mx-auto flex w-full flex-col items-center gap-6 px-6 pb-[80px] pt-[90px] text-center tb:pb-[116px] tb:pt-[124px] dt:max-w-[1280px]">
-          <Kicker light>{COPY.hero.kicker}</Kicker>
-          <h1 className="m-0 max-w-[820px] break-keep text-[30px] leading-[1.32] tracking-[-0.035em] text-white tb:text-[46px]">{lines(COPY.hero.titleLines)}</h1>
-          <p className="m-0 max-w-[620px] break-keep text-[15.5px] leading-[1.85] text-white/80 tb:text-[16.5px]">{COPY.hero.description}</p>
-          <div className="mt-3.5 flex w-full flex-col items-stretch gap-3 tb:w-auto tb:flex-row">
-            <a href="#contact" className="rounded-full bg-primary-sub-02 px-8 py-[17px] text-center text-[15.5px] font-bold text-primary-main no-underline transition hover:opacity-90">
-              {COPY.hero.primaryButton}
-            </a>
-            <a href="#devices" className="rounded-full border border-white/40 px-8 py-4 text-center text-[15.5px] font-bold text-white no-underline transition hover:opacity-90">
-              {COPY.hero.secondaryButton}
-            </a>
-          </div>
+      <section
+        id="top"
+        className="relative h-[calc(100svh-112px)] min-h-[400px] overflow-hidden bg-black tb:h-auto tb:min-h-[520px]"
+        style={viewportHeight ? { height: viewportHeight - 112 } : undefined}
+      >
+        <a
+          href={RECOVERY_HERO_VIDEO.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={RECOVERY_HERO_VIDEO.label}
+          className="absolute inset-0 block">
+          <video
+            src={RECOVERY_HERO_VIDEO.video}
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="metadata"
+            className="pointer-events-none h-full w-full object-cover"
+          />
+        </a>
+        <div className="absolute bottom-[60px] left-1/2 z-10 flex w-[calc(100%-40px)] -translate-x-1/2 flex-col items-stretch gap-3 tb:bottom-[80px] tb:w-auto tb:flex-row">
+          <a href="#contact" className="rounded-full bg-primary-sub-02 px-8 py-[17px] text-center text-[15.5px] font-bold text-primary-main no-underline transition hover:opacity-90">
+            {COPY.hero.primaryButton}
+          </a>
+          <a href="#devices" className="rounded-full border border-white/40 px-8 py-4 text-center text-[15.5px] font-bold text-white no-underline transition hover:opacity-90">
+            {COPY.hero.secondaryButton}
+          </a>
         </div>
       </section>
 
@@ -231,17 +232,42 @@ export default function RecoveryLandingNew() {
                 <h4 className="m-0 text-[17px] leading-[1.4]">{COPY.combos.reviewsTitle}</h4>
                 <span className="text-[13px] text-gray-02">{COPY.combos.reviewsNote}</span>
               </div>
-              <div className="mt-5 grid grid-cols-1 gap-6 tb:grid-cols-2 tb:gap-8">
-                {RECOVERY_COMBO_REVIEWS[situation].map((r) => (
-                  <figure key={r.meta} className="m-0 flex flex-col gap-2.5">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[13px] tracking-[0.1em] text-primary-main">★★★★★</span>
-                      <span className="text-[13.5px] font-bold text-gray-03">{r.label}</span>
-                    </div>
-                    <blockquote className="m-0 break-keep text-[15px] leading-[1.85] text-black">{r.body}</blockquote>
-                    <figcaption className="text-[12.5px] text-gray-02">{r.meta}</figcaption>
-                  </figure>
-                ))}
+              <div className="mt-5 grid grid-cols-1 items-start gap-7 dt:grid-cols-[260px_minmax(0,1fr)] dt:gap-10">
+                <a
+                  href={RECOVERY_INSTAGRAM_REVIEW.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${RECOVERY_INSTAGRAM_REVIEW.title} — Instagram에서 보기`}
+                  className="group relative mx-auto block aspect-[9/16] w-full max-w-[260px] overflow-hidden rounded-[20px] bg-black no-underline shadow-[0_6px_20px_rgba(0,0,0,0.14)] dt:mx-0">
+                  <video
+                    src={RECOVERY_INSTAGRAM_REVIEW.video}
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    preload="metadata"
+                    className="pointer-events-none h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  />
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10" />
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-5 text-white">
+                    <span className={`${EN} text-[12px] tracking-[0.14em] text-primary-sub-02`}>{RECOVERY_INSTAGRAM_REVIEW.label}</span>
+                    <strong className="break-keep text-[16px] leading-[1.45]">{RECOVERY_INSTAGRAM_REVIEW.title}</strong>
+                    <span className="text-[13px] text-white/75">Instagram에서 보기 ↗</span>
+                  </span>
+                </a>
+
+                <div className="grid grid-cols-1 gap-6 tb:grid-cols-2 tb:gap-8 dt:grid-cols-1">
+                  {RECOVERY_COMBO_REVIEWS[situation].map((r) => (
+                    <figure key={r.meta} className="m-0 flex flex-col gap-2.5 rounded-[18px] border border-gray-01 bg-white p-5">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[13px] tracking-[0.1em] text-primary-main">★★★★★</span>
+                        <span className="text-[13.5px] font-bold text-gray-03">{r.label}</span>
+                      </div>
+                      <blockquote className="m-0 break-keep text-[15px] leading-[1.85] text-black">{r.body}</blockquote>
+                      <figcaption className="text-[12.5px] text-gray-02">{r.meta}</figcaption>
+                    </figure>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
