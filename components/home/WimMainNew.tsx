@@ -11,6 +11,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Typography } from "@/components/common/Typography";
+import { useVariant } from "@/components/common/VariantProvider";
+import { useMobileViewportHeight } from "@/components/common/useMobileViewportHeight";
 import {
   WIM_NEW_COPY,
   WIM_NEW_TESTS,
@@ -88,7 +90,7 @@ function CardPhoto({
 
 function Eyebrow({ text, tone = "green" }: { text: string; tone?: "green" | "gray" | "light" }) {
   const color = tone === "green" ? "text-primary-main" : tone === "light" ? "text-gray-01" : "text-black";
-  return <Typography font="franklin" mobile="body-02" weight="book" className={`block ${color}`}>{text}</Typography>;
+  return <Typography font="franklin" mobile="body-02" weight="regular" className={`block ${color}`}>{text}</Typography>;
 }
 
 /** 섹션 공통 — 모바일 20px 사이드 여백, PC 1280 컨테이너 */
@@ -228,8 +230,98 @@ function CareDetailModal({ care, onClose }: { care: WimNewCare; onClose: () => v
   );
 }
 
+/** 히어로 A안 — 원본 시안: 전면 배경 사진 위에 가운데 정렬 카피/CTA */
+function HeroA() {
+  const COPY = WIM_NEW_COPY;
+  return (
+    <section className="relative isolate flex h-[460px] flex-col items-center justify-center overflow-hidden text-center tb:h-[640px]">
+      {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+      <img
+        src={COPY.hero.imageMobile}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover blur-[2px] tb:hidden"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+      <img
+        src={COPY.hero.image}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 hidden h-full w-full object-cover blur-[2px] tb:block"
+      />
+      {/* <div className={HERO_SCRIM} /> */}
+
+      <div className="relative flex flex-col items-center px-5">
+        <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="break-keep text-white">
+          <Lines items={COPY.hero.titleLines} />
+        </Typography>
+        <Typography as="p" mobile="body-03" tablet="headline-02" className="mt-[18px] text-white tb:mt-[26px]">
+          {COPY.hero.sub}
+        </Typography>
+
+        <div className="mt-12 flex flex-col items-center gap-2.5 tb:mt-[76px] tb:flex-row tb:gap-[18px]">
+          <a
+            href="#contact"
+            className="flex h-[35px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:h-[50px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main">
+            <Typography mobile="body-03" tablet="headline-03" weight="bold" tabletWeight="medium">{COPY.hero.primaryCta}</Typography>
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[11px] w-[11px] tb:hidden" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img
+              src={WIM_NEW_ICONS.arrowGreen}
+              alt=""
+              aria-hidden="true"
+              className="hidden h-[17px] w-[17px] tb:block"
+            />
+          </a>
+          <a
+            href="#services"
+            className="flex h-[35px] w-[170px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:w-[200px] tb:border-[1.5px] tb:px-6">
+            <Typography mobile="body-03" tablet="headline-03" weight="medium">{COPY.hero.secondaryCta}</Typography>
+          </a>
+        </div>
+      </div>
+
+      {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+      <img
+        src={WIM_NEW_ICONS.chevron}
+        alt=""
+        aria-hidden="true"
+        className="absolute bottom-[60px] left-1/2 h-[10px] w-[32px] -translate-x-1/2 tb:bottom-24 tb:h-[23px] tb:w-[33px]"
+      />
+    </section>
+  );
+}
+
+/**
+ * 히어로 B안 — A/B 테스트용 대안 레이아웃.
+ * 전면 배경 사진 대신 좌(카피+CTA) / 우(사진 카드) 분할 구조,
+ * 어두운 배경 위 흰 글자 대신 밝은 배경 위 검정·그린 글자를 쓴다.
+ * 카피·CTA 문구는 A안과 동일한 콘텐츠를 그대로 재사용한다.
+ */
+function HeroB() {
+  const COPY = WIM_NEW_COPY;
+  const viewportHeight = useMobileViewportHeight();
+  return (
+    <section
+      className="flex h-[calc(100svh-112px)] flex-col justify-center bg-black px-5 tb:h-[640px]"
+      style={viewportHeight ? { height: viewportHeight - 112 } : undefined}
+    >
+      <Container className="flex flex-col items-center text-center">
+        <Typography as="p" mobile="body-03" tablet="headline-02" className="text-white/70">
+          {COPY.heroB.sub}
+        </Typography>
+        <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="mt-[14px] break-keep text-white tb:mt-5">
+          <Lines items={COPY.heroB.titleLines} />
+        </Typography>
+      </Container>
+    </section>
+  );
+}
+
 export default function WimMainNew() {
   const COPY = WIM_NEW_COPY;
+  const { heroVariant } = useVariant();
   const visibleReviews = WIM_NEW_REVIEWS.slice(0, 7);
   const reviewCenterIndex = Math.floor(visibleReviews.length / 2);
 
@@ -315,63 +407,8 @@ export default function WimMainNew() {
     <div className="bg-white text-black antialiased">
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
-      {/* ─────────────── HERO ─────────────── */}
-      <section className="relative isolate flex h-[460px] flex-col items-center justify-center overflow-hidden text-center tb:h-[640px]">
-        {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-        <img
-          src={COPY.hero.imageMobile}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover blur-[2px] tb:hidden"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-        <img
-          src={COPY.hero.image}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 hidden h-full w-full object-cover blur-[2px] tb:block"
-        />
-        {/* <div className={HERO_SCRIM} /> */}
-
-        <div className="relative flex flex-col items-center px-5">
-          <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="break-keep text-white">
-            <Lines items={COPY.hero.titleLines} />
-          </Typography>
-          <Typography as="p" mobile="body-03" tablet="headline-02" className="mt-[18px] text-white tb:mt-[26px]">
-            {COPY.hero.sub}
-          </Typography>
-
-          <div className="mt-12 flex flex-col items-center gap-2.5 tb:mt-[76px] tb:flex-row tb:gap-[18px]">
-            <a
-              href="#contact"
-              className="flex h-[35px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:h-[50px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main">
-              <Typography mobile="body-03" tablet="headline-03" weight="bold" tabletWeight="medium">{COPY.hero.primaryCta}</Typography>
-              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-              <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[11px] w-[11px] tb:hidden" />
-              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-              <img
-                src={WIM_NEW_ICONS.arrowGreen}
-                alt=""
-                aria-hidden="true"
-                className="hidden h-[17px] w-[17px] tb:block"
-              />
-            </a>
-            <a
-              href="#services"
-              className="flex h-[35px] w-[170px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:w-[200px] tb:border-[1.5px] tb:px-6">
-              <Typography mobile="body-03" tablet="headline-03" weight="medium">{COPY.hero.secondaryCta}</Typography>
-            </a>
-          </div>
-        </div>
-
-        {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-        <img
-          src={WIM_NEW_ICONS.chevron}
-          alt=""
-          aria-hidden="true"
-          className="absolute bottom-[60px] left-1/2 h-[10px] w-[32px] -translate-x-1/2 tb:bottom-24 tb:h-[23px] tb:w-[33px]"
-        />
-      </section>
+      {/* ─────────────── HERO (A/B, 헤더 스위치로 전환) ─────────────── */}
+      {heroVariant === "b" ? <HeroB /> : <HeroA />}
 
       {/* ─────────────── INTRO ─────────────── */}
       <section className="bg-white px-5 py-[54px] tb:py-[110px]">

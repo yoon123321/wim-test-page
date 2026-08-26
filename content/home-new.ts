@@ -82,6 +82,11 @@ export const WIM_NEW_COPY = {
     primaryCta: "무료 기질 검사 받기",
     secondaryCta: "프로그램 살펴보기",
   },
+  /** 히어로 B안 전용 카피 (A/B 테스트) — CTA 문구는 A안과 동일하게 유지 */
+  heroB: {
+    titleLines: ["나만의 위해 설계하는 단하나의 다이어트"],
+    sub: "Wellness in Me",
+  },
   intro: {
     eyebrow: "나는 왜 항상 다이어트에 실패할까?",
     titleLines: ["윔은 감량 이전에", "먼저 ‘나’를 깊이 있게 알아봅니다."],

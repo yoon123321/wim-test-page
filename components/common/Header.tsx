@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Sidebar from "./Sidebar";
 import HeaderMain from "./HeaderMain";
-import { useVariant, VARIANT_LABELS, type HomeVariant } from "./VariantProvider";
+import { useVariant, VARIANT_LABELS, HERO_VARIANT_LABELS, type HomeVariant, type HeroVariant } from "./VariantProvider";
 import { DEFAULT_NAV, type NavLink } from "./types";
 import { COMMON_CONTENT } from "@/content/common";
 
@@ -36,6 +36,29 @@ function VariantSwitch() {
   );
 }
 
+/** 개선안 메인 히어로 A/B 미리보기 스위치 (목업 전용) */
+function HeroVariantSwitch() {
+  const { heroVariant, setHeroVariant } = useVariant();
+  return (
+    <div className="flex items-center gap-1 rounded-full border border-neutral-300 p-1">
+      {(["a", "b"] as HeroVariant[]).map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => setHeroVariant(v)}
+          aria-pressed={heroVariant === v}
+          title={`${HERO_VARIANT_LABELS[v]} 보기`}
+          className={`h-7 cursor-pointer rounded-full px-3 text-xs font-bold uppercase transition ${
+            heroVariant === v ? "bg-neutral-900 text-white" : "bg-transparent text-neutral-500 hover:text-neutral-900"
+          }`}
+        >
+          {v}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /**
  * 공용 헤더 (목업 · 레이아웃 전용)
  *
@@ -48,7 +71,17 @@ export default function Header({ logo = COMMON_CONTENT.logo, navLinks = DEFAULT_
   const { variant } = useVariant();
 
   // 개선안은 피그마 시안 헤더를 쓴다
-  if (variant === "improved") return <HeaderMain switchSlot={<VariantSwitch />} />;
+  if (variant === "improved")
+    return (
+      <HeaderMain
+        switchSlot={
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <VariantSwitch />
+            <HeroVariantSwitch />
+          </div>
+        }
+      />
+    );
 
   const activeLink = navLinks.find((link) => link.label === openMenu && link.children);
 
