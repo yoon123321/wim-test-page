@@ -1,7 +1,7 @@
 import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from "react";
 
 export type TypographyFont = "pretendard" | "franklin" | "garamond";
-export type TypographyWeight = "regular" | "book" | "medium" | "semibold" | "demi" | "bold" | "extrabold";
+export type TypographyWeight = "regular" | "medium" | "semibold" | "bold" | "extrabold";
 export type TypographyScale =
   | "design-01"
   | "display-01"
@@ -86,10 +86,8 @@ const FONT_CLASS: Record<TypographyFont, string> = {
 
 const FONT_WEIGHT: Record<TypographyWeight, number> = {
   regular: 400,
-  book: 400,
   medium: 500,
   semibold: 600,
-  demi: 600,
   bold: 700,
   extrabold: 800,
 };
@@ -142,14 +140,27 @@ export function Typography({
 }: TypographyProps) {
   const scales = SCALE_BY_FONT[font];
   const mobileValue = scales.mobile[mobile];
-  const tabletValue = scales.desktop[tablet ?? desktop ?? mobile] ?? mobileValue;
-  const desktopValue = scales.desktop[desktop ?? tablet ?? mobile] ?? tabletValue;
 
   if (!mobileValue) {
     throw new Error(`Typography: ${font} 모바일 scale에 "${mobile}"이 없습니다.`);
   }
-  if (!desktopValue) {
-    throw new Error(`Typography: ${font} PC scale에 "${desktop ?? mobile}"이 없습니다.`);
+
+  let tabletValue = mobileValue;
+  if (tablet) {
+    const explicitTabletValue = scales.desktop[tablet];
+    if (!explicitTabletValue) {
+      throw new Error(`Typography: ${font} 태블릿 scale에 "${tablet}"이 없습니다.`);
+    }
+    tabletValue = explicitTabletValue;
+  }
+
+  let desktopValue = tabletValue;
+  if (desktop) {
+    const explicitDesktopValue = scales.desktop[desktop];
+    if (!explicitDesktopValue) {
+      throw new Error(`Typography: ${font} PC scale에 "${desktop}"이 없습니다.`);
+    }
+    desktopValue = explicitDesktopValue;
   }
 
   const typographyStyle: TypographyStyle = {
@@ -157,7 +168,7 @@ export function Typography({
     "--type-mobile-leading": mobileValue.lineHeight,
     "--type-tablet-size": `${tabletSize ?? tabletValue.size}px`,
     "--type-tablet-leading": tabletValue.lineHeight,
-    "--type-desktop-size": `${desktopSize ?? tabletSize ?? desktopValue.size}px`,
+    "--type-desktop-size": `${desktopSize ?? (desktop ? desktopValue.size : tabletSize ?? desktopValue.size)}px`,
     "--type-desktop-leading": desktopValue.lineHeight,
     "--type-mobile-weight": FONT_WEIGHT[weight],
     "--type-tablet-weight": FONT_WEIGHT[tabletWeight ?? weight],
