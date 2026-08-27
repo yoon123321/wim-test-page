@@ -33,6 +33,29 @@ const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendar
 
 const EN = "font-['EB_Garamond',serif]";
 
+const PERSONA_VERSIONS = {
+  1: [
+    {
+      name: "스트레스 식욕형",
+      traits: "스트레스 내성 낮음 / 충동성 낮음 / 무절제 높음 / 보상적 식사 높음",
+      description: "식욕이 배고픔보다 감정에 먼저 반응하는 편이에요. 스트레스가 쌓인 날, 마음이 허한 밤이면 나도 모르게 먹을 것을 찾게 돼요. 먹는 동안은 편안해지지만 끝나고 나면 후회가 따라와요. 이럴 때 식단을 제한하는 다이어트는 스트레스를 하나 더 얹는 셈이 돼요.",
+    },
+    {
+      name: "수면 부족형",
+      traits: "자극추구 높음 / 관계 민감도 높음 / 보상적 식사 높음",
+      description: "먹는 것만 보면 크게 문제가 없어 보여요. 그런데 피곤할수록 단것이 당겨요. 사람들과 어울리는 대외적 활동을 좋아하고 취미 생활이 많아 잠잘 시간이 부족해요.",
+    },
+  ],
+  2: [
+    {
+      name: "페르소나 이름 자리 3",
+      traits: "세부 기질과 성향이 들어갈 자리입니다.",
+      description: "식욕이 배고픔보다 감정에 먼저 반응하는 편이에요.\n스트레스가 쌓이거나 마음이 허한 밤이면 나도 모르게 먹을 것을 찾게 돼요.\n제한적인 식단은 후회와 스트레스를 더 키울 수 있어요.",
+    },
+    { name: "페르소나 이름 자리 4", traits: "세부 기질과 성향이 들어갈 자리입니다.", description: "버전 2의 두 번째 유형 설명이 들어갈 자리입니다." },
+  ],
+} as const;
+
 /* SVG 전용 — 팔레트 토큰 CSS 변수 */
 const V = {
   green: "var(--color-primary-main)",
@@ -51,6 +74,49 @@ function ImageSlot({ label, src, className = "aspect-[4/3] rounded-[20px]" }: { 
       ) : (
         <span className="break-keep p-3 text-center text-[12.5px] text-gray-02">{label}</span>
       )}
+    </div>
+  );
+}
+
+const PERSONA_PROFILE_GROUPS = [
+  {
+    title: "기질 성향",
+    items: [
+      { label: "스트레스 내성", value: 38 },
+      { label: "부정적 충동성", value: 72 },
+    ],
+  },
+  {
+    title: "생활 습관",
+    items: [
+      { label: "식습관", value: 64 },
+      { label: "보상적 식사", value: 82 },
+      { label: "스트레스 지수", value: 74 },
+    ],
+  },
+] as const;
+
+function PersonaProfileVisual() {
+  return (
+    <div className="grid grid-cols-2 items-stretch gap-3 rounded-[16px] bg-primary-sub-03 p-3 tb:gap-4 tb:p-4">
+      {PERSONA_PROFILE_GROUPS.map((group) => (
+        <div key={group.title} className="flex min-w-0 flex-col gap-3 rounded-[14px] border border-primary-sub-02/45 bg-white p-3 shadow-sm tb:p-4">
+          <span className="text-[13px] font-bold text-primary-main">{group.title}</span>
+          <div className="flex flex-col gap-3">
+            {group.items.map((item) => (
+              <div key={item.label} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[12px] font-medium text-neutral-600">{item.label}</span>
+                  <span className="text-[11px] font-bold text-primary-main/65">{item.value}</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-primary-sub-03">
+                  <div className="h-full rounded-full bg-gradient-to-r from-primary-sub-02 to-primary-main" style={{ width: `${item.value}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -133,6 +199,7 @@ export default function DietLandingNew() {
   const [surveyOpen, setSurveyOpen] = useState(false);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResult, setShowResult] = useState(false);
+  const [personaVersion, setPersonaVersion] = useState<1 | 2>(1);
   const COPY = DIET_NEW_COPY;
 
   const score = answers.length;
@@ -190,15 +257,49 @@ export default function DietLandingNew() {
             <p className="m-0 max-w-[560px] break-keep text-center text-[14.5px] leading-[1.8] text-white/60 tb:text-[15.5px]">{COPY.problem.statementSub}</p>
           </div>
 
-          {/* 페르소나 카드 — 우선 카드 형태만 (실제 인물·문구는 추후 교체) */}
-          <div className="mx-auto grid w-full max-w-[640px] grid-cols-1 gap-4 tb:grid-cols-2 tb:gap-5">
-            {[1, 2].map((n) => (
-              <div key={n} className="flex flex-col gap-4 rounded-[22px] border border-white/15 bg-white/5 p-5 tb:p-6">
-                <ImageSlot label={`페르소나 ${n} 사진`} className="aspect-[4/3] rounded-[16px]" />
+          {/* 페르소나 카드 버전 선택 */}
+          <div className="mx-auto flex w-full max-w-[1100px] items-center justify-between gap-4">
+            <h3 className="m-0 text-[19px] font-bold text-white tb:text-[22px]">페르소나</h3>
+            <div className="flex items-center gap-1 rounded-full border border-white/25 bg-white/5 p-1" aria-label="페르소나 버전 선택">
+              {([1, 2] as const).map((version) => (
+                <button
+                  key={version}
+                  type="button"
+                  onClick={() => setPersonaVersion(version)}
+                  aria-pressed={personaVersion === version}
+                  className={`grid h-8 w-9 cursor-pointer place-items-center rounded-full border-0 text-[13px] font-bold transition ${
+                    personaVersion === version ? "bg-white text-primary-main" : "bg-transparent text-white/55 hover:text-white"
+                  }`}
+                >
+                  {version}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-4 tb:grid-cols-2 tb:gap-5">
+            {PERSONA_VERSIONS[personaVersion].map((persona, index) => (
+              <div key={`${personaVersion}-${persona.name}`} className="flex flex-col gap-4 rounded-[22px] border border-white/70 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] tb:p-6">
+                {personaVersion === 2 && <PersonaProfileVisual />}
                 <div className="flex flex-col gap-1.5">
-                  <span className={`${EN} text-[13px] tracking-[0.14em] text-primary-sub-02`}>PERSONA 0{n}</span>
-                  <span className="text-[18px] font-bold text-white">페르소나 이름 자리</span>
-                  <span className="break-keep text-[14px] leading-[1.7] text-white/60">유형 설명이 들어갈 자리입니다.</span>
+                  <span className={`${EN} text-[13px] tracking-[0.14em] text-primary-main/55`}>PERSONA 0{index + 1}</span>
+                  <span className="text-[20px] font-bold text-primary-main">{persona.name}</span>
+                  {personaVersion === 1 && <div className="mt-2 flex flex-wrap gap-2">
+                    {persona.traits.split("/").map((trait) => {
+                      const value = trait.trim();
+                      const tone = value.includes("낮음")
+                        ? "border-sky-200 bg-sky-50 text-sky-700"
+                        : value.includes("높음")
+                          ? "border-rose-200 bg-rose-50 text-rose-700"
+                          : "border-primary-sub-02 bg-primary-sub-03 text-primary-main";
+                      return (
+                        <span key={trait} className={`rounded-full border px-3 py-1.5 text-[12px] font-medium ${tone}`}>
+                          #{value.replaceAll(" ", "_")}
+                        </span>
+                      );
+                    })}
+                  </div>}
+                  <span className="mt-2 whitespace-pre-line break-keep text-[14px] leading-[1.8] text-neutral-600">{persona.description}</span>
                 </div>
               </div>
             ))}
