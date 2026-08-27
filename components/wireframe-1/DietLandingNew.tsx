@@ -190,6 +190,20 @@ export default function DietLandingNew() {
             <p className="m-0 max-w-[560px] break-keep text-center text-[14.5px] leading-[1.8] text-white/60 tb:text-[15.5px]">{COPY.problem.statementSub}</p>
           </div>
 
+          {/* 페르소나 카드 — 우선 카드 형태만 (실제 인물·문구는 추후 교체) */}
+          <div className="mx-auto grid w-full max-w-[640px] grid-cols-1 gap-4 tb:grid-cols-2 tb:gap-5">
+            {[1, 2].map((n) => (
+              <div key={n} className="flex flex-col gap-4 rounded-[22px] border border-white/15 bg-white/5 p-5 tb:p-6">
+                <ImageSlot label={`페르소나 ${n} 사진`} className="aspect-[4/3] rounded-[16px]" />
+                <div className="flex flex-col gap-1.5">
+                  <span className={`${EN} text-[13px] tracking-[0.14em] text-primary-sub-02`}>PERSONA 0{n}</span>
+                  <span className="text-[18px] font-bold text-white">페르소나 이름 자리</span>
+                  <span className="break-keep text-[14px] leading-[1.7] text-white/60">유형 설명이 들어갈 자리입니다.</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="flex flex-wrap items-center justify-center gap-5 rounded-[22px] border border-white/15 bg-white/5 p-[22px] text-center tb:justify-between tb:rounded-full tb:px-[30px] tb:py-[18px] tb:text-left">
             <span className="break-keep text-[15px] leading-[1.6] text-white/80">
               {COPY.problem.quizLabel} <span className="text-white/50">{COPY.problem.quizNote}</span>

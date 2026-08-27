@@ -231,7 +231,11 @@ function CareDetailModal({ care, onClose }: { care: WimNewCare; onClose: () => v
 }
 
 /** 히어로 A안 — 원본 시안: 전면 배경 사진 위에 가운데 정렬 카피/CTA */
-function HeroA() {
+export function HeroA({
+  titleLines,
+  showSub = true,
+  showCta = true,
+}: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
     <section className="relative isolate flex h-[460px] flex-col items-center justify-center overflow-hidden text-center tb:h-[640px]">
@@ -253,33 +257,37 @@ function HeroA() {
 
       <div className="relative flex flex-col items-center px-5">
         <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="break-keep text-white">
-          <Lines items={COPY.hero.titleLines} />
+          <Lines items={titleLines ?? COPY.hero.titleLines} />
         </Typography>
-        <Typography as="p" mobile="body-03" tablet="headline-02" className="mt-[18px] text-white tb:mt-[26px]">
-          {COPY.hero.sub}
-        </Typography>
+        {showSub && (
+          <Typography as="p" mobile="body-03" tablet="headline-02" className="mt-[18px] text-white tb:mt-[26px]">
+            {COPY.hero.sub}
+          </Typography>
+        )}
 
-        <div className="mt-12 flex flex-col items-center gap-2.5 tb:mt-[76px] tb:flex-row tb:gap-[18px]">
-          <a
-            href="#contact"
-            className="flex h-[35px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:h-[50px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main">
-            <Typography mobile="body-03" tablet="headline-03" weight="bold" tabletWeight="medium">{COPY.hero.primaryCta}</Typography>
-            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-            <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[11px] w-[11px] tb:hidden" />
-            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-            <img
-              src={WIM_NEW_ICONS.arrowGreen}
-              alt=""
-              aria-hidden="true"
-              className="hidden h-[17px] w-[17px] tb:block"
-            />
-          </a>
-          <a
-            href="#services"
-            className="flex h-[35px] w-[170px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:w-[200px] tb:border-[1.5px] tb:px-6">
-            <Typography mobile="body-03" tablet="headline-03" weight="medium">{COPY.hero.secondaryCta}</Typography>
-          </a>
-        </div>
+        {showCta && (
+          <div className="mt-12 flex flex-col items-center gap-2.5 tb:mt-[76px] tb:flex-row tb:gap-[18px]">
+            <a
+              href="#contact"
+              className="flex h-[35px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:h-[50px] tb:bg-none tb:bg-primary-sub-02 tb:text-primary-main">
+              <Typography mobile="body-03" tablet="headline-03" weight="bold" tabletWeight="medium">{COPY.hero.primaryCta}</Typography>
+              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+              <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[11px] w-[11px] tb:hidden" />
+              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+              <img
+                src={WIM_NEW_ICONS.arrowGreen}
+                alt=""
+                aria-hidden="true"
+                className="hidden h-[17px] w-[17px] tb:block"
+              />
+            </a>
+            <a
+              href="#services"
+              className="flex h-[35px] w-[170px] items-center justify-center rounded-full border border-white text-white no-underline transition hover:bg-white/10 tb:h-[50px] tb:w-[200px] tb:border-[1.5px] tb:px-6">
+              <Typography mobile="body-03" tablet="headline-03" weight="medium">{COPY.hero.secondaryCta}</Typography>
+            </a>
+          </div>
+        )}
       </div>
 
       {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
@@ -319,6 +327,136 @@ function HeroB() {
   );
 }
 
+/** STEP 01 — 6가지 검사 카드 (호출부에서 section/Container로 감싸서 사용) */
+export function TestsSection() {
+  const COPY = WIM_NEW_COPY;
+  const [activeTest, setActiveTest] = useState<WimNewTest | null>(null);
+  return (
+    <>
+      <div className="flex flex-col items-start gap-[26px] tb:flex-row tb:items-end tb:gap-5">
+        <StepDivider />
+        <div className="min-w-0 flex-1">
+          <Eyebrow text={COPY.step1.label} tone="gray" />
+          <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
+            {COPY.step1.title}
+          </Typography>
+        </div>
+      </div>
+
+      <ul className="mt-[43px] grid list-none grid-cols-2 gap-[10px] p-0 tb:gap-[15px] dt:grid-cols-3 dt:gap-[13px]">
+        {WIM_NEW_TESTS.map((test) => (
+          <li
+            key={test.title}
+            className="relative isolate aspect-[155/170] overflow-hidden rounded-[10px] dt:aspect-[418/330] dt:rounded-[20px]">
+            <button
+              type="button"
+              onClick={() => setActiveTest(test)}
+              aria-label={`${test.title} 자세히 보기`}
+              className="absolute inset-0 h-full w-full cursor-pointer text-left">
+              <CardPhoto
+                src={test.image}
+                mobileSrc={test.imageMobile}
+                alt={test.imageAlt}
+                position={test.position}
+              />
+
+              {/* 모바일: 우상단 + 아이콘 / PC: 우상단 자세히 보기 */}
+              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+              <img
+                src={WIM_NEW_ICONS.plus}
+                alt=""
+                aria-hidden="true"
+                className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
+              />
+              <Typography mobile="body-03" className="absolute right-[32px] top-[35px] hidden flex-col items-end text-white dt:flex">
+                <span className="flex items-center gap-[7px]">
+                  {COPY.step1.detailLabel.replace("-->", "").trim()}
+                  {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                  <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[12px] w-[12px]" />
+                </span>
+                <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
+              </Typography>
+
+              <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[30px]">
+                <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
+                  {test.title === "자율 신경 및 스트레스 측정" ? (
+                    <>
+                      <span className="dt:hidden">
+                        자율 신경 및<br />
+                        스트레스 측정
+                      </span>
+                      <span className="hidden dt:inline">{test.title}</span>
+                    </>
+                  ) : (
+                    test.title
+                  )}
+                </Typography>
+                <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-2.5">
+                  <span className="dt:hidden">
+                    <Lines items={test.lines} />
+                  </span>
+                  <span className="hidden dt:inline">{test.lines.join(" ")}</span>
+                </Typography>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {activeTest && <TestDetailModal test={activeTest} onClose={() => setActiveTest(null)} />}
+    </>
+  );
+}
+
+/** 인트로 섹션 — 소개 카피 + 사진 */
+export function IntroSection({
+  titleLines,
+  showDesc = true,
+  showTestChips = false,
+}: { titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean } = {}) {
+  const COPY = WIM_NEW_COPY;
+  return (
+    <section className="bg-white px-5 py-[54px] tb:py-[110px]">
+      <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
+        <div className="flex flex-col dt:flex-1">
+          <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
+            {COPY.intro.eyebrow}
+          </Typography>
+          <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-2 break-keep text-primary-main tb:mt-[9px]">
+            <Lines items={titleLines ?? COPY.intro.titleLines} />
+          </Typography>
+          {showDesc && (
+            <Typography as="p" mobile="body-03" tablet="headline-03" weight="medium" className="mt-[28px] break-keep text-black tb:mt-[36px]">
+              <Lines items={COPY.intro.descLines} />
+            </Typography>
+          )}
+          {showTestChips && (
+            <div className="mt-[18px] flex flex-wrap gap-[8px] tb:mt-[24px]">
+              {WIM_NEW_TESTS.map((test) => (
+                <Typography
+                  as="span"
+                  key={test.title}
+                  mobile="body-03"
+                  className="rounded-full border border-primary-sub-02 bg-primary-sub-03 px-[14px] py-[7px] text-primary-main">
+                  {test.title}
+                </Typography>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:aspect-[640/360] dt:w-[640px] dt:shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+          <img
+            src={COPY.intro.image}
+            alt={COPY.intro.imageAlt}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+      </Container>
+    </section>
+  );
+}
+
 export default function WimMainNew() {
   const COPY = WIM_NEW_COPY;
   const { heroVariant } = useVariant();
@@ -333,7 +471,6 @@ export default function WimMainNew() {
    * 끝까지 스크롤해 뒤에 카드가 없으면 -1 이 되어 평범한 카드로 돌아간다.
    */
   const [carePeek, setCarePeek] = useState<{ index: number; width: number }>({ index: -1, width: 0 });
-  const [activeTest, setActiveTest] = useState<WimNewTest | null>(null);
   const [activeCare, setActiveCare] = useState<WimNewCare | null>(null);
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
 
@@ -411,29 +548,7 @@ export default function WimMainNew() {
       {heroVariant === "b" ? <HeroB /> : <HeroA />}
 
       {/* ─────────────── INTRO ─────────────── */}
-      <section className="bg-white px-5 py-[54px] tb:py-[110px]">
-        <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
-          <div className="flex flex-col dt:flex-1">
-            <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
-              {COPY.intro.eyebrow}
-            </Typography>
-            <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-2 break-keep text-primary-main tb:mt-[9px]">
-              <Lines items={COPY.intro.titleLines} />
-            </Typography>
-            <Typography as="p" mobile="body-03" tablet="headline-03" weight="medium" className="mt-[28px] break-keep text-black tb:mt-[36px]">
-              <Lines items={COPY.intro.descLines} />
-            </Typography>
-          </div>
-          <div className="relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:aspect-[640/360] dt:w-[640px] dt:shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-            <img
-              src={COPY.intro.image}
-              alt={COPY.intro.imageAlt}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-        </Container>
-      </section>
+      <IntroSection />
 
       {/* ─────────────── STEP 01 / STEP 02 ─────────────── */}
       <section id="services" className="bg-gray-00 px-5 pb-[54px] pt-[38px] tb:pb-[110px] tb:pt-[80px]">
@@ -457,75 +572,9 @@ export default function WimMainNew() {
           </p>
 
           {/* STEP 01 — 6가지 검사 */}
-          <div className="mt-[26px] flex flex-col items-start gap-[26px] tb:mt-[34px] tb:flex-row tb:items-end tb:gap-5">
-            <StepDivider />
-            <div className="min-w-0 flex-1">
-              <Eyebrow text={COPY.step1.label} tone="gray" />
-              <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
-                {COPY.step1.title}
-              </Typography>
-            </div>
+          <div className="mt-[26px] tb:mt-[34px]">
+            <TestsSection />
           </div>
-
-          <ul className="mt-[43px] grid list-none grid-cols-2 gap-[10px] p-0 tb:gap-[15px] dt:grid-cols-3 dt:gap-[13px]">
-            {WIM_NEW_TESTS.map((test) => (
-              <li
-                key={test.title}
-                className="relative isolate aspect-[155/170] overflow-hidden rounded-[10px] dt:aspect-[418/330] dt:rounded-[20px]">
-                <button
-                  type="button"
-                  onClick={() => setActiveTest(test)}
-                  aria-label={`${test.title} 자세히 보기`}
-                  className="absolute inset-0 h-full w-full cursor-pointer text-left">
-                  <CardPhoto
-                    src={test.image}
-                    mobileSrc={test.imageMobile}
-                    alt={test.imageAlt}
-                    position={test.position}
-                  />
-
-                  {/* 모바일: 우상단 + 아이콘 / PC: 우상단 자세히 보기 */}
-                  {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                  <img
-                    src={WIM_NEW_ICONS.plus}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
-                  />
-                  <Typography mobile="body-03" className="absolute right-[32px] top-[35px] hidden flex-col items-end text-white dt:flex">
-                    <span className="flex items-center gap-[7px]">
-                      {COPY.step1.detailLabel.replace("-->", "").trim()}
-                      {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                      <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[12px] w-[12px]" />
-                    </span>
-                    <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
-                  </Typography>
-
-                  <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[30px]">
-                    <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
-                      {test.title === "자율 신경 및 스트레스 측정" ? (
-                        <>
-                          <span className="dt:hidden">
-                            자율 신경 및<br />
-                            스트레스 측정
-                          </span>
-                          <span className="hidden dt:inline">{test.title}</span>
-                        </>
-                      ) : (
-                        test.title
-                      )}
-                    </Typography>
-                    <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-2.5">
-                      <span className="dt:hidden">
-                        <Lines items={test.lines} />
-                      </span>
-                      <span className="hidden dt:inline">{test.lines.join(" ")}</span>
-                    </Typography>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
 
           {/* STEP 02 — 관리 캐러셀 */}
           <div className="mt-[26px] flex flex-col items-start gap-[26px] tb:mt-[34px] tb:flex-row tb:items-end tb:gap-5">
@@ -924,8 +973,101 @@ export default function WimMainNew() {
         </div>
       </footer>
 
-      {activeTest && <TestDetailModal test={activeTest} onClose={() => setActiveTest(null)} />}
       {activeCare && <CareDetailModal care={activeCare} onClose={() => setActiveCare(null)} />}
     </div>
+  );
+}
+
+/** 버전 2의 최종 CTA와 푸터를 다른 메인 시안에서도 그대로 재사용합니다. */
+export function WimMainBottom() {
+  const COPY = WIM_NEW_COPY;
+
+  return (
+    <>
+      <section id="contact" className="bg-primary-sub-03 px-5 py-[32px] tb:py-[62px]">
+        <Container className="flex flex-col items-center text-center">
+          <Typography as="h2" mobile="body-01" tablet="display-01" weight="bold" className="break-keep text-primary-main">
+            {COPY.cta.title}
+          </Typography>
+          <a
+            href="#contact"
+            className="mt-[14px] flex h-[26px] items-center justify-center gap-[5px] rounded-full bg-gradient-to-r from-primary-main from-[39.892%] to-primary-accent px-[23px] text-white no-underline transition hover:opacity-90 tb:mt-[28px] tb:h-[50px] tb:gap-[10px]">
+            <Typography mobile="body-03" tablet="headline-03" tabletWeight="medium">{COPY.cta.buttonLabel}</Typography>
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img src={WIM_NEW_ICONS.arrow} alt="" aria-hidden="true" className="h-[9px] w-[9px] tb:h-[17px] tb:w-[17px]" />
+          </a>
+        </Container>
+      </section>
+
+      <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
+        <div className="mx-auto w-full px-5 dt:max-w-[1440px] dt:px-20">
+          <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img src={WIM_NEW_ICONS.logoWim} alt="WIM" className="h-[14px] w-[50px] tb:h-full tb:w-auto" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img src={WIM_NEW_ICONS.logoCenter} alt="Center" className="h-[13px] w-auto tb:h-full tb:w-auto" />
+          </div>
+
+          <div className="mt-[28px] tb:mt-[36px]">
+            <div className="flex flex-col gap-[32px] dt:flex-row dt:gap-10">
+              {COPY.footer.info.map((block) => (
+                <div key={block.label} className="flex gap-[24px] dt:gap-[25px]">
+                  <Typography mobile="body-03" tablet="body-02" weight="bold" className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px]">
+                    {block.label}
+                  </Typography>
+                  <div className="flex flex-col">
+                    <Typography mobile="body-03" tablet="body-02" weight="bold" className="text-white">
+                      {block.strong}
+                    </Typography>
+                    {block.rows.map((row) => (
+                      <Typography key={row.day} mobile="body-03" className="mt-[8px] flex gap-[16px] tb:gap-[27px]">
+                        <span className="w-[75px] shrink-0 font-semibold text-white">{row.day}</span>
+                        <span className="text-gray-01">{row.time}</span>
+                      </Typography>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex gap-[24px] dt:gap-[25px]">
+                <Typography mobile="body-03" tablet="body-02" weight="bold" className="w-[64px] shrink-0 text-primary-sub-02 tb:w-[75px]">
+                  {COPY.footer.address.label}
+                </Typography>
+                <div className="flex flex-col">
+                  <Typography mobile="body-03" tablet="body-02" weight="bold" className="break-keep text-white">
+                    <span className="dt:hidden"><Lines items={COPY.footer.address.strongLines} /></span>
+                    <span className="hidden dt:inline">{COPY.footer.address.strongLines.join(" ")}</span>
+                  </Typography>
+                  <Typography mobile="body-03" weight="medium" className="mt-[8px] text-white">{COPY.footer.address.walk}</Typography>
+                  <Typography mobile="body-03" className="mt-[8px] text-gray-01">{COPY.footer.address.parking}</Typography>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-[34px] flex items-center justify-end gap-[6px] tb:mt-[50px] tb:gap-[10px]">
+              {WIM_NEW_ICONS.sns.map((src) => (
+                // eslint-disable-next-line @next/next/no-img-element -- 피그마 원본
+                <img key={src} src={src} alt="" aria-hidden="true" className="h-[28px] w-[28px] tb:h-[43px] tb:w-[43px]" />
+              ))}
+            </div>
+
+            <div className="mt-[12px] h-px w-full bg-gray-01/40 tb:mt-[22px]" />
+            <div className="mt-[11px] flex flex-col gap-[10px] tb:mt-[24px]">
+              <div className="flex flex-col gap-[8px]">
+                <Typography as="div" mobile="body-03" mobileSize={11} className="flex justify-between gap-[11px] text-gray-01">
+                  <span>{COPY.footer.copyright}</span>
+                  <a href="#contact" className="text-gray-01 underline decoration-gray-01 underline-offset-[4px]">
+                    <Typography mobile="body-03" mobileSize={11} weight="bold">{COPY.footer.terms}</Typography>
+                  </a>
+                </Typography>
+                <Typography as="div" mobile="body-03" mobileSize={9} className="flex flex-wrap gap-x-[14px] gap-y-[4px] text-gray-01">
+                  {COPY.footer.business.map((line) => <span key={line}>{line}</span>)}
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }

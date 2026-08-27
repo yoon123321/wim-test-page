@@ -13,7 +13,7 @@ interface HeaderProps {
   navLinks?: NavLink[];
 }
 
-/** 기존안/개선안 미리보기 스위치 (목업 전용) */
+/** 버전1/버전2 미리보기 스위치 (목업 전용) */
 function VariantSwitch() {
   const { variant, setVariant } = useVariant();
   return (

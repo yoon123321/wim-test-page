@@ -6,8 +6,8 @@ export type HomeVariant = "base" | "improved";
 export type HeroVariant = "a" | "b";
 
 export const VARIANT_LABELS: Record<HomeVariant, string> = {
-  base: "기존안",
-  improved: "개선안",
+  base: "버전1",
+  improved: "버전2",
 };
 
 export const HERO_VARIANT_LABELS: Record<HeroVariant, string> = {
@@ -30,7 +30,7 @@ const VariantContext = createContext<VariantContextValue>({
 });
 
 /**
- * 기존안/개선안, 그리고 개선안 메인 히어로의 A/B 시안을 고르는 미리보기 컨텍스트 (목업 전용).
+ * 버전1/버전2, 그리고 개선안 메인 히어로의 A/B 시안을 고르는 미리보기 컨텍스트 (목업 전용).
  * 헤더의 스위치로 값을 바꾸면 즉시 전환된다.
  * - 페이지 이동(Link) 시에도 유지되고, 새로고침하면 localStorage 값으로 복원.
  */
