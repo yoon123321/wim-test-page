@@ -5,17 +5,15 @@
  *
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
  * - 문구·데이터는 content/diet-new.ts 에서 수정
- * - 1분 유형 검사(12문항) 모달, 3단계 여정 모달, 관리 8종 모달 포함
+ * - 유형 검사 CTA는 /diet-type-test 페이지로 이동, 3단계 여정 모달, 관리 8종 모달 포함
  * - 이미지 자리는 <ImageSlot src="...">로 실사 교체
  */
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   DIET_NEW_COPY,
   DIET_WORRIES,
-  DIET_SURVEY,
-  DIET_SURVEY_RESULTS,
   DIET_METRICS,
   DIET_ROADMAP,
   DIET_TEAM,
@@ -197,17 +195,8 @@ function Hexagon() {
 export default function DietLandingNew() {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [step, setStep] = useState<DietStep | null>(null);
-  const [surveyOpen, setSurveyOpen] = useState(false);
-  const [answers, setAnswers] = useState<number[]>([]);
-  const [showResult, setShowResult] = useState(false);
   const [personaVersion, setPersonaVersion] = useState<1 | 2>(1);
   const COPY = DIET_NEW_COPY;
-
-  const score = answers.length;
-  const result = useMemo(() => DIET_SURVEY_RESULTS.find((r) => score <= r.max) ?? DIET_SURVEY_RESULTS[DIET_SURVEY_RESULTS.length - 1], [score]);
-
-  const toggleAnswer = (i: number) => setAnswers((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
-  const closeSurvey = () => { setSurveyOpen(false); setShowResult(false); };
 
   const lines = (arr: readonly string[]) =>
     arr.map((line, i) => (
@@ -310,13 +299,9 @@ export default function DietLandingNew() {
             <span className="break-keep text-[15px] leading-[1.6] text-white/80">
               {COPY.problem.quizLabel} <span className="text-white/50">{COPY.problem.quizNote}</span>
             </span>
-            <button
-              type="button"
-              onClick={() => setSurveyOpen(true)}
-              className="flex-none cursor-pointer rounded-full bg-primary-sub-02 px-[26px] py-3.5 text-[14.5px] font-bold text-primary-main"
-            >
+            <Link href="/diet-type-test" className="flex-none rounded-full bg-primary-sub-02 px-[26px] py-3.5 text-[14.5px] font-bold text-primary-main no-underline">
               {COPY.problem.quizButton}
-            </button>
+            </Link>
           </div>
         </div>
       </Section>
@@ -708,13 +693,9 @@ export default function DietLandingNew() {
           <h2 className="m-0 max-w-[820px] break-keep text-[32px] leading-[1.3] tracking-[-0.04em] text-white tb:text-[56px]">{lines(COPY.cta.titleLines)}</h2>
           <p className="m-0 max-w-[560px] break-keep text-[16px] leading-[1.9] text-white/70 tb:text-[17px]">{COPY.cta.description}</p>
           <div className="mt-3.5 flex w-full flex-col items-stretch gap-3 tb:w-auto tb:flex-row">
-            <button
-              type="button"
-              onClick={() => setSurveyOpen(true)}
-              className="cursor-pointer rounded-full border-0 bg-primary-sub-02 px-9 py-[18px] text-center text-[16px] font-bold text-primary-main"
-            >
+            <Link href="/diet-type-test" className="rounded-full bg-primary-sub-02 px-9 py-[18px] text-center text-[16px] font-bold text-primary-main no-underline">
               {COPY.cta.primaryButton}
-            </button>
+            </Link>
             <a href="#plans" className="rounded-full border border-white/40 px-9 py-[17px] text-center text-[16px] font-bold text-white no-underline transition hover:opacity-90">
               {COPY.cta.secondaryButton}
             </a>
@@ -755,58 +736,6 @@ export default function DietLandingNew() {
         </Modal>
       )}
 
-      {/* 1분 유형 검사 */}
-      {surveyOpen && (
-        <Modal onClose={closeSurvey}>
-          {!showResult ? (
-            <>
-              <div className="flex flex-col gap-1.5">
-                <span className={`${EN} text-[13px] tracking-[0.18em] text-primary-main`}>{COPY.survey.kicker}</span>
-                <span className="text-[13.5px] text-gray-02">{score} / {DIET_SURVEY.length} 선택</span>
-                <span className="mt-1.5 break-keep text-[12.5px] leading-[1.65] text-gray-03">{COPY.survey.note}</span>
-              </div>
-              <p className="m-0 break-keep text-[20px] font-bold leading-[1.4] tb:text-[22px]">{COPY.survey.question}</p>
-              <div className="flex flex-col gap-2">
-                {DIET_SURVEY.map((q, i) => {
-                  const on = answers.includes(i);
-                  return (
-                    <label
-                      key={q}
-                      className={`flex cursor-pointer items-center gap-3 break-keep rounded-[14px] border px-4 py-3.5 text-[14.5px] leading-[1.5] ${
-                        on ? "border-primary-main bg-primary-sub-03" : "border-gray-01 bg-white"
-                      }`}
-                    >
-                      <input type="checkbox" checked={on} onChange={() => toggleAnswer(i)} className="h-[18px] w-[18px] flex-none cursor-pointer accent-primary-main" />
-                      {q}
-                    </label>
-                  );
-                })}
-              </div>
-              <button type="button" onClick={() => setShowResult(true)} className="mt-2 cursor-pointer rounded-full border-0 bg-primary-main px-[26px] py-[15px] text-[15px] font-bold text-white">
-                {COPY.survey.submitLabel}
-              </button>
-            </>
-          ) : (
-            <>
-              <span className={`${EN} text-[13px] tracking-[0.18em] text-primary-main`}>{COPY.survey.resultKicker} · {score} / {DIET_SURVEY.length}</span>
-              <h3 className="m-0 break-keep text-[24px] leading-[1.35] tb:text-[28px]">{result.title}</h3>
-              <p className="m-0 break-keep text-[15.5px] leading-[1.85] text-gray-03">{result.body}</p>
-              <div className="mt-2 flex flex-wrap gap-2.5">
-                <a href="#contact" onClick={closeSurvey} className="rounded-full bg-primary-main px-[26px] py-3.5 text-[14.5px] font-bold text-white no-underline">
-                  {COPY.survey.consultButton}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => { setAnswers([]); setShowResult(false); }}
-                  className="cursor-pointer rounded-full border border-gray-01 bg-white px-[26px] py-3.5 text-[14.5px] font-bold text-gray-03"
-                >
-                  {COPY.survey.retryButton}
-                </button>
-              </div>
-            </>
-          )}
-        </Modal>
-      )}
     </div>
   );
 }
