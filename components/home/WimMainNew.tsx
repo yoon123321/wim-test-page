@@ -235,7 +235,8 @@ export function HeroA({
   titleLines,
   showSub = true,
   showCta = true,
-}: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean } = {}) {
+  eyebrowImage,
+}: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean; eyebrowImage?: string } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
     <section className="relative isolate flex h-[460px] flex-col items-center justify-center overflow-hidden text-center tb:h-[640px]">
@@ -244,18 +245,28 @@ export function HeroA({
         src={COPY.hero.imageMobile}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover blur-[2px] tb:hidden"
+        className="absolute inset-0 h-full w-full object-cover tb:hidden"
       />
       {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
       <img
         src={COPY.hero.image}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 hidden h-full w-full object-cover blur-[2px] tb:block"
+        className="absolute inset-0 hidden h-full w-full object-cover tb:block"
       />
       {/* <div className={HERO_SCRIM} /> */}
 
       <div className="relative flex flex-col items-center px-5">
+        {eyebrowImage && (
+          // eslint-disable-next-line @next/next/no-img-element -- 프로젝트 정적 로고 에셋
+          <img
+            src={eyebrowImage}
+            alt="Wellness in Me"
+            width={400}
+            height={45}
+            className="mb-5 h-auto w-[200px] object-contain tb:mb-7"
+          />
+        )}
         <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="break-keep text-white">
           <Lines items={titleLines ?? COPY.hero.titleLines} />
         </Typography>
@@ -327,8 +338,202 @@ function HeroB() {
   );
 }
 
+/** STEP 02 — 관리 캐러셀 (호출부에서 section/Container로 감싸서 사용) */
+export function CaresSection() {
+  const COPY = WIM_NEW_COPY;
+  const careTrackRef = useRef<HTMLDivElement>(null);
+  const [careActive, setCareActive] = useState(0);
+  const [carePeek, setCarePeek] = useState<{ index: number; width: number }>({ index: -1, width: 0 });
+  const [activeCare, setActiveCare] = useState<WimNewCare | null>(null);
+
+  const careStep = () => {
+    const track = careTrackRef.current;
+    const card = track?.firstElementChild as HTMLElement | null;
+    return card ? card.offsetWidth + 15 : 0;
+  };
+
+  /** 화살표 클릭 — 카드 한 장만큼 다음으로 넘긴다 */
+  const moveCareNext = () => {
+    const track = careTrackRef.current;
+    const step = careStep();
+    if (!track || !step) return;
+    track.scrollBy({ left: step, behavior: "smooth" });
+  };
+
+  const updateCareActive = () => {
+    const track = careTrackRef.current;
+    const step = careStep();
+    if (!track || !step) return;
+    setCareActive(Math.min(WIM_NEW_CARES.length - 1, Math.round(track.scrollLeft / step)));
+    setCarePeek(computeCarePeek());
+  };
+
+  /**
+   * 늘어난 카드 폭에 영향받지 않도록, 기본 카드 폭(첫 카드) 기준으로 계산한다.
+   * 이렇게 해야 늘어남 → 위치 이동 → 다시 계산이 서로 물려 깜빡이지 않는다.
+   */
+  const computeCarePeek = () => {
+    const track = careTrackRef.current;
+    const first = track?.firstElementChild as HTMLElement | null;
+    if (!track || !first) return { index: -1, width: 0 };
+    const gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
+    const step = first.offsetWidth + gap;
+    if (!step) return { index: -1, width: 0 };
+
+    // 판정은 "컨테이너 폭" 기준 — 트랙은 화면 끝까지 열려 있으므로(pr-*) 그만큼 뺀다.
+    const padRight = parseFloat(getComputedStyle(track).paddingRight || "0") || 0;
+    const contentRight = track.scrollLeft + track.clientWidth - padRight;
+    const lastVisible = Math.floor((contentRight - 1) / step);
+    if (lastVisible >= WIM_NEW_CARES.length - 1) return { index: -1, width: 0 };
+
+    const cardLeft = lastVisible * step;
+    const screenRight = track.scrollLeft + track.clientWidth;
+    const w = Math.min(first.offsetWidth * 1.5, Math.max(first.offsetWidth * 1.25, screenRight - cardLeft));
+    return { index: lastVisible, width: Math.round(w) };
+  };
+
+  useEffect(() => {
+    const track = careTrackRef.current;
+    const sync = () => setCarePeek(computeCarePeek());
+    sync();
+    const observer = new ResizeObserver(sync);
+    if (track) observer.observe(track);
+    window.addEventListener("resize", sync);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <>
+        {/* STEP 02 — 관리 캐러셀 */}
+        <div className="mt-[26px] flex flex-col items-start gap-[26px] tb:mt-[34px] tb:flex-row tb:items-end tb:gap-5">
+          <StepDivider className="hidden tb:block" />
+          <div className="min-w-0 flex-1">
+            <Eyebrow text={COPY.step2.label} tone="gray" />
+            <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
+              {COPY.step2.title}
+            </Typography>
+          </div>
+          {/* 모바일에서는 캐러셀 아래에 따로 노출한다 */}
+          <Typography mobile="body-03" className="hidden shrink-0 self-end text-primary-main dt:block">
+            {COPY.step2.swipeHint}
+          </Typography>
+        </div>
+
+        <div
+          ref={careTrackRef}
+          onScroll={updateCareActive}
+          className="mt-[36px] mr-[calc(50%-50vw)] flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-3 pr-[calc(50vw-50%)] [scrollbar-width:none] tb:gap-[15px] dt:mr-0 dt:pr-0 [&::-webkit-scrollbar]:hidden">
+          {WIM_NEW_CARES.map((care, careIndex) => {
+            // 마지막 카드는 끝에 닿기 전까지 옆으로 늘어나 "더 있다"는 신호를 준다.
+            // 높이는 aspect 대신 h-* 로 고정해서, 폭이 변해도 줄 높이가 흔들리지 않는다.
+            const isPeek = careIndex === carePeek.index;
+            return (
+            <div
+              key={care.no}
+              style={{
+                ...(isPeek ? { width: carePeek.width } : null),
+              }}
+              className={`relative isolate h-[150px] shrink-0 snap-start overflow-hidden rounded-[10px] tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
+                isPeek ? "" : "w-[205px] tb:w-[calc((100%-15px)/2)] dt:w-[calc((100%-45px)/4)]"
+              }`}>
+            <button
+              type="button"
+              onClick={() => setActiveCare(care)}
+              aria-label={`${care.title} 자세히 보기`}
+              className="absolute inset-0 h-full w-full cursor-pointer border-0 bg-transparent p-0 text-left font-inherit">
+              <div className={`absolute inset-0 ${isPeek ? "care-peek-content" : ""}`}>
+                <CardPhoto src={care.image} mobileSrc={care.imageMobile} alt={care.imageAlt} />
+                <div className={CARE_SCRIM} />
+
+                <Typography mobile="body-02" desktop="display-01" weight="bold" className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px]">
+                  {care.no}
+                </Typography>
+                {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                <img
+                  src={WIM_NEW_ICONS.plus}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
+                />
+
+                <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[37px]">
+                  <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
+                    {care.title}
+                  </Typography>
+                  <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-[8px]">
+                    {care.line}
+                  </Typography>
+                  <Typography mobile="body-03" className="mt-[14px] hidden flex-col text-white dt:flex">
+                    {COPY.step2.detailLabel}
+                    <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
+                  </Typography>
+                </div>
+              </div>
+
+            </button>
+
+              {isPeek && (
+                <span
+                  aria-hidden="true"
+                  className="care-peek-fade pointer-events-none absolute inset-y-0 right-0 z-10 w-3/4"
+                />
+              )}
+
+              {isPeek && (
+                <button
+                  type="button"
+                  onClick={moveCareNext}
+                  aria-label="다음 관리 방식 보기"
+                  className="absolute left-[200px] top-1/2 z-20 hidden h-[36px] w-[36px] -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0 transition hover:opacity-80 dt:block">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+                  <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
+                </button>
+              )}
+            </div>
+            );
+          })}
+          {careActive < WIM_NEW_CARES.length - 1 && (
+            <button
+              type="button"
+              onClick={moveCareNext}
+              aria-label="다음 관리 방식 보기"
+              className="sticky right-[20px] z-20 -ml-[36px] block h-[36px] w-[36px] shrink-0 cursor-pointer self-center border-0 bg-transparent p-0 transition hover:opacity-80 dt:hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+              <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
+            </button>
+          )}
+        </div>
+
+        <div className="mt-[10px] flex items-center justify-center gap-2 dt:hidden" aria-hidden="true">
+          {WIM_NEW_CARES.map((care, index) => (
+            <span
+              key={care.no}
+              className={`h-[5px] rounded-full transition-all ${careActive === index ? "w-[24px] bg-primary-main" : "w-[5px] bg-gray-01"}`}
+            />
+          ))}
+        </div>
+      {activeCare && <CareDetailModal care={activeCare} onClose={() => setActiveCare(null)} />}
+    </>
+  );
+}
+
 /** STEP 01 — 6가지 검사 카드 (호출부에서 section/Container로 감싸서 사용) */
-export function TestsSection() {
+export function TestsSection({
+  singleRow = false,
+  hideCardDesc = false,
+  titleBelow = false,
+}: {
+  /** 6장을 한 줄로 (PC 6열 · 모바일 가로 스크롤). 카드가 작아지므로 제목도 한 단계 줄인다 */
+  singleRow?: boolean;
+  /** 카드 제목 아래 설명 문구 숨김 */
+  hideCardDesc?: boolean;
+  /** 제목을 사진 위가 아니라 사진 아래(카드 바깥)에 둔다 */
+  titleBelow?: boolean;
+}) {
   const COPY = WIM_NEW_COPY;
   const [activeTest, setActiveTest] = useState<WimNewTest | null>(null);
   return (
@@ -343,16 +548,36 @@ export function TestsSection() {
         </div>
       </div>
 
-      <ul className="mt-[43px] grid list-none grid-cols-2 gap-[10px] p-0 tb:gap-[15px] dt:grid-cols-3 dt:gap-[13px]">
+      {/* singleRow: 6장을 한 줄로 (PC는 6열, 모바일·태블릿은 가로 스크롤) */}
+      <ul
+        className={
+          singleRow
+            ? "mt-[43px] mr-[calc(50%-50vw)] flex list-none snap-x snap-mandatory gap-[10px] overflow-x-auto p-0 pr-[calc(50vw-50%)] [scrollbar-width:none] tb:gap-[15px] dt:mr-0 dt:grid dt:grid-cols-6 dt:gap-[13px] dt:overflow-visible dt:pr-0 [&::-webkit-scrollbar]:hidden"
+            : "mt-[43px] grid list-none grid-cols-2 gap-[10px] p-0 tb:gap-[15px] dt:grid-cols-3 dt:gap-[13px]"
+        }>
         {WIM_NEW_TESTS.map((test) => (
           <li
             key={test.title}
-            className="relative isolate aspect-[155/170] overflow-hidden rounded-[10px] dt:aspect-[418/330] dt:rounded-[20px]">
+            className={`${
+              titleBelow
+                ? "isolate"
+                : "relative isolate aspect-[155/170] overflow-hidden rounded-[10px] dt:aspect-[418/330] dt:rounded-[20px]"
+            } ${singleRow ? "w-[155px] shrink-0 snap-start dt:w-auto" : ""}`}>
             <button
               type="button"
               onClick={() => setActiveTest(test)}
               aria-label={`${test.title} 자세히 보기`}
-              className="absolute inset-0 h-full w-full cursor-pointer text-left">
+              className={
+                titleBelow
+                  ? "block w-full cursor-pointer border-0 bg-transparent p-0 text-left"
+                  : "absolute inset-0 h-full w-full cursor-pointer text-left"
+              }>
+            <span
+              className={
+                titleBelow
+                  ? "relative block aspect-[155/170] overflow-hidden rounded-[10px] dt:aspect-[418/330] dt:rounded-[20px]"
+                  : "contents"
+              }>
               <CardPhoto
                 src={test.image}
                 mobileSrc={test.imageMobile}
@@ -377,8 +602,20 @@ export function TestsSection() {
                 <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
               </Typography>
 
-              <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[30px]">
-                <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
+            </span>
+
+              <div
+                className={
+                  titleBelow
+                    ? "mt-[12px] flex flex-col"
+                    : "absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[30px]"
+                }>
+                <Typography
+                  as="h3"
+                  mobile={singleRow ? "body-03" : "body-02"}
+                  desktop={singleRow ? "body-01" : "title-02"}
+                  weight="bold"
+                  className={`break-keep ${titleBelow ? "text-black" : "text-white"}`}>
                   {test.title === "자율 신경 및 스트레스 측정" ? (
                     <>
                       <span className="dt:hidden">
@@ -391,12 +628,19 @@ export function TestsSection() {
                     test.title
                   )}
                 </Typography>
-                <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-2.5">
-                  <span className="dt:hidden">
-                    <Lines items={test.lines} />
-                  </span>
-                  <span className="hidden dt:inline">{test.lines.join(" ")}</span>
-                </Typography>
+                {!hideCardDesc && (
+                  <Typography
+                    as="p"
+                    mobile="body-03"
+                    desktop="body-02"
+                    mobileSize={13}
+                    className={`mt-[6px] break-keep dt:mt-2.5 ${titleBelow ? "text-gray-03" : "text-white"}`}>
+                    <span className="dt:hidden">
+                      <Lines items={test.lines} />
+                    </span>
+                    <span className="hidden dt:inline">{test.lines.join(" ")}</span>
+                  </Typography>
+                )}
               </div>
             </button>
           </li>
@@ -576,114 +820,7 @@ export default function WimMainNew() {
             <TestsSection />
           </div>
 
-          {/* STEP 02 — 관리 캐러셀 */}
-          <div className="mt-[26px] flex flex-col items-start gap-[26px] tb:mt-[34px] tb:flex-row tb:items-end tb:gap-5">
-            <StepDivider className="hidden tb:block" />
-            <div className="min-w-0 flex-1">
-              <Eyebrow text={COPY.step2.label} tone="gray" />
-              <Typography as="h2" mobile="headline-01" tablet="display-02" weight="bold" className="mt-1.5 break-keep text-primary-main">
-                {COPY.step2.title}
-              </Typography>
-            </div>
-            {/* 모바일에서는 캐러셀 아래에 따로 노출한다 */}
-            <Typography mobile="body-03" className="hidden shrink-0 self-end text-primary-main dt:block">
-              {COPY.step2.swipeHint}
-            </Typography>
-          </div>
-
-          <div
-            ref={careTrackRef}
-            onScroll={updateCareActive}
-            className="mt-[36px] mr-[calc(50%-50vw)] flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-3 pr-[calc(50vw-50%)] [scrollbar-width:none] tb:gap-[15px] dt:mr-0 dt:pr-0 [&::-webkit-scrollbar]:hidden">
-            {WIM_NEW_CARES.map((care, careIndex) => {
-              // 마지막 카드는 끝에 닿기 전까지 옆으로 늘어나 "더 있다"는 신호를 준다.
-              // 높이는 aspect 대신 h-* 로 고정해서, 폭이 변해도 줄 높이가 흔들리지 않는다.
-              const isPeek = careIndex === carePeek.index;
-              return (
-              <div
-                key={care.no}
-                style={{
-                  ...(isPeek ? { width: carePeek.width } : null),
-                }}
-                className={`relative isolate h-[150px] shrink-0 snap-start overflow-hidden rounded-[10px] tb:h-[246px] dt:h-[357px] dt:rounded-[20px] ${
-                  isPeek ? "" : "w-[205px] tb:w-[calc((100%-15px)/2)] dt:w-[calc((100%-45px)/4)]"
-                }`}>
-              <button
-                type="button"
-                onClick={() => setActiveCare(care)}
-                aria-label={`${care.title} 자세히 보기`}
-                className="absolute inset-0 h-full w-full cursor-pointer border-0 bg-transparent p-0 text-left font-inherit">
-                <div className={`absolute inset-0 ${isPeek ? "care-peek-content" : ""}`}>
-                  <CardPhoto src={care.image} mobileSrc={care.imageMobile} alt={care.imageAlt} />
-                  <div className={CARE_SCRIM} />
-
-                  <Typography mobile="body-02" desktop="display-01" weight="bold" className="absolute left-[16px] top-[12px] text-white dt:left-[32px] dt:top-[18px]">
-                    {care.no}
-                  </Typography>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                  <img
-                    src={WIM_NEW_ICONS.plus}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute right-[12px] top-[12px] h-[20px] w-[20px] dt:hidden"
-                  />
-
-                  <div className="absolute inset-x-0 bottom-0 flex flex-col px-[16px] pb-[16px] dt:px-[32px] dt:pb-[37px]">
-                    <Typography as="h3" mobile="body-02" desktop="title-02" weight="bold" className="break-keep text-white">
-                      {care.title}
-                    </Typography>
-                    <Typography as="p" mobile="body-03" desktop="body-02" mobileSize={13} className="mt-[6px] break-keep text-white dt:mt-[8px]">
-                      {care.line}
-                    </Typography>
-                    <Typography mobile="body-03" className="mt-[14px] hidden flex-col text-white dt:flex">
-                      {COPY.step2.detailLabel}
-                      <span className="mt-[6px] h-px w-[86px] bg-gradient-to-r from-white/10 to-white" />
-                    </Typography>
-                  </div>
-                </div>
-
-              </button>
-
-                {isPeek && (
-                  <span
-                    aria-hidden="true"
-                    className="care-peek-fade pointer-events-none absolute inset-y-0 right-0 z-10 w-3/4"
-                  />
-                )}
-
-                {isPeek && (
-                  <button
-                    type="button"
-                    onClick={moveCareNext}
-                    aria-label="다음 관리 방식 보기"
-                    className="absolute left-[200px] top-1/2 z-20 hidden h-[36px] w-[36px] -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0 transition hover:opacity-80 dt:block">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                    <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
-                  </button>
-                )}
-              </div>
-              );
-            })}
-            {careActive < WIM_NEW_CARES.length - 1 && (
-              <button
-                type="button"
-                onClick={moveCareNext}
-                aria-label="다음 관리 방식 보기"
-                className="sticky right-[20px] z-20 -ml-[36px] block h-[36px] w-[36px] shrink-0 cursor-pointer self-center border-0 bg-transparent p-0 transition hover:opacity-80 dt:hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-                <img src={WIM_NEW_ICONS.careArrow} alt="" aria-hidden="true" className="block h-[36px] w-[36px]" />
-              </button>
-            )}
-          </div>
-
-          <div className="mt-[10px] flex items-center justify-center gap-2 dt:hidden" aria-hidden="true">
-            {WIM_NEW_CARES.map((care, index) => (
-              <span
-                key={care.no}
-                className={`h-[5px] rounded-full transition-all ${careActive === index ? "w-[24px] bg-primary-main" : "w-[5px] bg-gray-01"}`}
-              />
-            ))}
-          </div>
+          <CaresSection />
           {/* <p className="mt-[10px] text-center text-[13px] leading-[1.5] text-gray-02 dt:hidden">
             {COPY.step2.swipeHint}
           </p> */}

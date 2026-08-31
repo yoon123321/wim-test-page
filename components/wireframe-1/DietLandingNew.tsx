@@ -27,6 +27,7 @@ import {
   DIET_FAQ,
   type DietStep,
 } from "@/content/diet-new";
+import { TestsSection, CaresSection } from "@/components/home/WimMainNew";
 
 const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");`;
@@ -454,6 +455,14 @@ export default function DietLandingNew() {
               ))}
             </div>
           </div>
+        </div>
+      </Section>
+
+      {/* 메인과 동일한 STEP 01·02 — 컴포넌트를 그대로 가져다 쓴다 */}
+      <Section bg="bg-gray-00">
+        <TestsSection singleRow hideCardDesc titleBelow />
+        <div className="mt-[26px] tb:mt-[34px]">
+          <CaresSection />
         </div>
       </Section>
 

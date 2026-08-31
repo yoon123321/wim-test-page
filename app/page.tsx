@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Text from "@/components/common/Text";
@@ -7,6 +8,66 @@ import RevealOnScroll from "@/components/common/RevealOnScroll";
 import { useHomeContent } from "@/components/home/useHomeContent";
 import { useVariant } from "@/components/common/VariantProvider";
 import WimMainNew, { HeroA, IntroSection, WimMainBottom } from "@/components/home/WimMainNew";
+
+/** 센터 소개 2종 — 기본 50:50, 호버한 카드가 70:30 으로 넓어진다 */
+const CENTERS = [
+  {
+    title: "프리미엄 다이어트 센터",
+    lines: ["개인 기질 및 체질 정밀 분석", "맞춤형 식단 교정 및 영양 코칭", "단계별 체계적인 운동 처방"],
+    image: "/images/main/care-07.png",
+    alt: "맞춤 식단과 운동 처방을 받는 모습",
+    href: "/wireframe-1",
+  },
+  {
+    title: "리커버리 센터",
+    lines: ["최첨단 장비를 활용한 데이터 기반의 정밀한 측정과 분석을 통해", "당신의 몸을 정확히 이해하고 최적의 솔루션을 제공합니다."],
+    image: "/images/main/program-03.png",
+    alt: "전문 관리 장비를 이용하는 모습",
+    href: "/page-single",
+  },
+];
+
+function CenterCards() {
+  const [hovered, setHovered] = useState<number | null>(null);
+
+  return (
+    <div className="flex flex-col gap-5 tb:flex-row">
+      {CENTERS.map((center, index) => {
+        // 아무것도 안 눌렀을 때 5:5, 호버하면 6:4 — 세로로 쌓이는 모바일에서는 적용하지 않는다
+        const grow = hovered === null ? 5 : hovered === index ? 6 : 4;
+        return (
+          <article
+            key={center.title}
+            onMouseEnter={() => setHovered(index)}
+            onMouseLeave={() => setHovered(null)}
+            style={{ "--grow": grow } as React.CSSProperties}
+            className="relative isolate h-[300px] overflow-hidden rounded-[20px] tb:h-[380px] tb:basis-0 tb:[flex-grow:var(--grow)] tb:transition-[flex-grow] tb:duration-500 tb:ease-out">
+            <Image src={center.image} alt={center.alt} fill sizes="(min-width:768px) 60vw, 100vw" className="object-cover" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
+
+            <div className="absolute inset-0 flex flex-col justify-center gap-4 p-7 tb:p-10">
+              <Text as="h2" size="2xl" weight="bold" className="break-keep tracking-[-0.025em] text-white">
+                {center.title}
+              </Text>
+              <div className="flex flex-col gap-1.5">
+                {center.lines.map((line) => (
+                  <Text key={line} as="span" size="sm" className="break-keep text-white/85">
+                    {line}
+                  </Text>
+                ))}
+              </div>
+              <Link
+                href={center.href}
+                className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-white/70 px-5 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/15">
+                자세히 보기 <span aria-hidden>↗</span>
+              </Link>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
 
 function LaurelBranch({ mirrored = false }: { mirrored?: boolean }) {
   return (
@@ -43,7 +104,12 @@ export default function HomePage() {
 
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
-      <HeroA titleLines={["강남에서 시작하는 새로운 웰니스의 기준"]} showSub={false} showCta={false} />
+      <HeroA
+        titleLines={["강남에서 시작하는 새로운 웰니스의 기준"]}
+        showSub={false}
+        showCta={false}
+        eyebrowImage="/images/main/main_logo.png"
+      />
 
       {/* 센터 소개 */}
       <IntroSection titleLines={["모든 것은 전문인 데이터에 기반한 분석과 최신 기기 조합으로 시작됩니다"]} showDesc={false} showTestChips />
@@ -52,62 +118,7 @@ export default function HomePage() {
       <section className="bg-[#f6f7f7] px-4 py-14 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-20">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-8 tb:gap-10 dt:gap-12">
           <RevealOnScroll>
-            <div className="grid items-center gap-6 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm tb:grid-cols-2 tb:gap-8 tb:p-6 dt:grid-cols-[0.9fr_1.1fr] dt:gap-12">
-              <div className="relative h-[300px] w-full max-w-[400px] overflow-hidden rounded-lg border border-neutral-200 bg-white">
-                <Image
-                  src="/images/main/care-07.png"
-                  alt="건강한 식단과 맞춤 영양 관리"
-                  fill
-                  sizes="400px"
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="flex min-h-[200px] flex-col py-2">
-                <Text as="h2" size="2xl" weight="bold" className="break-keep tracking-[-0.025em] text-[#174f43]">
-                  프리미엄 다이어트 센터
-                </Text>
-                <ul className="mt-5 flex flex-col gap-3.5 text-sm text-neutral-700">
-                  {["개인 기질 및 체질 정밀 분석", "맞춤형 식단 교정 및 영양 코칭", "단계별 체계적인 운동 처방"].map((item) => (
-                    <li key={item} className="flex items-center gap-3">
-                      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#2f7567] text-[11px] font-bold text-white" aria-hidden>
-                        ✓
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/page-single" className="mt-auto self-end text-sm font-medium text-[#174f43] transition hover:translate-x-1">
-                  더 알아보기 →
-                </Link>
-              </div>
-            </div>
-          </RevealOnScroll>
-
-          <RevealOnScroll>
-            <div className="grid items-stretch gap-8 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm tb:grid-cols-2 tb:gap-8 tb:p-6 dt:grid-cols-[1.1fr_0.9fr] dt:gap-12">
-              <div className="flex min-h-[280px] flex-col py-2 tb:order-1 tb:h-[340px] tb:py-1 dt:h-[330px] dt:py-2">
-                <Text as="h2" size="2xl" weight="bold" className="tracking-[-0.025em] text-[#174f43]">
-                  리커버리 센터
-                </Text>
-                <Text as="p" size="md" className="mt-4 max-w-[530px] break-keep leading-8 text-neutral-600">
-                  최첨단 장비를 활용한 데이터 기반의 정밀한 측정과 분석을 통해 당신의 몸을 정확히 이해하고 최적의 솔루션을 제공합니다.
-                </Text>
-                <Link href="/page-single" className="mt-auto self-end text-sm font-medium text-[#174f43] transition hover:translate-x-1">
-                  장비 안내 보기 →
-                </Link>
-              </div>
-
-              <div className="relative h-[300px] w-full max-w-[400px] overflow-hidden rounded-lg border border-neutral-200 bg-white tb:order-2 tb:justify-self-end">
-                <Image
-                  src="/images/main/program-03.png"
-                  alt="전문 관리 장비를 이용하는 모습"
-                  fill
-                  sizes="400px"
-                  className="object-cover"
-                />
-              </div>
-            </div>
+            <CenterCards />
           </RevealOnScroll>
         </div>
       </section>
