@@ -14,7 +14,7 @@ export type DietStep = {
 export const DIET_NEW_COPY = {
   hero: {
     kicker: "WIM 통합 다이어트 타워",
-    titleLines: ["정교한 데이터가 만드는", "나만의 다이어트"],
+    titleLines: ["내 몸을 데이터로 읽고,", "나에게 맞게 감량합니다."],
     description: "체중 감량을 넘어, 대사와 생활 습관까지 함께 만들어가는 프로그램입니다.",
     imageLabel: "히어로 이미지 — 센터 또는 상담 장면",
   },

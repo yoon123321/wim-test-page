@@ -12,8 +12,9 @@
  * 팔레트에 없어 아래 상수로 모아 두었다.
  */
 
-import { useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { CaresSection, TestsSection } from "@/components/home/WimMainNew";
 import { Typography } from "@/components/common/Typography";
 import {
@@ -31,6 +32,116 @@ import {
   DIET_REVIEWS,
   DIET_FAQ,
 } from "@/data/diet";
+import { DIET_NEW_COPY } from "@/data/diet-new";
+
+/** 버전2 문구를 버전1 레이아웃에서 사용하는 동일한 문구 구조로 연결한다. */
+const DIET_COPY_V2 = {
+  hero: {
+    eyebrow: DIET_NEW_COPY.hero.kicker,
+    titleLines: DIET_NEW_COPY.hero.titleLines,
+    sub: DIET_NEW_COPY.hero.description,
+    imageLabel: DIET_NEW_COPY.hero.imageLabel,
+    primaryCta: DIET_NEW_COPY.cta.primaryButton,
+    secondaryCta: DIET_NEW_COPY.cta.secondaryButton,
+  },
+  problem: {
+    eyebrow: DIET_NEW_COPY.problem.kicker,
+    titleLines: DIET_NEW_COPY.problem.titleLines,
+    subLines: DIET_NEW_COPY.problem.statementLines,
+    caseIntroLines: [DIET_NEW_COPY.problem.description, DIET_NEW_COPY.problem.statementSub],
+    caseIntroLabel: "자주 나오는 유형",
+    ctaLead: DIET_NEW_COPY.problem.quizLabel,
+    ctaLabel: DIET_NEW_COPY.problem.quizButton,
+  },
+  difference: {
+    eyebrow: DIET_NEW_COPY.diff.eyebrow,
+    titleLines: [DIET_NEW_COPY.diff.titleLines[0], DIET_NEW_COPY.diff.titleAccent],
+    bodyLines: [...DIET_NEW_COPY.diff.bodyLines, DIET_NEW_COPY.diff.bodyStrong],
+    steps: DIET_NEW_COPY.diff.steps.map((step) => ({ step: step.step, title: step.title, descLines: step.subLines })),
+  },
+  result: {
+    eyebrow: DIET_NEW_COPY.result.badge,
+    title: DIET_NEW_COPY.result.title,
+    before: { label: DIET_NEW_COPY.result.before.cap, weight: DIET_NEW_COPY.result.before.kg, imageLabel: DIET_NEW_COPY.result.before.slot },
+    after: { label: DIET_NEW_COPY.result.after.cap, weight: DIET_NEW_COPY.result.after.kg, imageLabel: DIET_NEW_COPY.result.after.slot },
+    metricsLabel: "결과",
+    moreLabel: DIET_NEW_COPY.result.moreLabel,
+    keepEyebrow: DIET_NEW_COPY.result.stays.kicker,
+    keepTitleLines: [DIET_NEW_COPY.result.stays.lead, DIET_NEW_COPY.result.stays.title],
+    keepBody: DIET_NEW_COPY.result.stays.body,
+    chart: {
+      label: DIET_NEW_COPY.result.curve.badge,
+      title: DIET_NEW_COPY.result.curve.title,
+      endLabel: "관리 종료",
+      startLabel: "시작 체중",
+      goalLabel: "목표",
+      normalLabel: "일반 다이어트 — 다시 원래대로",
+      wimLabel: "윔 — 습관이 남아 유지",
+      note: "여기서부터가 진짜 관리 구간입니다",
+      caption: "체중 곡선 · 관리 종료 지점에서 두 곡선이 갈립니다",
+    },
+    axes: {
+      label: DIET_NEW_COPY.result.hexagon.badge,
+      title: DIET_NEW_COPY.result.hexagon.title,
+      cardTitle: DIET_NEW_COPY.result.hexagon.cardTitle,
+      cardBody: DIET_NEW_COPY.result.hexagon.cardBody,
+      legendStart: DIET_NEW_COPY.result.hexagon.legendStart,
+      legendAfter: DIET_NEW_COPY.result.hexagon.legendAfter,
+    },
+  },
+  roadmap: {
+    eyebrow: DIET_NEW_COPY.journey.kicker,
+    title: DIET_NEW_COPY.journey.title,
+    description: DIET_NEW_COPY.journey.description,
+    detailLabel: DIET_NEW_COPY.journey.detailLabel,
+  },
+  team: {
+    eyebrow: DIET_NEW_COPY.team.kicker,
+    title: DIET_NEW_COPY.team.title,
+    oneDesign: {
+      eyebrow: DIET_NEW_COPY.team.oneDesign.kicker,
+      title: DIET_NEW_COPY.team.oneDesign.title,
+      body: DIET_NEW_COPY.team.oneDesign.body,
+    },
+    coaching: {
+      eyebrow: DIET_NEW_COPY.team.coaching.kicker,
+      title: DIET_NEW_COPY.team.coaching.title,
+      body: DIET_NEW_COPY.team.coaching.body,
+      managerEyebrow: DIET_NEW_COPY.team.coaching.managerKicker,
+      managerName: DIET_NEW_COPY.team.coaching.managerName,
+      youEyebrow: DIET_NEW_COPY.team.coaching.youKicker,
+      youName: DIET_NEW_COPY.team.coaching.youName,
+      arrowGive: DIET_NEW_COPY.team.coaching.arrowGive,
+      arrowBack: DIET_NEW_COPY.team.coaching.arrowBack,
+    },
+  },
+  plans: {
+    eyebrow: DIET_NEW_COPY.plans.kicker,
+    title: DIET_NEW_COPY.plans.title,
+    descriptionLines: DIET_NEW_COPY.plans.descriptionLines,
+    badge: DIET_NEW_COPY.plans.featuredBadge,
+    optionLabel: DIET_NEW_COPY.plans.optionLabel,
+    swipeHint: DIET_NEW_COPY.plans.swipeHint,
+  },
+  reviews: {
+    eyebrow: DIET_NEW_COPY.reviews.kicker,
+    titleLines: [DIET_NEW_COPY.reviews.title, DIET_NEW_COPY.reviews.description],
+    ratingLabel: DIET_NEW_COPY.reviews.ratingKicker,
+    ratingValue: DIET_NEW_COPY.reviews.rating,
+    ratingMax: DIET_NEW_COPY.reviews.ratingSub,
+    ratingCount: DIET_NEW_COPY.reviews.ratingNote,
+  },
+  faq: { eyebrow: DIET_NEW_COPY.faq.kicker, title: DIET_NEW_COPY.faq.title },
+  contact: {
+    titleLines: DIET_NEW_COPY.cta.titleLines,
+    description: DIET_NEW_COPY.cta.description,
+    primaryCta: DIET_NEW_COPY.cta.primaryButton,
+    secondaryCta: DIET_NEW_COPY.cta.secondaryButton,
+  },
+} as const;
+
+const DietCopyContext = createContext<typeof DIET_COPY | typeof DIET_COPY_V2>(DIET_COPY);
+const useDietCopy = () => useContext(DietCopyContext);
 
 /** 모바일 캐러셀에서 카드 사이 간격(px) — gap-3 과 맞춰 둔다 */
 const CASE_DECK_GAP = 12;
@@ -98,11 +209,18 @@ function ImageSlot({ label, className = "" }: { label: string; className?: strin
 /* ─────────────────────────── 섹션들 ─────────────────────────── */
 
 function Hero() {
-  const C0 = DIET_COPY.hero;
+  const C0 = useDietCopy().hero;
   return (
     <section id="top" className="relative overflow-hidden bg-black">
       <div className="absolute inset-0">
-        <ImageSlot label={C0.imageLabel} className="h-full w-full" />
+        <Image
+          src="/images/diet/diet_hero.png"
+          alt={C0.imageLabel}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(rgba(29,30,30,0.55),rgba(29,30,30,0.82))]" />
 
@@ -404,7 +522,7 @@ function CaseDeck() {
 }
 
 function Problem() {
-  const C0 = DIET_COPY.problem;
+  const C0 = useDietCopy().problem;
   return (
     <section id="problem" className="overflow-hidden px-6 py-[96px]" style={{ background: C.greenDark }}>
       <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-11">
@@ -465,7 +583,7 @@ function Problem() {
 }
 
 function Difference() {
-  const C0 = DIET_COPY.difference;
+  const C0 = useDietCopy().difference;
   return (
     <Section id="difference" className="bg-white">
       {/* 가운데 정렬 · 원 두 개를 + 로 잇는다 (원본 시안) */}
@@ -516,7 +634,7 @@ function Difference() {
 }
 
 function Result() {
-  const C0 = DIET_COPY.result;
+  const C0 = useDietCopy().result;
   return (
     <Section id="result" className="bg-white">
       <div className="flex flex-col gap-12">
@@ -715,7 +833,7 @@ function Result() {
 }
 
 function Roadmap() {
-  const C0 = DIET_COPY.roadmap;
+  const C0 = useDietCopy().roadmap;
   return (
     <Section id="roadmap" className="bg-white">
       <div className="flex flex-col gap-8 tb:gap-11">
@@ -758,7 +876,7 @@ function Roadmap() {
 }
 
 function Team() {
-  const C0 = DIET_COPY.team;
+  const C0 = useDietCopy().team;
   return (
     <Section id="team" className="bg-black">
       <div className="flex flex-col gap-8 tb:gap-11">
@@ -822,7 +940,7 @@ function Team() {
 }
 
 function Plans() {
-  const C0 = DIET_COPY.plans;
+  const C0 = useDietCopy().plans;
   return (
     <Section id="plans" className="bg-white">
       <div className="flex flex-col gap-8 tb:gap-11">
@@ -905,7 +1023,7 @@ function Plans() {
 }
 
 function Reviews() {
-  const C0 = DIET_COPY.reviews;
+  const C0 = useDietCopy().reviews;
   return (
     <Section id="reviews" className="bg-black">
       <div className="flex flex-col gap-8 tb:gap-11">
@@ -970,7 +1088,7 @@ function Reviews() {
 }
 
 function Faq() {
-  const C0 = DIET_COPY.faq;
+  const C0 = useDietCopy().faq;
   const [open, setOpen] = useState<string | null>(DIET_FAQ[0].q);
   return (
     <Section id="faq" className="bg-white">
@@ -1008,7 +1126,7 @@ function Faq() {
 }
 
 function Contact() {
-  const C0 = DIET_COPY.contact;
+  const C0 = useDietCopy().contact;
   return (
     <section id="contact" className="px-6 py-[116px]" style={{ background: C.greenDark }}>
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 text-center">
@@ -1036,19 +1154,22 @@ function Contact() {
 
 /* ─────────────────────────── 페이지 ─────────────────────────── */
 
-export default function DietLanding() {
+export default function DietLanding({ copyVariant = "base" }: { copyVariant?: "base" | "improved" }) {
+  const copy = copyVariant === "improved" ? DIET_COPY_V2 : DIET_COPY;
   return (
-    <main className="w-full bg-white font-pretendard text-black antialiased">
-      <Hero />
-      <Problem />
-      <Difference />
-      <Result />
-      <Roadmap />
-      <Team />
-      <Plans />
-      <Reviews />
-      <Faq />
-      <Contact />
-    </main>
+    <DietCopyContext.Provider value={copy}>
+      <main className="w-full bg-white font-pretendard text-black antialiased">
+        <Hero />
+        <Problem />
+        <Difference />
+        <Result />
+        <Roadmap />
+        <Team />
+        <Plans />
+        <Reviews />
+        <Faq />
+        <Contact />
+      </main>
+    </DietCopyContext.Provider>
   );
 }
