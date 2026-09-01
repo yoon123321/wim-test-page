@@ -6,9 +6,11 @@
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
  * - 문구·데이터는 data/recovery-new.ts 에서 수정
  * - 상황별 조합 탭, 기기 5종 + 상세 모달, 관리 흐름, 인스타 기록, 가격 2탭, FAQ
+ * - 하단 CTA의 유형 검사는 /recovery-type-test 페이지로 이동
  */
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { useMobileViewportHeight } from "@/components/common/useMobileViewportHeight";
 import {
   RECOVERY_COPY,
@@ -508,12 +510,12 @@ export default function RecoveryLandingNew() {
           <h2 className="m-0 max-w-[700px] break-keep text-[24px] leading-[1.42] tracking-[-0.03em] tb:text-[36px] tb:leading-[1.4]">{COPY.contact.title}</h2>
           <p className="m-0 max-w-[560px] break-keep text-[16px] leading-[1.9] text-gray-03">{COPY.contact.description}</p>
           <div className="mt-3 flex w-full flex-col items-stretch gap-3 tb:w-auto tb:flex-row">
-            <a href="#contact" className="rounded-full bg-primary-main px-[34px] py-[17px] text-center text-[15.5px] font-bold text-white no-underline transition hover:opacity-90">
+            <Link href="/recovery-type-test" className="rounded-full bg-primary-main px-[34px] py-[17px] text-center text-[15.5px] font-bold text-white no-underline transition hover:opacity-90">
               {COPY.contact.primaryButton}
-            </a>
-            <a href="#contact" className="rounded-full border border-primary-main px-[34px] py-4 text-center text-[15.5px] font-bold text-primary-main no-underline transition hover:opacity-90">
+            </Link>
+            <Link href="/contact" className="rounded-full border border-primary-main px-[34px] py-4 text-center text-[15.5px] font-bold text-primary-main no-underline transition hover:opacity-90">
               {COPY.contact.secondaryButton}
-            </a>
+            </Link>
           </div>
         </div>
       </section>
