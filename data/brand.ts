@@ -3,7 +3,7 @@
  * 현재 화면은 도형 와이어프레임이므로 문구는 aria-label과 구조 데이터에 연결됩니다.
  * 디자인 확정 후 이 데이터 그대로 실제 텍스트 컴포넌트에 사용할 수 있습니다.
  */
-export const WIREFRAME_TWO_CONTENT = {
+export const BRAND_CONTENT = {
   navigation: {
     brand: "윔센터",
     items: [

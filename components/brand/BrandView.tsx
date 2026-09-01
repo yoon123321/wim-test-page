@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { WIREFRAME_TWO_CONTENT as CONTENT } from "@/content/wireframe-2";
+import { BRAND_CONTENT as CONTENT } from "@/data/brand";
 
 const lineWidths = ["w-2/5", "w-3/5", "w-1/2", "w-4/5"];
 
@@ -30,7 +30,7 @@ function SectionTitle({ eyebrow, title, description }: { eyebrow: string; title:
 const sectionClass = "border-t border-dashed border-neutral-300 px-4 py-14 tb:px-8 tb:py-20 dt:px-10 dt:py-24";
 const innerClass = "mx-auto w-full max-w-[1200px]";
 
-export default function WireframeTwo() {
+export default function BrandView() {
   const [method, setMethod] = useState(1);
   const [manager, setManager] = useState(1);
   const [selectedCase, setSelectedCase] = useState<number | null>(null);

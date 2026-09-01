@@ -16,14 +16,14 @@ const CENTERS = [
     lines: ["개인 기질 및 체질 정밀 분석", "맞춤형 식단 교정 및 영양 코칭", "단계별 체계적인 운동 처방"],
     image: "/images/main/care-07.png",
     alt: "맞춤 식단과 운동 처방을 받는 모습",
-    href: "/wireframe-1",
+    href: "/diet-program",
   },
   {
     title: "리커버리 센터",
     lines: ["최첨단 장비를 활용한 데이터 기반의 정밀한 측정과 분석을 통해", "당신의 몸을 정확히 이해하고 최적의 솔루션을 제공합니다."],
     image: "/images/main/program-03.png",
     alt: "전문 관리 장비를 이용하는 모습",
-    href: "/page-single",
+    href: "/recovery",
   },
 ];
 
@@ -45,21 +45,24 @@ function CenterCards() {
             <Image src={center.image} alt={center.alt} fill sizes="(min-width:768px) 60vw, 100vw" className="object-cover" />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
 
-            <div className="absolute inset-0 flex flex-col justify-center gap-4 p-7 tb:p-10">
-              <Text as="h2" size="2xl" weight="bold" className="break-keep tracking-[-0.025em] text-white">
+            <div className="absolute inset-0 flex flex-col justify-end p-7 tb:p-10 dt:p-12">
+              <Text as="h2" size="2xl" weight="bold" className="break-keep tracking-[-0.035em] text-white tb:text-[32px]">
                 {center.title}
               </Text>
-              <div className="flex flex-col gap-1.5">
+              <div className="mt-5 flex max-w-[560px] flex-col gap-1.5 tb:mt-7 tb:gap-2">
                 {center.lines.map((line) => (
-                  <Text key={line} as="span" size="sm" className="break-keep text-white/85">
+                  <Text key={line} as="span" size="sm" className="break-keep leading-7 text-white/90 tb:text-[17px]">
                     {line}
                   </Text>
                 ))}
               </div>
               <Link
                 href={center.href}
-                className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-white/70 px-5 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-white/15">
-                자세히 보기 <span aria-hidden>↗</span>
+                className="mt-7 inline-flex h-[46px] w-fit items-center gap-3 rounded-full border border-white/75 bg-white/25 px-6 text-[15px] font-medium text-white no-underline shadow-sm backdrop-blur-[5px] transition hover:bg-white/35 tb:mt-9 tb:h-[52px] tb:px-7 tb:text-[17px]">
+                자세히 보기
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <path d="M4 18 18 4M7 4h11v11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </Link>
             </div>
           </article>
@@ -109,13 +112,19 @@ export default function HomePage() {
         showSub={false}
         showCta={false}
         eyebrowImage="/images/main/main_logo.png"
+        mobileTopAligned
       />
 
       {/* 센터 소개 */}
-      <IntroSection titleLines={["모든 것은 전문인 데이터에 기반한 분석과 최신 기기 조합으로 시작됩니다"]} showDesc={false} showTestChips />
+      <IntroSection
+        titleLines={["모든 것은 전문인", "데이터에 기반한 분석과", "최신 기기 조합으로 시작됩니다."]}
+        showDesc={false}
+        showTestChips
+        gradientBackground
+      />
 
       {/* 프로그램 · 테크놀로지 소개 */}
-      <section className="bg-[#f6f7f7] px-4 py-14 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-20">
+      <section className="bg-white px-4 py-14 tb:px-10 tb:py-20 dt:px-[max(40px,calc((100vw-1200px)/2))] dt:py-20">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-8 tb:gap-10 dt:gap-12">
           <RevealOnScroll>
             <CenterCards />

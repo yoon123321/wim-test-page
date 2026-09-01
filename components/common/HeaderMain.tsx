@@ -6,7 +6,7 @@
  *   모바일 (~1199px)  높이 56px, 로고 + 햄버거 (메뉴는 우측 사이드바)
  *   PC (1200px~)      높이 80px, 로고 + 한 줄 메뉴 + 상담 신청 버튼
  *
- * 메뉴 항목은 content/navigation.ts 의 NAVIGATION_MAIN 에서 수정한다.
+ * 메뉴 항목은 data/navigation.ts 의 NAVIGATION_MAIN 에서 수정한다.
  * 기존안 헤더는 Header.tsx 에 그대로 남아 있고, 헤더 스위치로 갈린다.
  */
 
@@ -14,15 +14,39 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import { NAVIGATION_MAIN, NAVIGATION_MAIN_CTA } from "@/content/navigation";
-import { COMMON_CONTENT } from "@/content/common";
+import { useVariant, VARIANT_LABELS, type HomeVariant } from "./VariantProvider";
+import { NAVIGATION_MAIN, NAVIGATION_MAIN_CTA } from "@/data/navigation";
+import { COMMON_CONTENT } from "@/data/common";
 import type { NavLink } from "./types";
 import { Typography } from "./Typography";
 
 const ICONS = "/images/main/icons";
 
-/** 기존안/개선안 미리보기 스위치 (목업 전용) — 부모가 넘겨준다 */
-export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNode }) {
+/** 버전1/버전2 미리보기 스위치 (목업 전용) */
+function VariantSwitch() {
+  const { variant, setVariant } = useVariant();
+  return (
+    <div className="flex items-center gap-1 rounded-full border border-neutral-300 p-1">
+      {(["base", "improved"] as HomeVariant[]).map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => setVariant(v)}
+          aria-pressed={variant === v}
+          title={`${VARIANT_LABELS[v]} 문구 보기`}
+          className={`h-7 cursor-pointer rounded-full px-3 text-xs font-bold transition ${
+            variant === v ? "bg-neutral-900 text-white" : "bg-transparent text-neutral-500 hover:text-neutral-900"
+          }`}
+        >
+          {VARIANT_LABELS[v]}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** 공용 헤더 — 버전1·버전2 모두 이 헤더를 쓴다 */
+export default function HeaderMain() {
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const pathname = usePathname();
@@ -109,7 +133,9 @@ export default function HeaderMain({ switchSlot }: { switchSlot?: React.ReactNod
           </Link>
 
           {/* 기존안/개선안 스위치 (목업 전용) */}
-          {switchSlot ? <div className="ml-auto mr-3 dt:ml-6 dt:mr-0">{switchSlot}</div> : null}
+          <div className="ml-auto mr-3 dt:ml-6 dt:mr-0">
+            <VariantSwitch />
+          </div>
 
           {/* 모바일·태블릿 햄버거 */}
           <button

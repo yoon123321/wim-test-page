@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { COMMON_CONTENT } from "@/content/common";
+import { COMMON_CONTENT } from "@/data/common";
 
 interface FloatingConsultProps {
   href?: string;

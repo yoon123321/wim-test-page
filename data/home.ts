@@ -61,9 +61,9 @@ export const HOME_CONTENT_E = {
     titleLines: ["당신에게 맞는 프로그램을 \n제안합니다"],
     description: "목표와 몸 상태에 따라, \n서로 다른 프로그램을 제안합니다.",
     items: [
-      { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/wireframe-1" },
-      { id: "case-2", title: "닥터 윔 비대면 프로그램", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
-      { id: "case-3", title: "롱제비티케어", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
+      { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/diet-program" },
+      { id: "case-2", title: "닥터 윔 비대면 프로그램", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/recovery" },
+      { id: "case-3", title: "롱제비티케어", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/recovery" },
     ],
   },
   cta: {
@@ -77,24 +77,6 @@ export const HOME_CONTENT_E = {
   },
 } as const;
 
-/** 홈 "STEP 01 · 검사" 섹션(HomeDiagnostics) 문구와 카드 데이터 */
-export const HOME_DIAGNOSTICS = {
-  step: "STEP 01 · 검사",
-  title: "나만의 다이어트 전략을 위한 검사",
-  detailLabel: "자세히 보기 →",
-  modal: {
-    closeLabel: "검사 상세 닫기",
-    note: "검사 결과를 바탕으로 현재 상태와 생활 패턴을 확인하고, 무리 없이 지속할 수 있는 감량 방향을 함께 설계합니다.",
-  },
-  items: [
-    { number: "01", badge: "WIM-I", caption: "6축 기질 분포", title: "기질과 성향", description: "내가 무너지는 순간을 찾습니다", visual: "radar" },
-    { number: "02", badge: "WIM-S", caption: "생활 5축 기록", title: "현재 생활 습관", description: "하루 중 새는 지점을 찾습니다", visual: "bars" },
-    { number: "03", badge: "인바디", caption: "체성분 구성", title: "현재 몸 상태", description: "뺄 것과 지킬 것을 나눕니다", visual: "body" },
-    { number: "04", badge: "시그니처", caption: "유전 정보", title: "타고난 유전자", description: "나에게 무리인 방식을 걸러냅니다", visual: "dna" },
-    { number: "05", badge: "CGM", caption: "식후 혈당 곡선", title: "혈당 변화", description: "내 몸이 반응하는 음식을 찾습니다", visual: "curve" },
-    { number: "06", badge: "운동 리포트", caption: "체력 지표", title: "현재 체력", description: "지금 가능한 강도를 정합니다", visual: "gauge" },
-  ],
-} as const;
 
 /** 홈 "STEP 02 · 관리" 섹션(HomeManagement) 문구와 카드 데이터 */
 export const HOME_MANAGEMENT = {
@@ -181,9 +163,9 @@ export const HOME_CONTENT_NEW = {
     titleLines: ["당신에게 맞는 프로그램을 \n제안합니다"],
     description: "목표와 몸 상태에 따라, \n서로 다른 프로그램을 제안합니다.",
     items: [
-      { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/wireframe-1" },
-      { id: "case-2", title: "닥터 윔 비대면 프로그램", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
-      { id: "case-3", title: "롱제비티케어", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/page-single" },
+      { id: "case-1", title: "웰니스 프로그램", meta: "식단과 생활 습관을 중심으로, 체중과 체형의 변화를 세심하게 관리하는 프로그램입니다.", image: "/images/case-1.jpg", href: "/diet-program" },
+      { id: "case-2", title: "닥터 윔 비대면 프로그램", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/recovery" },
+      { id: "case-3", title: "롱제비티케어", meta: "크라이오테라피, 인프라레드, 고압산소챔버 등 회복 전문 테크를 그날의 컨디션에 맞춰 조합합니다. ", image: "/images/case-2.jpg", href: "/recovery" },
     ],
   },
   cta: {
@@ -197,24 +179,6 @@ export const HOME_CONTENT_NEW = {
   },
 } as const;
 
-/** 홈 "STEP 01 · 검사" 섹션 — 개선안(NEW) */
-export const HOME_DIAGNOSTICS_NEW = {
-  step: "STEP 01 · 검사",
-  title: "나만의 다이어트 전략을 위한 검사",
-  detailLabel: "자세히 보기 →",
-  modal: {
-    closeLabel: "검사 상세 닫기",
-    note: "검사 결과를 바탕으로 현재 상태와 생활 패턴을 확인하고, 무리 없이 지속할 수 있는 감량 방향을 함께 설계합니다.",
-  },
-  items: [
-    { number: "01", badge: "WIM-I", caption: "6축 기질 분포", title: "기질과 성향", description: "내가 무너지는 순간을 찾습니다", visual: "radar" },
-    { number: "02", badge: "WIM-S", caption: "생활 5축 기록", title: "현재 생활 습관", description: "하루 중 새는 지점을 찾습니다", visual: "bars" },
-    { number: "03", badge: "인바디", caption: "체성분 구성", title: "현재 몸 상태", description: "뺄 것과 지킬 것을 나눕니다", visual: "body" },
-    { number: "04", badge: "시그니처", caption: "유전 정보", title: "타고난 유전자", description: "나에게 무리인 방식을 걸러냅니다", visual: "dna" },
-    { number: "05", badge: "CGM", caption: "식후 혈당 곡선", title: "혈당 변화", description: "내 몸이 반응하는 음식을 찾습니다", visual: "curve" },
-    { number: "06", badge: "운동 리포트", caption: "체력 지표", title: "현재 체력", description: "지금 가능한 강도를 정합니다", visual: "gauge" },
-  ],
-} as const;
 
 /** 홈 "STEP 02 · 관리" 섹션 — 개선안(NEW) */
 export const HOME_MANAGEMENT_NEW = {

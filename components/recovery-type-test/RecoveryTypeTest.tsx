@@ -2,7 +2,7 @@
 
 /**
  * 기기관리(리커버리) 유형 테스트 — 인트로 → 10문항 → 로딩 → 결과
- * 데이터·채점 규칙: content/recovery-type-test.ts (원본 config.js / scoring.js 로직 그대로)
+ * 데이터·채점 규칙: data/recovery-type-test.ts (원본 config.js / scoring.js 로직 그대로)
  *
  * 세션 저장(/api/submit)·이벤트 로그(/api/track)는 기존 메타 광고용 사이트 백엔드로 POST 한다.
  * NEXT_PUBLIC_RECOVERY_TEST_API 가 비어 있으면 전송하지 않는다 (CORS 열리기 전까지).
@@ -10,7 +10,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { TEST_CONFIG, type Axis, type Question } from "@/content/recovery-type-test";
+import { TEST_CONFIG, type Axis, type Question } from "@/data/recovery-type-test";
 
 const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");`;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PAGE_SINGLE_CONTENT as CONTENT } from "@/content/page-single";
+import { RECOVERY_CONTENT as CONTENT } from "@/data/recovery";
 import Modal from "@/components/common/Modal";
 import Text from "@/components/common/Text";
 import ProcessRoadmap from "@/components/common/ProcessRoadmap";
@@ -59,7 +59,7 @@ function Heading({ title, subtitle }: { title: string; subtitle: React.ReactNode
   );
 }
 
-export default function WimDeviceWireframe() {
+export default function RecoveryLanding() {
   const [situation, setSituation] = useState(0);
   const [faq, setFaq] = useState(0);
   const [selectedDevice, setSelectedDevice] = useState<number | null>(null);

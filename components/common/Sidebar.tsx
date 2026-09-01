@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import type { NavLink } from "./types";
-import { COMMON_CONTENT } from "@/content/common";
+import { COMMON_CONTENT } from "@/data/common";
 
 interface SidebarProps {
   open: boolean;

@@ -4,7 +4,7 @@
  * 감량프로그램 랜딩 — 개선안(NEW) · 테일윈드 + 디자인 시스템 토큰 버전
  *
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
- * - 문구·데이터는 content/diet-new.ts 에서 수정
+ * - 문구·데이터는 data/diet-new.ts 에서 수정
  * - 1분 유형 검사(12문항) 모달, 3단계 여정 모달, 관리 8종 모달 포함
  * - 이미지 자리는 <ImageSlot src="...">로 실사 교체
  */
@@ -26,7 +26,7 @@ import {
   DIET_PLAN_STATES,
   DIET_FAQ,
   type DietStep,
-} from "@/content/diet-new";
+} from "@/data/diet-new";
 import { TestsSection, CaresSection } from "@/components/home/WimMainNew";
 
 const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");

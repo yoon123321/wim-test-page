@@ -1,8 +1,8 @@
 /**
- * 원페이지(/page-single) 문구와 반복 데이터.
+ * 원페이지(/recovery) 문구와 반복 데이터.
  * 화면의 텍스트를 바꿀 때는 이 파일만 수정하면 됩니다.
  */
-export const PAGE_SINGLE_CONTENT = {
+export const RECOVERY_CONTENT = {
   hero: {
     sectionLabel: "① 히어로 — 현행 카피 유지",
     imagePlaceholder: "골블러드 다크 우드 이미지 (현행 유지)",

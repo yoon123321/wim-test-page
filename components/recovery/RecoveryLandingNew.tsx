@@ -4,7 +4,7 @@
  * 기기관리(리커버리) 랜딩 — 개선안(NEW) · 테일윈드 + 디자인 시스템 토큰 버전
  *
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
- * - 문구·데이터는 content/recovery-new.ts 에서 수정
+ * - 문구·데이터는 data/recovery-new.ts 에서 수정
  * - 상황별 조합 탭, 기기 5종 + 상세 모달, 관리 흐름, 인스타 기록, 가격 2탭, FAQ
  * - 하단 CTA의 유형 검사는 /recovery-type-test 페이지로 이동
  */
@@ -28,7 +28,7 @@ import {
   RECOVERY_TRIALS,
   RECOVERY_FAQ,
   type RecoveryDevice,
-} from "@/content/recovery-new";
+} from "@/data/recovery-new";
 
 const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");`;
