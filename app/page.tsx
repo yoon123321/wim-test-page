@@ -6,33 +6,17 @@ import Image from "next/image";
 import Text from "@/components/common/Text";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
 import { useHomeContent } from "@/components/home/useHomeContent";
+import { HOME_CENTERS, HOME_MAIN_V1 } from "@/data/home";
 import { useVariant } from "@/components/common/VariantProvider";
 import WimMainNew, { HeroA, IntroSection, WimMainBottom } from "@/components/home/WimMainNew";
 
-/** 센터 소개 2종 — 기본 50:50, 호버한 카드가 70:30 으로 넓어진다 */
-const CENTERS = [
-  {
-    title: "프리미엄 다이어트 센터",
-    lines: ["개인 기질 및 체질 정밀 분석", "맞춤형 식단 교정 및 영양 코칭", "단계별 체계적인 운동 처방"],
-    image: "/images/main/care-07.png",
-    alt: "맞춤 식단과 운동 처방을 받는 모습",
-    href: "/diet-program",
-  },
-  {
-    title: "리커버리 센터",
-    lines: ["최첨단 장비를 활용한 데이터 기반의 정밀한 측정과 분석을 통해", "당신의 몸을 정확히 이해하고 최적의 솔루션을 제공합니다."],
-    image: "/images/main/program-03.png",
-    alt: "전문 관리 장비를 이용하는 모습",
-    href: "/recovery",
-  },
-];
-
+/** 센터 소개 2종 — 기본 50:50, 호버한 카드가 70:30 으로 넓어진다. 문구는 data/home.ts HOME_CENTERS */
 function CenterCards() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <div className="flex flex-col gap-5 tb:flex-row">
-      {CENTERS.map((center, index) => {
+      {HOME_CENTERS.map((center, index) => {
         // 아무것도 안 눌렀을 때 5:5, 호버하면 6:4 — 세로로 쌓이는 모바일에서는 적용하지 않는다
         const grow = hovered === null ? 5 : hovered === index ? 6 : 4;
         return (
@@ -43,27 +27,34 @@ function CenterCards() {
             style={{ "--grow": grow } as React.CSSProperties}
             className="relative isolate h-[300px] overflow-hidden rounded-[20px] tb:h-[380px] tb:basis-0 tb:[flex-grow:var(--grow)] tb:transition-[flex-grow] tb:duration-500 tb:ease-out">
             <Image src={center.image} alt={center.alt} fill sizes="(min-width:768px) 60vw, 100vw" className="object-cover" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
+            {/* 사이트 초록으로 아래에서 올라오는 그라데이션 */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-deeper via-primary-main/60 to-black/5" />
 
-            <div className="absolute inset-0 flex flex-col justify-end p-7 tb:p-10 dt:p-12">
-              <Text as="h2" size="2xl" weight="bold" className="break-keep tracking-[-0.035em] text-white tb:text-[32px]">
-                {center.title}
-              </Text>
-              <div className="mt-5 flex max-w-[560px] flex-col gap-1.5 tb:mt-7 tb:gap-2">
-                {center.lines.map((line) => (
-                  <Text key={line} as="span" size="sm" className="break-keep leading-7 text-white/90 tb:text-[17px]">
-                    {line}
-                  </Text>
-                ))}
+            <div className="absolute inset-0 flex flex-col justify-between p-5 tb:p-7 dt:p-8">
+              {/* 센터 이름 — 상단 좌측, 아래 연두 밑줄 */}
+              <div className="flex w-fit flex-col gap-2">
+                <Text as="h2" size="md" weight="bold" className="m-0 tracking-[-0.02em] text-white tb:text-[17px]">
+                  {center.title}
+                </Text>
+                <span aria-hidden="true" className="h-[3px] w-[44px] rounded-full bg-primary-sub-02" />
               </div>
-              <Link
-                href={center.href}
-                className="mt-7 inline-flex h-[46px] w-fit items-center gap-3 rounded-full border border-white/75 bg-white/25 px-6 text-[15px] font-medium text-white no-underline shadow-sm backdrop-blur-[5px] transition hover:bg-white/35 tb:mt-9 tb:h-[52px] tb:px-7 tb:text-[17px]">
-                자세히 보기
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-                  <path d="M4 18 18 4M7 4h11v11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
+
+              <div className="flex max-w-[560px] flex-col gap-2">
+                <Text as="p" size="xl" weight="bold" className="m-0 break-keep leading-[1.3] tracking-[-0.03em] text-white">
+                  {center.message}
+                </Text>
+                <Text as="span" size="md" className="break-keep text-white/90">
+                  {center.sub}
+                </Text>
+                <Link
+                  href={center.href}
+                  className="mt-3 inline-flex h-[40px] w-fit items-center gap-1.5 rounded-full bg-white px-5 text-[14px] font-bold text-primary-main no-underline shadow-sm transition hover:bg-primary-sub-03 tb:mt-4 tb:h-[44px] tb:px-6 tb:text-[15px]">
+                  자세히 보기
+                  <svg width="14" height="14" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                    <path d="M5 17 17 5M8 5h9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              </div>
             </div>
           </article>
         );
@@ -108,7 +99,7 @@ export default function HomePage() {
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
       <HeroA
-        titleLines={["강남에서 시작하는 새로운 웰니스의 기준"]}
+        titleLines={HOME_MAIN_V1.hero.titleLines}
         showSub={false}
         showCta={false}
         eyebrowImage="/images/main/main_logo.png"
@@ -117,7 +108,8 @@ export default function HomePage() {
 
       {/* 센터 소개 */}
       <IntroSection
-        titleLines={["모든 것은 전문인", "데이터에 기반한 분석과", "최신 기기 조합으로 시작됩니다."]}
+        eyebrow={HOME_MAIN_V1.intro.eyebrow}
+        titleLines={HOME_MAIN_V1.intro.titleLines}
         showDesc={false}
         showTestChips
         gradientBackground

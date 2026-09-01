@@ -636,11 +636,12 @@ export function TestsSection({
 
 /** 인트로 섹션 — 소개 카피 + 사진 */
 export function IntroSection({
+  eyebrow,
   titleLines,
   showDesc = true,
   showTestChips = false,
   gradientBackground = false,
-}: { titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean } = {}) {
+}: { eyebrow?: string; titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
     <section
@@ -652,7 +653,7 @@ export function IntroSection({
       <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
         <div className="flex flex-col dt:flex-1">
           <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
-            {COPY.intro.eyebrow}
+            {eyebrow ?? COPY.intro.eyebrow}
           </Typography>
           <Typography as="h2" mobile="headline-01" tablet="display-01" weight="bold" className="mt-2 break-keep text-primary-main tb:mt-[9px]">
             <Lines items={titleLines ?? COPY.intro.titleLines} />
