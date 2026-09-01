@@ -93,9 +93,10 @@ function Eyebrow({ text, tone = "green" }: { text: string; tone?: "green" | "gra
   return <Typography font="franklin" mobile="body-02" weight="regular" className={`block ${color}`}>{text}</Typography>;
 }
 
-/** 섹션 공통 — 모바일 20px 사이드 여백, PC 1280 컨테이너 */
-function Container({ className = "", children }: { className?: string; children: React.ReactNode }) {
-  return <div className={`mx-auto w-full tb:max-w-[688px] dt:max-w-[1280px] ${className}`}>{children}</div>;
+/** 섹션 공통 — 모바일 20px 사이드 여백, PC 기본 1280 컨테이너 */
+function Container({ className = "", desktopMaxWidth = "1280px", children }: { className?: string; desktopMaxWidth?: "1200px" | "1280px"; children: React.ReactNode }) {
+  const desktopWidthClass = desktopMaxWidth === "1200px" ? "dt:max-w-[1200px]" : "dt:max-w-[1280px]";
+  return <div className={`mx-auto w-full tb:max-w-[688px] ${desktopWidthClass} ${className}`}>{children}</div>;
 }
 
 function Lines({ items }: { items: readonly string[] }) {
@@ -239,8 +240,15 @@ export function HeroA({
   mobileTopAligned = false,
 }: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean; eyebrowImage?: string; mobileTopAligned?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
+  const mobileViewportHeight = useMobileViewportHeight();
+  // 모바일은 헤더(56)와 하단 상담예약 바(56)를 뺀 만큼만 차지해, 바 바로 위에서 끝난다.
+  // 실제로 재보니 2px 이 남아 그만큼 덜 뺀다.
+  const MOBILE_CHROME = 56 + 56 - 2;
   return (
-    <section className={`relative isolate flex h-[460px] flex-col items-center overflow-hidden text-center tb:h-[640px] tb:justify-center tb:pt-0 ${mobileTopAligned ? "justify-start pt-[64px]" : "justify-center"}`}>
+    <section
+      className={`relative isolate flex h-[calc(100svh-110px)] flex-col items-center overflow-hidden text-center tb:h-[640px] tb:justify-center tb:pt-0 ${mobileTopAligned ? "justify-start pt-[64px]" : "justify-center"}`}
+      style={mobileViewportHeight ? { height: `${mobileViewportHeight - MOBILE_CHROME}px` } : undefined}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
       <img
         src={COPY.hero.imageMobile}
@@ -641,17 +649,20 @@ export function IntroSection({
   showDesc = true,
   showTestChips = false,
   gradientBackground = false,
-}: { eyebrow?: string; titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean } = {}) {
+  desktopMaxWidth = "1280px",
+  largeImage = false,
+}: { eyebrow?: string; titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean; desktopMaxWidth?: "1200px" | "1280px"; largeImage?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
     <section
       // 흰색 → gray-00 세로 그라데이션 (피그마 Center_White → Center_Gray00)
       className={`${
         gradientBackground ? "bg-gradient-to-b from-white to-gray-00" : "bg-white"
-      } px-5 py-[54px] tb:py-[110px]`}
+      } px-5 pb-0 pt-[54px] tb:pt-[110px]`}
     >
-      <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
-        <div className="flex flex-col dt:flex-1">
+      <Container desktopMaxWidth={desktopMaxWidth}>
+        <div className={`flex flex-col gap-[30px] dt:flex-row dt:gap-[60px] ${largeImage ? "dt:w-[calc(100%+50px)] dt:items-end" : "dt:items-center"}`}>
+          <div className={`flex flex-col dt:flex-1 ${largeImage ? "dt:pb-[110px]" : ""}`}>
           <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
             {eyebrow ?? COPY.intro.eyebrow}
           </Typography>
@@ -664,7 +675,7 @@ export function IntroSection({
             </Typography>
           )}
           {showTestChips && (
-            <div className="mt-[18px] flex flex-wrap gap-[8px] tb:mt-[24px]">
+            <div className="mt-[47px] flex flex-wrap gap-[8px] tb:mt-[24px]">
               {WIM_NEW_TESTS.map((test) => (
                 <Typography
                   as="span"
@@ -676,14 +687,15 @@ export function IntroSection({
               ))}
             </div>
           )}
-        </div>
-        <div className="relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:aspect-[640/360] dt:w-[640px] dt:shrink-0">
-          {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-          <img
-            src={COPY.intro.image}
-            alt={COPY.intro.imageAlt}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          </div>
+          <div className={`relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:shrink-0 ${largeImage ? "dt:h-[456.64px] dt:w-[757.36px] dt:aspect-auto" : "dt:aspect-[640/360] dt:w-[640px]"}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
+            <img
+              src={COPY.intro.image}
+              alt={COPY.intro.imageAlt}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
         </div>
       </Container>
     </section>
@@ -1109,8 +1121,8 @@ export function WimMainBottom() {
 
   return (
     <>
-      <section id="contact" className="bg-primary-sub-03 px-5 py-[32px] tb:py-[62px]">
-        <Container className="flex flex-col items-center text-center">
+      <section id="contact" className="bg-white px-5 py-[32px] tb:py-[62px]">
+        <Container desktopMaxWidth="1200px" className="flex flex-col items-center text-center">
           <Typography as="h2" mobile="body-01" tablet="display-01" weight="bold" className="break-keep text-primary-main">
             {COPY.cta.title}
           </Typography>
@@ -1125,7 +1137,7 @@ export function WimMainBottom() {
       </section>
 
       <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
-        <div className="mx-auto w-full px-5 dt:max-w-[1440px] dt:px-20">
+        <div className="mx-auto w-full px-5 dt:max-w-[1200px]">
           <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
             <img src={WIM_NEW_ICONS.logoWim} alt="WIM" className="h-[14px] w-[50px] tb:h-full tb:w-auto" />
