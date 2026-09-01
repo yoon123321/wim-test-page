@@ -5,7 +5,7 @@
  *
  * - 모바일: 메인_MO_1 (360 기준) / PC: 메인_PC (1440, 콘텐츠 1280 기준)
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
- * - 문구·카드 데이터는 content/home-new.ts 에서 수정
+ * - 문구·카드 데이터는 data/home-new.ts 에서 수정
  * - 이미지·아이콘은 public/images/home-new (피그마 export 원본)
  */
 
@@ -24,7 +24,7 @@ import {
   WIM_NEW_ICONS,
   type WimNewTest,
   type WimNewCare,
-} from "@/content/home-new";
+} from "@/data/home-new";
 
 const FONT_CSS = `@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap");`;
@@ -236,10 +236,11 @@ export function HeroA({
   showSub = true,
   showCta = true,
   eyebrowImage,
-}: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean; eyebrowImage?: string } = {}) {
+  mobileTopAligned = false,
+}: { titleLines?: readonly string[]; showSub?: boolean; showCta?: boolean; eyebrowImage?: string; mobileTopAligned?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
-    <section className="relative isolate flex h-[460px] flex-col items-center justify-center overflow-hidden text-center tb:h-[640px]">
+    <section className={`relative isolate flex h-[460px] flex-col items-center overflow-hidden text-center tb:h-[640px] tb:justify-center tb:pt-0 ${mobileTopAligned ? "justify-start pt-[64px]" : "justify-center"}`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
       <img
         src={COPY.hero.imageMobile}
@@ -318,25 +319,6 @@ export function HeroA({
  * 어두운 배경 위 흰 글자 대신 밝은 배경 위 검정·그린 글자를 쓴다.
  * 카피·CTA 문구는 A안과 동일한 콘텐츠를 그대로 재사용한다.
  */
-function HeroB() {
-  const COPY = WIM_NEW_COPY;
-  const viewportHeight = useMobileViewportHeight();
-  return (
-    <section
-      className="flex h-[calc(100svh-112px)] flex-col justify-center bg-black px-5 tb:h-[640px]"
-      style={viewportHeight ? { height: viewportHeight - 112 } : undefined}
-    >
-      <Container className="flex flex-col items-center text-center">
-        <Typography as="p" mobile="body-03" tablet="headline-02" className="text-white/70">
-          {COPY.heroB.sub}
-        </Typography>
-        <Typography as="h1" mobile="headline-02" tablet="display-01" weight="bold" className="mt-[14px] break-keep text-white tb:mt-5">
-          <Lines items={COPY.heroB.titleLines} />
-        </Typography>
-      </Container>
-    </section>
-  );
-}
 
 /** STEP 02 — 관리 캐러셀 (호출부에서 section/Container로 감싸서 사용) */
 export function CaresSection() {
@@ -657,10 +639,16 @@ export function IntroSection({
   titleLines,
   showDesc = true,
   showTestChips = false,
-}: { titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean } = {}) {
+  gradientBackground = false,
+}: { titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
-    <section className="bg-white px-5 py-[54px] tb:py-[110px]">
+    <section
+      // 흰색 → gray-00 세로 그라데이션 (피그마 Center_White → Center_Gray00)
+      className={`${
+        gradientBackground ? "bg-gradient-to-b from-white to-gray-00" : "bg-white"
+      } px-5 py-[54px] tb:py-[110px]`}
+    >
       <Container className="flex flex-col gap-[30px] dt:flex-row dt:items-center dt:gap-[60px]">
         <div className="flex flex-col dt:flex-1">
           <Typography mobile="body-03" tablet="body-02" className="text-gray-02 tb:text-gray-03">
@@ -681,7 +669,7 @@ export function IntroSection({
                   as="span"
                   key={test.title}
                   mobile="body-03"
-                  className="rounded-full border border-primary-sub-02 bg-primary-sub-03 px-[14px] py-[7px] text-primary-main">
+                  className="flex h-[30px] items-center justify-center whitespace-nowrap rounded-[5px] border border-primary-sub-02 bg-primary-sub-03 px-[10px] py-[5px] text-center text-[12px] text-primary-main">
                   {test.title}
                 </Typography>
               ))}
@@ -703,7 +691,6 @@ export function IntroSection({
 
 export default function WimMainNew() {
   const COPY = WIM_NEW_COPY;
-  const { heroVariant } = useVariant();
   const visibleReviews = WIM_NEW_REVIEWS.slice(0, 7);
   const reviewCenterIndex = Math.floor(visibleReviews.length / 2);
 
@@ -789,7 +776,7 @@ export default function WimMainNew() {
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
       {/* ─────────────── HERO (A/B, 헤더 스위치로 전환) ─────────────── */}
-      {heroVariant === "b" ? <HeroB /> : <HeroA />}
+      <HeroA />
 
       {/* ─────────────── INTRO ─────────────── */}
       <IntroSection />
