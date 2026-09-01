@@ -196,3 +196,34 @@ export const HOME_MANAGEMENT_NEW = {
     { number: "05", badge: "운동", caption: "개인별 운동 가이드", title: "운동 교육", description: "내 몸에 맞는 운동 기준을 배웁니다", visual: "maintain" },
   ],
 } as const;
+
+/** 메인(버전1) 센터 카드 2종 — 사진 위에 얹는 문구라 짧게. 메시지 한 줄 + 보조 한 줄 */
+export const HOME_CENTERS = [
+  {
+    title: "윔 다이어트 센터",
+    message: "의지가 아니라 설계로 뺍니다",
+    sub: "기질·성향 분석 → 데이터 기반 코칭",
+    image: "/images/main/diet_card.png",
+    alt: "맞춤 식단과 운동 처방을 받는 모습",
+    href: "/diet-program",
+  },
+  {
+    title: "윔 리커버리 센터",
+    message: "셀럽과 선수들이 컨디션을 맡기는 곳",
+    sub: "크라이오 · 산소 · 적외선, 미국 최신 장비 5종",
+    image: "/images/main/recovery_card.png",
+    alt: "전문 관리 장비를 이용하는 모습",
+    href: "/recovery",
+  },
+] as const;
+
+/** 메인(버전1) 히어로·인트로 문구 — 두 센터(다이어트·리커버리)를 함께 품는 기조 */
+export const HOME_MAIN_V1 = {
+  hero: {
+    titleLines: ["강남에서 시작하는 새로운 웰니스의 기준"],
+  },
+  intro: {
+    eyebrow: "웰니스의 기준은?",
+    titleLines: ["몸을 먼저 읽고,", "몸에 맞게 설계합니다."],
+  },
+} as const;

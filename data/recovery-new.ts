@@ -87,9 +87,9 @@ export const RECOVERY_COPY = {
   },
   contact: {
     title: "오늘 몸 상태로 상담 받아보세요",
-    description: "어떤 기기·조합이 맞는지는 몸을 보고 정합니다",
-    primaryButton: "상담 신청",
-    secondaryButton: "네이버 예약",
+    description: "먼저 유형 검사로 내 몸의 신호부터 확인해 보세요. 어떤 기기·조합이 맞는지는 몸을 보고 정합니다.",
+    primaryButton: "3분 리커버리 유형 검사 (무료)",
+    secondaryButton: "상담 신청",
   },
   footer: {
     brandKo: "윔센터",

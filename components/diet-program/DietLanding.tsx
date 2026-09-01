@@ -1,1295 +1,1054 @@
 "use client";
 
 /**
- * 감량 프로그램 랜딩 — E안 (단일 파일)
- * Next.js App Router · React · TypeScript
+ * 감량프로그램 랜딩 — 버전1
  *
- * 설치
- *   1. 이 파일을 app/wireframe-d/page.tsx 로 저장합니다. 끝입니다.
- *      (별도 CSS 파일 없음 — 스타일은 파일 하단 STYLES 상수에 있습니다)
- *   2. app/layout.tsx 에 Pretendard 폰트를 로드합니다:
- *      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
- *   3. /wireframe-d 로 접속합니다.
+ * wim-diet-body.html 시안을 React + Tailwind 로 옮긴 것.
+ * 문구·수치는 data/diet.ts 에서 수정한다.
  *
- * 구성
- *   · 문구와 데이터   — 파일 상단 상수 (여기만 고치면 화면에 반영)
- *   · 섹션 컴포넌트   — 12개
- *   · 스타일          — 하단 STYLES, 클래스 접두사 wd-, 모바일 ≤767px
- *
- * 대안 레이아웃
- *   <TeamSection variant="converge" | "funnel" />
- *   <CasesSection variant="records" />
+ * 원본의 인라인 스타일 색은 프로젝트 팔레트 토큰으로 바꿨다.
+ *   --wim-g0~g3, --wim-black, --wim-sage  →  gray-00~03, black, primary-sub-01
+ * 시안 전용 초록 3종(green #1c4b39 / green-dark #14342a / mint #c3d4b6 / pale #eef1ea)은
+ * 팔레트에 없어 아래 상수로 모아 두었다.
  */
 
-import { useState } from "react";
-import HomeManagement from "@/components/home/HomeManagement";
-
-
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { CaresSection, TestsSection } from "@/components/home/WimMainNew";
+import { Typography } from "@/components/common/Typography";
 import {
-  HERO, WORRIES, WORRIES_COPY, DIFFERENCE, RESULT, ROADMAP, TEAM,
-  CARE, CASES, REVIEWS_COPY, PLAN_FEATURES, PLANS_COPY, FAQ_COPY, FINAL_CTA,
+  DIET_COPY,
+  DIET_WORRIES,
+  DIET_CASES,
+  DIET_HABITS,
+  DIET_METRICS,
+  DIET_AXES,
+  DIET_ROADMAP,
+  DIET_TEAM,
+  DIET_PLANS,
+  DIET_PLAN_FEATURES,
+  DIET_RATING_BARS,
+  DIET_REVIEWS,
+  DIET_FAQ,
 } from "@/data/diet";
 
+/** 모바일 캐러셀에서 카드 사이 간격(px) — gap-3 과 맞춰 둔다 */
+const CASE_DECK_GAP = 12;
 
-/* ─── primitives ──────────────────────────────────────── */
+/** 시안 전용 초록 — 프로젝트 팔레트에 없는 값이라 여기 모아 둔다 */
+const C = {
+  green: "#1c4b39",
+  greenDark: "#14342a",
+  mint: "#c3d4b6",
+  pale: "#eef1ea",
+} as const;
 
-function Star({ filled }: { filled: boolean }) {
+/* ─────────────────────────── 공통 조각 ─────────────────────────── */
+
+function Section({
+  id,
+  className = "",
+  children,
+}: {
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? "#525252" : "#d4d4d4"} aria-hidden="true">
-      <path d="m12 2 3 6.5 7 .9-5 4.9 1.2 7L12 18l-6.2 3.3L7 14.3l-5-4.9 7-.9z" />
+    <section id={id} className={`px-6 py-[72px] tb:py-[100px] ${className}`}>
+      <div className="mx-auto w-full max-w-[1280px]">{children}</div>
+    </section>
+  );
+}
+
+function Eyebrow({ children, tone = "mint" }: { children: React.ReactNode; tone?: "mint" | "green" | "gray" }) {
+  const color = tone === "mint" ? C.mint : tone === "green" ? C.green : undefined;
+  return (
+    <span
+      className={`text-[14px] tracking-[0.2em] ${tone === "gray" ? "text-gray-02" : ""}`}
+      style={color ? { color } : undefined}>
+      {children}
+    </span>
+  );
+}
+
+function Lines({ items }: { items: readonly string[] }) {
+  return (
+    <>
+      {items.map((line, i) => (
+        <span key={line}>
+          {i > 0 && <br />}
+          {line}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/** 사진이 들어갈 자리 — src 를 넘기면 실사로 바뀐다 */
+function ImageSlot({ label, className = "" }: { label: string; className?: string }) {
+  return (
+    <div
+      className={`grid place-items-center break-keep bg-gray-00 p-4 text-center text-[13px] text-gray-02 ${className}`}>
+      {label}
+    </div>
+  );
+}
+
+/* ─────────────────────────── 섹션들 ─────────────────────────── */
+
+function Hero() {
+  const C0 = DIET_COPY.hero;
+  return (
+    <section id="top" className="relative overflow-hidden bg-black">
+      <div className="absolute inset-0">
+        <ImageSlot label={C0.imageLabel} className="h-full w-full" />
+      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(29,30,30,0.55),rgba(29,30,30,0.82))]" />
+
+      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 px-6 pb-[120px] pt-[128px] text-center">
+        <Eyebrow>{C0.eyebrow}</Eyebrow>
+        <h1 className="max-w-[800px] break-keep text-[32px] leading-[1.32] text-white tb:text-[46px]">
+          <Lines items={C0.titleLines} />
+        </h1>
+        <p className="max-w-[640px] break-keep text-[15px] leading-[1.8] text-white/80 tb:text-[17px]">{C0.sub}</p>
+      </div>
+    </section>
+  );
+}
+
+/** 식습관 타입 10종 아이콘 — 원본 라인 아이콘 path */
+const HABIT_ICON_PATHS: Record<string, string> = {
+  "음료·에이드": "M7 4h10l-1.2 15a2 2 0 0 1-2 1.9h-3.6a2 2 0 0 1-2-1.9zM7.4 9h9.2",
+  과식: "M3.5 11h17a8.5 8.5 0 0 1-17 0zM12 11V6M12 4.5v.6M5 21h14",
+  탄수화물: "M4 13.5c0-4 3.6-7 8-7s8 3 8 7c0 2.2-1.6 4-4 4H8c-2.4 0-4-1.8-4-4zM8.5 8.2 7 5M12 7.6V4.4M15.5 8.2 17 5",
+  디저트: "M5 12h14l-1 8H6zM6.5 12a5.5 5.5 0 0 1 11 0M12 6.5V4M12 4a1.4 1.4 0 1 0 0-.1",
+  "빨리 먹기": "M13 2.5 4.5 13.6H11l-1 7.9 8.5-11.1H12z",
+  "끼니 거름": "M6.5 3h11v3.2L12 12l5.5 5.8V21h-11v-3.2L12 12 6.5 6.2zM5 3h14M5 21h14",
+  정크푸드: "M5 10.5c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5zM4 13.5h16M6 16.5h12c-.4 2.3-1.6 3.5-3.5 3.5h-5c-1.9 0-3.1-1.2-3.5-3.5z",
+  음주: "M6 3h12l-1.2 5.6A5 5 0 0 1 12 12a5 5 0 0 1-4.8-3.4zM12 12v7M8.5 19.5h7",
+  야식: "M20 14.2A8.2 8.2 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z",
+  "잦은 모임":
+    "M8.5 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM2.8 20c0-3.4 2.6-5.6 5.7-5.6s5.7 2.2 5.7 5.6M16 5.2a3 3 0 0 1 0 5.9M17.4 14.8c2.3.5 3.8 2.4 3.8 5.2",
+};
+
+function HabitIcon({ name, color }: { name: string; color: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-[18px] w-[18px] flex-none tb:h-[21px] tb:w-[21px]"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round">
+      <path d={HABIT_ICON_PATHS[name]} />
     </svg>
   );
 }
 
-function StarRow({ count, total = 5 }: { count: number; total?: number }) {
+/** 원인 / 결과 / 결론 앞에 붙는 배지 + 안내 문장 한 줄 */
+function CaseStepLine({ badge, tone, children }: { badge: string; tone: "cause" | "result" | "conclusion"; children: string }) {
+  const badgeStyle = {
+    cause: { background: "var(--color-primary-main)", color: "#fff" },
+    result: { background: "var(--color-primary-sub-02)", color: "var(--color-primary-main)" },
+    conclusion: { background: "var(--color-black)", color: "#fff" },
+  }[tone];
+
   return (
-    <div className={"wd-starRow"} aria-label={`${count} / ${total}`}>
-      {Array.from({ length: total }, (_, i) => (
-        <Star key={i} filled={i < count} />
-      ))}
+    <div className="flex items-baseline gap-2">
+      <Typography
+        mobile="body-03"
+        desktopSize={12}
+        weight="bold"
+        className="flex h-7 flex-none items-center rounded-full px-3 tb:h-6 tb:px-2.5"
+        style={badgeStyle}>
+        {badge}
+      </Typography>
+      <Typography mobile="body-03" weight="medium" className="break-keep" style={{ color: "var(--color-primary-sub-01)" }}>
+        {children}
+      </Typography>
     </div>
   );
 }
 
-function PhotoSlot({ label }: { label: string }) {
-  return (
-    <div className={"wd-photoSlot"}>
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="3" y="3" width="18" height="18" rx="3" />
-        <circle cx="8.5" cy="8.5" r="1.6" />
-        <path d="m21 15-5-5L5 21" />
-      </svg>
-      <div className={"wd-photoSlotLabel"}>{label}</div>
-    </div>
-  );
-}
-
-/* ─── HeroSection ─────────────────────────────────────── */
-
-function HeroSection() {
-  return (
-    <section className={"wd-hero"} aria-labelledby="hero-title">
-      <div className={"wd-heroGrid"} aria-hidden="true" />
-      <div className={"wd-heroScrim"} aria-hidden="true" />
-      <div className={"wd-heroBody"}>
-        <p className={"wd-heroEyebrow"}>{HERO.eyebrow}</p>
-        <h1 id="hero-title" className={"wd-heroTitle"}>
-          {HERO.title}
-        </h1>
-        <p className={"wd-heroText"}>{HERO.body}</p>
-        <div className={"wd-heroActions"}>
-          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>{HERO.primaryCta}</a>
-          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonSecondary"}`}>{HERO.secondaryCta}</a>
-        </div>
-        <p className={"wd-heroNote"}>{HERO.note}</p>
-      </div>
-    </section>
-  );
-}
-
-/* ─── WorriesSection ──────────────────────────────────── */
-
-/** 데스크톱에서는 무한 마퀴, 모바일에서는 감싸진 태그 벽으로 표시됩니다. */
-function WorriesSection() {
-  const marquee = [...WORRIES, ...WORRIES];
+/** 유형 카드 한 장 — 원인 / 결과 / 결론 3단 */
+function CaseCard({ item }: { item: (typeof DIET_CASES)[number] }) {
+  const [detailOpen, setDetailOpen] = useState(false);
 
   return (
-    <section className={"wd-worries"} aria-labelledby="worries-title">
-      <div className={"wd-worriesHead"}>
-        <div className={"wd-worriesEyebrow"}>{WORRIES_COPY.eyebrow}</div>
-        <h2 id="worries-title" className={"wd-worriesTitle"}>
-          {WORRIES_COPY.title}
-        </h2>
-        <p className={"wd-worriesSub"}>{WORRIES_COPY.sub}</p>
+    <article className="flex flex-col gap-4 rounded-[14px] bg-white px-4 py-5 tb:gap-5 tb:rounded-[20px] tb:px-[26px] tb:py-7">
+      {/* 제목 줄 — 모바일에선 팔레트 이름이 아래 줄로 내려간다 */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <Typography
+          mobile="body-03"
+          desktopSize={12}
+          weight="bold"
+          className="flex h-8 flex-none items-center rounded-full px-3.5 tracking-[0.1em] tb:h-[30px]"
+          style={{ background: "var(--color-primary-sub-03)", color: "var(--color-primary-main)" }}>
+          {item.no}
+        </Typography>
+        <Typography as="h3" mobile="headline-03" desktop="headline-02" weight="bold" className="m-0 min-w-0 break-keep">
+          {item.title}
+        </Typography>
+        <Typography
+          mobile="body-03"
+          desktopSize={11}
+          weight="semibold"
+          className="basis-full whitespace-nowrap text-gray-02 tb:ml-auto tb:basis-auto">
+          {item.palette.label}
+        </Typography>
       </div>
 
-      <div className={"wd-marqueeWrap"}>
-        <div className={"wd-marqueeRow"}>
-          {marquee.map((text, i) => (
-            <span key={i} className={"wd-worryChip"} aria-hidden={i >= WORRIES.length}>
-              {text}
-            </span>
-          ))}
-        </div>
-      </div>
+      <CaseStepLine badge="원인" tone="cause">
+        기질 × 식생활 패턴에서 시작합니다.
+      </CaseStepLine>
 
-      <div className={"wd-worriesStem"} aria-hidden="true">
-        <div className={"wd-worriesStemLine"} />
-        <div className={"wd-worriesStemDot"} />
-      </div>
-
-      <div className={"wd-domeWrap"}>
-        <div className={"wd-dome"} aria-hidden="true" />
-        <div className={"wd-domeBody"}>
-          <p className={"wd-domeTitle"}>{WORRIES_COPY.domeTitle}</p>
-          <p className={"wd-domeSub"}>{WORRIES_COPY.domeSub}</p>
-          <p className={"wd-domeCtaText"}>{WORRIES_COPY.domeCtaText}</p>
-          <a href="/contact" className={"wd-domeCtaButton"}>{WORRIES_COPY.domeCtaButton}</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── DifferenceSection ───────────────────────────────── */
-
-function DifferenceSection() {
-  return (
-    <section className={`${"wd-section"} ${"wd-difference"}`} aria-labelledby="difference-title">
-      <div className={`${"wd-inner"} ${"wd-differenceInner"}`}>
-        <div className={"wd-diffKicker"}>
-          <span aria-hidden="true">［</span>
-          {DIFFERENCE.kicker}
-          <span aria-hidden="true">］</span>
-        </div>
-
-        <div className={"wd-diffSteps"}>
-          {DIFFERENCE.steps.map((step, i) => {
-            const isResult = i === DIFFERENCE.steps.length - 1;
-            return (
-              <div key={step.title} className={"wd-rowCenter"} style={{ gap: 20 }}>
-                {i > 0 && <div className={"wd-diffOp"}>{i === 1 ? "+" : "="}</div>}
-                <div className={`${"wd-diffCircle"} ${isResult ? "wd-diffCircleResult" : ""}`}>
-                  <div className={`${"wd-diffStepKicker"} ${isResult ? "wd-diffStepKickerLight" : ""}`}>{step.kicker}</div>
-                  <div className={`${"wd-diffStepTitle"} ${isResult ? "wd-diffStepTitleLight" : ""}`}>{step.title}</div>
-                  <div className={`${"wd-diffStepDesc"} ${isResult ? "wd-diffStepDescLight" : ""}`}>{step.desc}</div>
+      {/* 기질 × 식생활 패턴 — 모바일 세로, PC 좌우 */}
+      <div className="grid grid-cols-[minmax(0,1fr)_14px_minmax(0,1fr)] items-center gap-1.5 tb:grid-cols-[minmax(0,1fr)_18px_minmax(0,1fr)] tb:gap-2.5">
+        {item.groups.map((group, groupIndex) => (
+          <div key={group.label} className="contents">
+            {groupIndex > 0 && (
+              <Typography mobile="body-03" desktopSize={15} weight="bold" className="text-center text-gray-02">
+                ×
+              </Typography>
+            )}
+            <div className="flex min-w-0 flex-col gap-2 rounded-[14px] border border-gray-01 px-2.5 py-3 tb:gap-[9px] tb:px-3 tb:py-3.5">
+              <Typography mobile="body-03" desktopSize={13} weight="bold" style={{ color: "var(--color-primary-main)" }}>
+                {group.label} <span className="font-medium text-gray-02">{group.note}</span>
+              </Typography>
+              {group.rows.map((row) => (
+                <div key={row.label} className="flex flex-col gap-1.5 border-t border-gray-01 pt-2 tb:flex-row tb:items-center tb:gap-2.5 tb:pt-[9px]">
+                  <Typography mobile="body-03" desktopSize={12} weight="medium" className="min-w-0 flex-1 break-keep text-gray-03">
+                    {row.label} <b className="font-bold" style={{ color: "var(--color-primary-main)" }}>{row.value}</b>
+                  </Typography>
+                  <span className="relative block h-[5px] w-full flex-none rounded-full bg-gray-01 tb:w-[88px]">
+                    <span
+                      className="block h-[5px] rounded-full"
+                      style={{
+                        width: `${row.percent}%`,
+                        background: row.tone === "soft" ? item.palette.soft : item.palette.strong,
+                      }}
+                    />
+                    <span aria-hidden="true" className="absolute -inset-y-px left-1/3 w-px bg-white/90" />
+                    <span aria-hidden="true" className="absolute -inset-y-px left-2/3 w-px bg-white/90" />
+                  </span>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 그래서 ↓ */}
+      <div className="flex items-center gap-4">
+        <span className="h-px flex-1 bg-gray-01" />
+        <Typography mobile="body-03" desktopSize={13} weight="medium" className="text-gray-03">
+          그래서
+        </Typography>
+        <span
+          className="grid h-7 w-7 flex-none place-items-center rounded-full text-[14px]"
+          style={{ background: "var(--color-primary-sub-03)", color: "var(--color-primary-main)" }}>
+          ↓
+        </span>
+        <span className="h-px flex-1 bg-gray-01" />
+      </div>
+
+      {/* 결과 — 식습관 타입 */}
+      <div className="flex flex-col gap-3">
+        <CaseStepLine badge="결과" tone="result">
+          그 결과, 이런 식습관으로 나타납니다.
+        </CaseStepLine>
+
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <Typography mobile="body-02" desktopSize={15} weight="bold">
+            {item.habitLabel}
+          </Typography>
+          <Typography mobile="body-03" desktopSize={13} weight="bold" className="break-keep" style={{ color: "var(--color-primary-main)" }}>
+            {item.habitNote}
+          </Typography>
+        </div>
+
+        {/* 모바일 2열(아이콘 옆) · PC 5열(아이콘 위) */}
+        <ul className="m-0 grid list-none grid-cols-2 gap-px overflow-hidden rounded-[12px] bg-gray-01 p-px tb:grid-cols-5">
+          {DIET_HABITS.map((habit) => {
+            const level = item.habitsStrong.includes(habit)
+              ? "strong"
+              : item.habitsSoft.includes(habit)
+                ? "soft"
+                : "off";
+            const tile = {
+              strong: { background: "var(--color-primary-main)", color: "#fff" },
+              soft: { background: "var(--color-primary-sub-03)", color: "var(--color-primary-main)" },
+              off: { background: "var(--color-gray-00)", color: "var(--color-gray-02)" },
+            }[level];
+            const stroke = level === "strong" ? "#fff" : level === "soft" ? "#155E35" : "#A1A0A1";
+            return (
+              <li
+                key={habit}
+                className="flex min-h-[42px] flex-row items-center justify-center gap-1.5 px-2 py-1.5 text-center tb:min-h-[56px] tb:flex-col tb:gap-1 tb:px-[3px] tb:py-2"
+                style={tile}>
+                <HabitIcon name={habit} color={stroke} />
+                <Typography mobile="body-03" desktopSize={11.5} weight="bold" className="break-keep">
+                  {habit}
+                </Typography>
+              </li>
             );
           })}
-        </div>
-
-        <h2 id="difference-title" className={"wd-diffTitle"}>
-          {DIFFERENCE.title}
-          <br />
-          <span className={"wd-diffAccent"}>{DIFFERENCE.titleAccent}</span>
-        </h2>
-
-        <div className={"wd-diffRule"} aria-hidden="true" />
-
-        <div className={"wd-diffBodyWrap"}>
-          <p className={"wd-diffBody"}>{DIFFERENCE.body}</p>
-          <p className={"wd-diffBodyStrong"}>{DIFFERENCE.bodyStrong}</p>
-        </div>
+        </ul>
       </div>
-    </section>
-  );
-}
 
-/* ─── ResultSection ───────────────────────────────────── */
+      <CaseStepLine badge="결론" tone="conclusion">
+        그래서 이렇게 관리합니다.
+      </CaseStepLine>
 
-function RadarChart() {
-  return (
-    <svg viewBox="0 0 300 290" style={{ width: "100%" }} role="img" aria-label={RESULT.radar.ariaLabel}>
-      <polygon points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90" fill="none" stroke="#e5e5e5" strokeWidth="1" />
-      <polygon points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107" fill="none" stroke="#eeeeee" strokeWidth="1" />
-      <polygon points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5" fill="none" stroke="#f0f0f0" strokeWidth="1" />
-      {[
-        "150,40", "236.6,90", "236.6,190", "150,240", "63.4,190", "63.4,90",
-      ].map((p) => {
-        const [x, y] = p.split(",");
-        return <line key={p} x1="150" y1="140" x2={x} y2={y} stroke="#f0f0f0" strokeWidth="1" />;
-      })}
-      <polygon points="150,55 227.9,95 193.3,165 150,195 115.4,160 111,117.5" fill="#a3a3a3" fillOpacity="0.18" stroke="#a3a3a3" strokeWidth="1.5" strokeDasharray="4 3" />
-      <polygon points="150,85 189,117.5 219.3,180 150,225 72.1,185 76.4,97.5" fill="#404040" fillOpacity="0.12" stroke="#262626" strokeWidth="2.5" strokeLinejoin="round" />
-      <text x="150" y="26" textAnchor="middle" fontSize="12" fill="#737373">{RESULT.radar.axes[0]}</text>
-      <text x="252" y="84" textAnchor="start" fontSize="12" fill="#737373">{RESULT.radar.axes[1]}</text>
-      <text x="252" y="200" textAnchor="start" fontSize="12" fill="#737373">{RESULT.radar.axes[2]}</text>
-      <text x="150" y="264" textAnchor="middle" fontSize="12" fill="#737373">{RESULT.radar.axes[3]}</text>
-      <text x="48" y="200" textAnchor="end" fontSize="12" fill="#737373">{RESULT.radar.axes[4]}</text>
-      <text x="48" y="84" textAnchor="end" fontSize="12" fill="#737373">{RESULT.radar.axes[5]}</text>
-    </svg>
-  );
-}
-
-function ResultSection() {
-  return (
-    <section className={`${"wd-section"} ${"wd-result"}`} aria-labelledby="result-title">
-      <div className={"wd-inner"}>
-        <div className={"wd-resultBadge"}>{RESULT.badge}</div>
-        <h2 id="result-title" className={"wd-resultTitle"}>{RESULT.title}</h2>
-        <p className={"wd-resultSub"}>{RESULT.sub}</p>
-        <p className={"wd-resultBody"}>{RESULT.body}</p>
-
-        <div className={"wd-photoPair"}>
-          <div className={"wd-photoCol"}>
-            <PhotoSlot label="BEFORE" />
-            <div className={"wd-photoCaption"}>{RESULT.before.label}</div>
-            <div className={"wd-photoWeight"}>{RESULT.before.weight}</div>
+      <div
+        className="flex items-start gap-3 rounded-[16px] px-3.5 py-4 text-white tb:gap-3.5 tb:px-[18px] tb:py-5"
+        style={{ background: "var(--color-primary-main)" }}>
+        <span
+          aria-hidden="true"
+          className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-white/45 text-[15px] tb:h-[34px] tb:w-[34px]">
+          →
+        </span>
+        <div className="flex min-w-0 flex-1 flex-col gap-2.5 tb:gap-3">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <Typography mobile="body-03" desktopSize={13} weight="bold" className="flex-none whitespace-nowrap text-white/70">
+              관리 포인트
+            </Typography>
+            <Typography mobile="headline-03" desktop="headline-02" weight="bold" className="min-w-0 break-keep">
+              {item.point}
+            </Typography>
           </div>
-          <div className={"wd-photoCol"}>
-            <PhotoSlot label="AFTER" />
-            <div className={"wd-photoCaption"}>{RESULT.after.label}</div>
-            <div className={"wd-photoWeight"}>{RESULT.after.weight}</div>
+
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-dashed border-white/30 pt-2.5 tb:pt-[9px]">
+            <Typography mobile="body-03" desktopSize={11} weight="bold" className="flex-none whitespace-nowrap text-white/70">
+              키워드
+            </Typography>
+            <Typography mobile="body-03" desktopSize={12.5} weight="medium" className="min-w-0 break-keep">
+              {item.keywords}
+            </Typography>
           </div>
-          <div className={"wd-photoPin"} aria-hidden="true">{RESULT.badgeCenter}</div>
-        </div>
 
-        <div className={"wd-rule"} aria-hidden="true" />
-
-        <div className={"wd-metricGrid"}>
-          {RESULT.metrics.map((m) => (
-            <div key={m.label} className={`${"wd-col"} ${"wd-gap8"}`}>
-              <div className={"wd-metricLabel"}>{m.label}</div>
-              <div className={"wd-metricValue"}>{m.value}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className={"wd-radarCard"}>
-          <RadarChart />
-          <div className={`${"wd-col"} ${"wd-gap20"}`}>
-            <div className={"wd-radarTitle"}>{RESULT.radar.title}</div>
-            <p className={"wd-radarBody"}>{RESULT.radar.body}</p>
-            <div className={`${"wd-col"} ${"wd-gap10"}`}>
-              <div className={"wd-radarLegend"}>
-                <span className={"wd-radarSwatchBefore"} aria-hidden="true" />
-                {RESULT.radar.legendBefore}
-              </div>
-              <div className={`${"wd-radarLegend"} ${"wd-radarLegendStrong"}`}>
-                <span className={"wd-radarSwatchAfter"} aria-hidden="true" />
-                {RESULT.radar.legendAfter}
-              </div>
-            </div>
+          <div className="flex flex-col gap-2.5 border-t border-dashed border-white/30 pt-3">
+            <button
+              type="button"
+              aria-expanded={detailOpen}
+              onClick={() => setDetailOpen((open) => !open)}
+              className="cursor-pointer self-start border-0 bg-transparent p-0 text-left">
+              <Typography mobile="body-03" desktopSize={13} weight="bold" style={{ color: "var(--color-primary-sub-02)" }}>
+                {detailOpen ? "결론 상세 접기 ▲" : "결론 상세 보기 ▼"}
+              </Typography>
+            </button>
+            {detailOpen && (
+              <Typography as="p" mobile="body-02" desktopSize={14} className="m-0 break-keep text-white/90 !leading-[1.8]">
+                {item.detail}
+              </Typography>
+            )}
           </div>
         </div>
       </div>
-    </section>
+    </article>
   );
 }
 
-/* ─── RoadmapSection ──────────────────────────────────── */
+/** 유형 카드 묶음 — 모바일은 좌우 스와이프, tb 부터는 그리드 */
+function CaseDeck() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
 
-function RoadmapSection() {
+  const readIndex = () => {
+    const track = trackRef.current;
+    const first = track?.firstElementChild as HTMLElement | undefined;
+    if (!track || !first) return;
+    const step = first.getBoundingClientRect().width + CASE_DECK_GAP;
+    setIndex(Math.min(DIET_CASES.length - 1, Math.max(0, Math.round(track.scrollLeft / step))));
+  };
+
+  const goTo = (next: number) => {
+    const track = trackRef.current;
+    const first = track?.firstElementChild as HTMLElement | undefined;
+    if (!track || !first) return;
+    track.scrollTo({ left: next * (first.getBoundingClientRect().width + CASE_DECK_GAP), behavior: "smooth" });
+  };
+
   return (
-    <section className={`${"wd-section"} ${"wd-roadmap"}`} aria-labelledby="roadmap-title">
-      <div className={`${"wd-inner"} ${"wd-gap16"}`}>
-        <div className={`${"wd-col"} ${"wd-gap10"}`}>
-          <div className={"wd-kicker"}>{ROADMAP.kicker}</div>
-          <h2 id="roadmap-title" className={"wd-h2"}>{ROADMAP.title}</h2>
-          <p className={"wd-lead"}>{ROADMAP.sub}</p>
-        </div>
-
-        <ol className={"wd-roadmapTrack"}>
-          <div className={"wd-roadmapLine"} aria-hidden="true" />
-          {ROADMAP.steps.map((step) => (
-            <li key={step.n} className={"wd-roadmapStep"}>
-              <div className={"wd-roadmapDot"} aria-hidden="true">{step.n}</div>
-              <div>
-                <h3 className={"wd-roadmapTitle"}>{step.title}</h3>
-                <div className={"wd-roadmapLead"}>{step.lead}</div>
-                <div className={"wd-roadmapDesc"}>{step.desc}</div>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-/* ─── TeamSection ─────────────────────────────────────── */
-
-type TeamVariant = "cards" | "converge" | "funnel";
-
-/**
- * cards    — 매니저 카드 3장 (A안, 기본)
- * converge — 세 전문 팀이 하나로 모이는 구조도 (B안)
- * funnel   — 구조도 + 전담 매니저 전달 단계까지 (C안)
- */
-function TeamSection({ variant = "cards" }: { variant?: TeamVariant }) {
-  return (
-    <section className={`${"wd-section"} ${"wd-team"}`} aria-labelledby="team-title">
-      <div className={`${"wd-inner"} ${"wd-gap44"}`}>
-        <div className={`${"wd-col"} ${"wd-gap16"}`}>
-          <div className={`${"wd-col"} ${"wd-gap10"}`}>
-            <div className={"wd-kicker"}>{TEAM.kicker}</div>
-            <h2 id="team-title" className={"wd-h2"}>{TEAM.title}</h2>
+    <div className="flex flex-col gap-5">
+      <div
+        ref={trackRef}
+        onScroll={readIndex}
+        className="-mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-6 px-6 [-ms-overflow-style:none] [scrollbar-width:none] tb:mx-0 tb:grid tb:grid-cols-1 tb:gap-5 tb:overflow-visible tb:px-0 tb:[&::-webkit-scrollbar]:block dt:grid-cols-2 dt:items-start [&::-webkit-scrollbar]:hidden">
+        {DIET_CASES.map((item) => (
+          <div key={item.no} className="w-[90%] flex-none snap-start tb:w-auto">
+            <CaseCard item={item} />
           </div>
-          <p className={`${"wd-lead"} ${"wd-pre"}`}>{TEAM.sub}</p>
+        ))}
+      </div>
+
+      {/* 인디케이터 — 모바일 전용 */}
+      <div className="flex justify-center gap-2 tb:hidden">
+        {DIET_CASES.map((item, i) => (
+          <button
+            key={item.no}
+            type="button"
+            onClick={() => goTo(i)}
+            aria-label={`${item.no} ${item.title} 보기`}
+            aria-current={i === index}
+            className="h-2 cursor-pointer rounded-full border-0 p-0 transition-all duration-300"
+            style={{ width: i === index ? 22 : 8, background: i === index ? C.mint : "rgba(255,255,255,0.28)" }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Problem() {
+  const C0 = DIET_COPY.problem;
+  return (
+    <section id="problem" className="overflow-hidden px-6 py-[96px]" style={{ background: C.greenDark }}>
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-11">
+        <div className="flex flex-col items-center gap-3.5 text-center">
+          <Eyebrow>{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 break-keep text-[26px] leading-[1.42] text-white tb:text-[34px]">
+            <Lines items={C0.titleLines} />
+          </h2>
         </div>
 
-        {variant === "cards" && (
-          <div className={"wd-teamGrid"}>
-            {TEAM.members.map((member) => (
-              <article key={member.no} className={"wd-teamCard"}>
-                <div className={`${"wd-rowCenter"} ${"wd-gap16"}`}>
-                  <div className={"wd-teamAvatar"} aria-hidden="true">{member.no}</div>
-                  <div>
-                    <div className={"wd-teamRole"}>{member.role}</div>
-                    <div className={"wd-teamName"}>{member.name}</div>
-                  </div>
-                </div>
-                <div className={`${"wd-col"} ${"wd-gap16"}`} style={{ marginTop: 20 }}>
-                  <p className={"wd-teamDesc"} style={{ margin: 0 }}>{member.desc}</p>
-                  <div className={`${"wd-wrapRow"} ${"wd-gap8"}`}>
-                    {member.tags.map((tag) => (
-                      <span key={tag} className={"wd-teamTag"}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </article>
+        {/* 고민 마퀴 — 두 벌을 이어 붙여 끊김 없이 흐른다 */}
+        <div className="relative -mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+          <div className="flex w-max gap-3 [animation:wim-marquee_38s_linear_infinite]">
+            {[0, 1].map((dup) => (
+              <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
+                {DIET_WORRIES.map((worry) => (
+                  <span
+                    key={worry}
+                    className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
+                    {worry}
+                  </span>
+                ))}
+              </div>
             ))}
           </div>
-        )}
+        </div>
 
-        {variant === "converge" && (
-          <div className={"wd-converge"}>
-            <div className={"wd-convergeRow"}>
-              {TEAM.specialists.map((t, i) => (
-                <div key={t.name} className={`${"wd-convergeCol"} ${i > 0 ? "wd-convergeColDivided" : ""}`}>
-                  <div className={"wd-convergeKicker"}>{t.kicker}</div>
-                  <div className={"wd-convergeName"}>{t.name}</div>
-                  <div className={"wd-convergeRole"}>{t.role}</div>
-                  <div className={"wd-convergeNote"}>{t.note}</div>
-                </div>
-              ))}
-            </div>
+        {/* 마퀴 아래에 오는 굵은 선언 + 유형 안내 */}
+        <div className="flex flex-col items-center gap-4 text-center">
+          <p className="m-0 break-keep text-[22px] font-bold leading-[1.45] text-white tb:text-[26px]">
+            <Lines items={C0.subLines} />
+          </p>
+          <p className="m-0 break-keep text-[15px] font-medium leading-[1.8] text-white/70 tb:text-[17px]">
+            <Lines items={C0.caseIntroLines} />
+          </p>
+        </div>
 
-            <div className={"wd-convergeJoin"} aria-hidden="true">
-              <div className={"wd-convergeStems"}>
-                {[0, 1, 2].map((i) => (
-                  <div key={i} className={"wd-convergeStemCell"}>
-                    <div className={"wd-convergeStem"} />
-                  </div>
-                ))}
-              </div>
-              <div className={"wd-convergeBar"} />
-              <div className={"wd-convergeDrop"} />
-              <div className={"wd-convergeNode"} />
-              <div className={"wd-convergeTail"} />
-            </div>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <span className="text-[17px] font-bold" style={{ color: C.mint }}>
+            {C0.caseIntroLabel}
+          </span>
+        </div>
 
-            <div className={"wd-convergeHub"}>
-              <div className={`${"wd-col"} ${"wd-gap8"}`}>
-                <div className={"wd-convergeHubKicker"}>{TEAM.convergeHub.kicker}</div>
-                <div className={"wd-convergeHubTitle"}>{TEAM.convergeHub.title}</div>
-              </div>
-            </div>
+        <CaseDeck />
 
-            <div className={"wd-convergeJoin"} aria-hidden="true">
-              <div className={"wd-convergeTail"} />
-              <div className={"wd-convergeNode"} />
-              <div className={"wd-convergeDrop"} />
-            </div>
-
-            <div className={`${"wd-col"} ${"wd-gap10"}`} style={{ alignItems: "center" }}>
-              <div className={"wd-convergeOutcome"}>{TEAM.outcomeTitle}</div>
-              <div className={"wd-convergeOutcomeSub"}>{TEAM.outcomeSub}</div>
-            </div>
-          </div>
-        )}
-
-        {variant === "funnel" && (
-          <div className={"wd-funnel"}>
-            <div className={"wd-funnelTop"}>
-              {TEAM.specialists.map((t) => (
-                <div key={t.name} className={`${"wd-col"} ${"wd-gap6"}`} style={{ alignItems: "center", textAlign: "center", padding: "0 20px" }}>
-                  <div className={"wd-convergeName"} style={{ fontSize: 18 }}>{t.name}</div>
-                  <div className={"wd-convergeRole"} style={{ maxWidth: 180, fontSize: 12, color: "#8a8073" }}>{t.role}</div>
-                </div>
-              ))}
-            </div>
-            <div className={"wd-funnelMid"}>
-              <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.035em" }}>{TEAM.convergeTitle}</div>
-            </div>
-            <div className={"wd-funnelLow"}>
-              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", color: "#2a2318" }}>{TEAM.deliveryTitle}</div>
-            </div>
-            <div className={`${"wd-col"} ${"wd-gap8"}`} style={{ marginTop: 26, alignItems: "center" }}>
-              <div className={"wd-convergeOutcome"}>{TEAM.outcomeTitle}</div>
-              <div className={"wd-convergeOutcomeSub"}>{TEAM.outcomeSub}</div>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
-/* ─── CareSection ─────────────────────────────────────── */
-
-function CareSection() {
-  return (
-    <section className={`${"wd-section"} ${"wd-care"}`} aria-labelledby="care-title">
-      <div className={"wd-inner"}>
-        <h2 id="care-title" className="sr-only">{CARE.title}</h2>
-        <HomeManagement embedded />
-      </div>
-    </section>
-  );
-}
-
-/* ─── CasesSection ────────────────────────────────────── */
-
-type CasesVariant = "records" | "featured";
-
-/**
- * featured — 대표 케이스 한 줄 + 페르소나 카드 3장 (C안, 기본)
- * records  — 케이스 기록 3건 (A안)
- */
-function CasesSection({ variant = "featured" }: { variant?: CasesVariant }) {
-  const personas = CASES.personas.slice(0, 3);
-  const [personaIndex, setPersonaIndex] = useState(0);
-
-  return (
-    <section className={`${"wd-section"} ${"wd-cases"}`} aria-labelledby="cases-title">
-      <div className={`${"wd-inner"} ${"wd-gap44"}`}>
-        <div className={`${"wd-col"} ${"wd-gap32"}`}>
-          <div className={`${"wd-col"} ${"wd-gap12"}`}>
-            <div className={"wd-kicker"}>{CASES.kicker}</div>
-            <h2 id="cases-title" className={"wd-h2"}>
-              {CASES.title}
-              <br />
-              <span style={{ color: "#525252" }}>{CASES.titleAccent}</span>
-            </h2>
-          </div>
-
-          {variant === "featured" && (
-            <div className={`${"wd-col"} ${"wd-gap24"}`}>
-              <div className={"wd-caseFeatured"}>
-                <div className={`${"wd-col"} ${"wd-gap12"}`}>
-                  <div className={"wd-caseFeaturedKicker"}>{CASES.featured.kicker}</div>
-                  <p className={"wd-caseFeaturedTitle"} style={{ margin: 0 }}>{CASES.featured.title}</p>
-                </div>
-                <div className={"wd-caseStats"}>
-                  {CASES.featured.stats.map((stat, i) => (
-                    <div key={stat.label} className={`${"wd-caseStat"} ${i > 0 ? "wd-caseStatDivided" : ""}`}>
-                      <div className={"wd-caseStatLabel"}>{stat.label}</div>
-                      <div className={`${"wd-caseStatValue"} ${i === 3 ? "wd-caseStatValueSm" : ""}`}>{stat.value}</div>
-                      <div className={"wd-caseStatNote"}>{stat.note}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={"wd-personaDesktopGrid"}>
-                {personas.map((p) => (
-                  <article key={p.persona} className={"wd-personaCard"}>
-                    <div className={"wd-personaHead"}>
-                      <span className={"wd-personaName"}>{p.persona}</span>
-                      <span className={"wd-personaPlan"}>{p.plan}</span>
-                    </div>
-                    <div className={`${"wd-col"} ${"wd-gap4"}`} style={{ padding: "22px 24px 14px" }}>
-                      <div className={"wd-personaLoss"}>{p.loss}</div>
-                      <div className={"wd-personaRange"}>{p.range} · {p.period}</div>
-                    </div>
-                    <div style={{ padding: "0 24px 18px" }}>
-                      <span className={"wd-personaSub"}>{p.sub}</span>
-                    </div>
-                    <p className={"wd-personaQuote"}>“{p.quote}”</p>
-                  </article>
-                ))}
-              </div>
-
-              <div className={"wd-personaCarousel"}>
-                <div className={"wd-personaViewport"}>
-                  <div className={"wd-personaTrack"} style={{ transform: `translateX(-${personaIndex * 100}%)` }}>
-                    {personas.map((p) => (
-                      <div key={p.persona} className={"wd-personaSlide"}>
-                        <article className={"wd-personaCard"}>
-                          <div className={"wd-personaHead"}>
-                            <span className={"wd-personaName"}>{p.persona}</span>
-                            <span className={"wd-personaPlan"}>{p.plan}</span>
-                          </div>
-                          <div className={`${"wd-col"} ${"wd-gap4"}`} style={{ padding: "22px 24px 14px" }}>
-                            <div className={"wd-personaLoss"}>{p.loss}</div>
-                            <div className={"wd-personaRange"}>{p.range} · {p.period}</div>
-                          </div>
-                          <div style={{ padding: "0 24px 18px" }}>
-                            <span className={"wd-personaSub"}>{p.sub}</span>
-                          </div>
-                          <p className={"wd-personaQuote"}>“{p.quote}”</p>
-                        </article>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={"wd-personaControls"}>
-                  <button type="button" aria-label={CASES.prevAriaLabel} onClick={() => setPersonaIndex((personaIndex - 1 + personas.length) % personas.length)} className={"wd-personaArrow"}>←</button>
-                  <div className={"wd-personaDots"}>
-                    {personas.map((p, index) => (
-                      <button key={p.persona} type="button" aria-label={`${index + 1}${CASES.dotAriaSuffix}`} onClick={() => setPersonaIndex(index)} className={`${"wd-personaDot"} ${personaIndex === index ? "wd-personaDotActive" : ""}`} />
-                    ))}
-                  </div>
-                  <button type="button" aria-label={CASES.nextAriaLabel} onClick={() => setPersonaIndex((personaIndex + 1) % personas.length)} className={"wd-personaArrow"}>→</button>
-                </div>
-              </div>
-
-              <p className={"wd-disclaimer"} style={{ margin: 0 }}>{CASES.disclaimer}</p>
-            </div>
-          )}
-
-          {variant === "records" && (
-            <div className={`${"wd-col"} ${"wd-gap20"}`}>
-              {CASES.records.map((item) => (
-                <article key={item.profile} className={"wd-recordCard"}>
-                  <div className={"wd-recordAside"}>
-                    <div className={"wd-recordProfile"}>{item.profile}</div>
-                    <div className={"wd-recordLoss"}>{item.loss}</div>
-                    <div className={"wd-recordMeta"}>{item.weight} · {item.period}</div>
-                    <span className={"wd-recordFat"}>{item.fat}</span>
-                  </div>
-                  <div style={{ padding: "20px 32px" }}>
-                    {item.details.map((d) => (
-                      <div key={d.label} className={"wd-recordRow"}>
-                        <span className={"wd-recordRowLabel"}>{d.label}</span>
-                        <span className={`${"wd-recordRowValue"} ${d.label === CASES.quoteLabel ? "wd-recordRowQuote" : ""}`}>{d.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+        <div className="flex flex-col items-center gap-3.5">
+          <span className="text-[14.5px] text-white/70">{C0.ctaLead}</span>
+          <Link
+            href="/contact"
+            className="rounded-full px-7 py-3.5 text-[15px] font-bold no-underline transition hover:opacity-90"
+            style={{ background: C.mint, color: C.greenDark }}>
+            {C0.ctaLabel}
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── ReviewsSection ──────────────────────────────────── */
-
-function ReviewsSection() {
+function Difference() {
+  const C0 = DIET_COPY.difference;
   return (
-    <section className={`${"wd-section"} ${"wd-reviews"}`} aria-labelledby="reviews-title">
-      <div className={`${"wd-inner"} ${"wd-gap40"}`}>
-        <div className={"wd-reviewsHead"}>
-          <div className={`${"wd-col"} ${"wd-gap10"}`} style={{ minWidth: 0 }}>
-            <div className={"wd-kicker"}>{REVIEWS_COPY.kicker}</div>
-            <h2 id="reviews-title" className={"wd-h2"}>
-              {REVIEWS_COPY.title} <span style={{ color: "#525252" }}>{REVIEWS_COPY.titleAccent}</span>
-            </h2>
-          </div>
-          <div className={"wd-rowCenter"} style={{ flexShrink: 0, alignItems: "baseline", gap: 10 }}>
-            <div className={"wd-reviewsScore"}>{REVIEWS_COPY.score}</div>
-            <div style={{ fontSize: 14, color: "#8a8a8a" }}>{REVIEWS_COPY.scoreNote}</div>
-          </div>
-        </div>
+    <Section id="difference" className="bg-white">
+      {/* 가운데 정렬 · 원 두 개를 + 로 잇는다 (원본 시안) */}
+      <div className="flex flex-col items-center gap-9 text-center">
+        <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+          {C0.eyebrow}
+        </span>
 
-        <div className={"wd-reviewsGrid"}>
-          {REVIEWS_COPY.items.map((r) => (
-            <div key={r.tag + r.author} className={"wd-reviewCard"}>
-              <div className={"wd-rowCenter"} style={{ justifyContent: "space-between", gap: 16 }}>
-                <StarRow count={r.stars} />
-                <div className={"wd-reviewTag"}>{r.tag}</div>
+        <div className="flex flex-wrap items-center justify-center gap-5">
+          {C0.steps.map((step, i) => (
+            <div key={step.step} className="flex items-center gap-5">
+              {i > 0 && (
+                <span aria-hidden="true" className="text-[26px] font-bold" style={{ color: C.mint }}>
+                  +
+                </span>
+              )}
+              <div
+                className="flex h-[180px] w-[180px] flex-col items-center justify-center gap-1.5 rounded-full px-6"
+                style={{ background: C.pale }}>
+                <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+                  {step.step}
+                </span>
+                <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
+                <p className="m-0 break-keep text-[12.5px] leading-[1.6] text-gray-02">
+                  <Lines items={step.descLines} />
+                </p>
               </div>
-              <p className={"wd-reviewBody"} style={{ margin: 0 }}>{r.body}</p>
-              <div className={"wd-reviewAuthor"}>{r.author}</div>
             </div>
           ))}
-
-          <div className={"wd-reviewHighlight"}>
-            <div className={"wd-starRow"} style={{ flexShrink: 0 }}>
-              {Array.from({ length: 5 }, (_, i) => (
-                <Star key={i} filled />
-              ))}
-            </div>
-            <p className={"wd-reviewHighlightBody"} style={{ margin: 0 }}>{REVIEWS_COPY.highlight.body}</p>
-            <div className={"wd-reviewHighlightAuthor"}>{REVIEWS_COPY.highlight.author}</div>
-          </div>
         </div>
 
-        <div className={"wd-disclaimer"}>{REVIEWS_COPY.disclaimer}</div>
+        {/* 두 번째 줄만 초록 */}
+        <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[31px]">
+          {C0.titleLines[0]}
+          <br />
+          <span style={{ color: C.green }}>{C0.titleLines[1]}</span>
+        </h2>
+
+        <div className="flex flex-col gap-3">
+          <p className="m-0 break-keep text-[16px] leading-[1.9] text-gray-03">
+            <Lines items={C0.bodyLines.slice(0, 2)} />
+          </p>
+          <p className="m-0 break-keep text-[16px] font-semibold leading-[1.9]">{C0.bodyLines[2]}</p>
+        </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
-/* ─── PlansSection ────────────────────────────────────── */
-
-function PlansSection() {
+function Result() {
+  const C0 = DIET_COPY.result;
   return (
-    <section className={`${"wd-section"} ${"wd-plans"}`} aria-labelledby="plans-title">
-      <div className={`${"wd-inner"} ${"wd-gap44"}`}>
-        <div className={`${"wd-col"} ${"wd-gap14"}`}>
-          <div className={"wd-kicker"}>{PLANS_COPY.kicker}</div>
-          <h2 id="plans-title" className={"wd-h2"}>
-            {PLANS_COPY.title}
-            <br />
-            <span style={{ color: "#525252" }}>{PLANS_COPY.titleAccent}</span>
-          </h2>
-          {PLANS_COPY.sub && (
-            <p className={`${"wd-pre"} ${"wd-planIntro"}`}>
-              {PLANS_COPY.sub}
-            </p>
-          )}
+    <Section id="result" className="bg-white">
+      <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 break-keep text-[28px] leading-[1.35] tb:text-[54px]">{C0.title}</h2>
         </div>
 
-        <div className={"wd-planGrid"}>
-          {PLANS_COPY.plans.map((plan) => (
-            <div key={plan.name} className={`${"wd-planCard"} ${plan.featured ? "wd-planCardFeatured" : ""}`}>
-              {plan.featured && <div className={"wd-planBadge"}>{PLANS_COPY.featuredBadge}</div>}
-
-              <div className={`${"wd-col"} ${"wd-gap10"}`}>
-                <div className={"wd-planName"}>{plan.name}</div>
-                <div className={"wd-planSubtitle"}>{plan.subtitle}</div>
-                <div className={"wd-planTarget"}>{plan.target}</div>
+        {/* 비포 · 애프터 */}
+        <div className="grid grid-cols-1 gap-4 tb:grid-cols-2">
+          {[C0.before, C0.after].map((side) => (
+            <div key={side.label} className="flex flex-col gap-3 rounded-[20px] bg-white p-5">
+              <ImageSlot label={side.imageLabel} className="aspect-[4/5] rounded-[14px]" />
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-[13px] text-gray-02">{side.label}</span>
+                <span className="text-[22px] font-bold tracking-[-0.02em]">{side.weight}</span>
               </div>
+            </div>
+          ))}
+        </div>
 
-              <div className={"wd-col"}>
-                {PLAN_FEATURES.map((text, i) => {
-                  const state = plan.features[i] ?? "off";
-                  const off = state === "off";
+        {/* 수치 */}
+        <div className="flex flex-col gap-4">
+          <span className="text-[12px] font-bold text-gray-02">{C0.metricsLabel}</span>
+          <div className="grid grid-cols-1 gap-4 tb:grid-cols-3">
+            {DIET_METRICS.map((m) => (
+              <div key={m.label} className="flex flex-col gap-1.5 rounded-[16px] bg-white px-6 py-5">
+                <span className="text-[13px] text-gray-02">{m.label}</span>
+                <span className="text-[19px] font-bold tracking-[-0.02em]" style={{ color: C.green }}>
+                  {m.value}
+                </span>
+              </div>
+            ))}
+          </div>
+          <a href="#reviews" className="self-start text-[14px] font-bold no-underline" style={{ color: C.green }}>
+            {C0.moreLabel}
+          </a>
+        </div>
+
+        {/* 유지 — AND IT STAYS */}
+        <div className="flex flex-col gap-3">
+          <span className="text-[14px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+            {C0.keepEyebrow}
+          </span>
+          <p className="m-0 text-[18px] font-medium text-gray-03">{C0.keepTitleLines[0]}</p>
+          <h3 className="m-0 break-keep text-[28px] font-bold leading-[1.35] tb:text-[40px]">
+            {C0.keepTitleLines[1]}
+          </h3>
+          <p className="m-0 max-w-[760px] break-keep text-[16.5px] leading-[1.85] text-gray-03">{C0.keepBody}</p>
+        </div>
+
+        {/* 결과(체중 곡선) · 이유(여섯 축) 두 장 */}
+        <div className="grid grid-cols-1 gap-5 dt:grid-cols-2">
+          {/* 왼쪽 — 체중 곡선 */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2.5">
+              <span className="rounded-full bg-black px-3 py-1 text-[12.5px] font-bold text-white">{C0.chart.label}</span>
+              <span className="break-keep text-[15px] font-bold">{C0.chart.title}</span>
+            </div>
+            <div className="rounded-[20px] bg-gray-00 p-5 tb:p-7">
+              <svg
+                viewBox="0 0 900 340"
+                role="img"
+                aria-label="관리 종료 후 체중 곡선 비교 — 일반 다이어트는 원래 체중으로 돌아가고, 윔은 유지됩니다"
+                className="block h-auto w-full">
+                <line x1="60" y1="290" x2="860" y2="290" stroke="var(--color-gray-01)" strokeWidth="1" />
+                <line x1="60" y1="40" x2="60" y2="290" stroke="var(--color-gray-01)" strokeWidth="1" />
+
+                <line x1="440" y1="34" x2="440" y2="296" stroke="var(--color-gray-02)" strokeWidth="1.5" strokeDasharray="6 6" />
+                <text x="440" y="24" fontSize="15" fontWeight="700" textAnchor="middle" fill={C.green}>
+                  {C0.chart.endLabel}
+                </text>
+
+                <line x1="60" y1="70" x2="860" y2="70" stroke="var(--color-gray-01)" strokeWidth="1" strokeDasharray="4 6" />
+                <text x="52" y="75" fontSize="13" textAnchor="end" fill="var(--color-gray-02)">
+                  {C0.chart.startLabel}
+                </text>
+                <text x="52" y="245" fontSize="13" textAnchor="end" fill="var(--color-gray-02)">
+                  {C0.chart.goalLabel}
+                </text>
+
+                {/* 일반 다이어트 — 되돌아간다 */}
+                <path
+                  d="M60 70 C 190 82, 320 190, 440 240 C 530 262, 600 200, 690 148 C 760 108, 810 82, 860 74"
+                  fill="none"
+                  stroke="var(--color-gray-02)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeDasharray="8 8"
+                />
+                <circle cx="860" cy="74" r="6" fill="var(--color-gray-02)" />
+                <text x="846" y="52" fontSize="14.5" fontWeight="700" textAnchor="end" fill="var(--color-gray-03)">
+                  {C0.chart.normalLabel}
+                </text>
+
+                {/* 윔 — 유지된다 */}
+                <path
+                  d="M60 70 C 190 82, 320 190, 440 240 C 560 252, 660 244, 760 246 C 800 247, 830 246, 860 246"
+                  fill="none"
+                  stroke={C.green}
+                  strokeWidth="4.5"
+                  strokeLinecap="round"
+                />
+                <circle cx="440" cy="240" r="7" fill={C.green} />
+                <circle cx="860" cy="246" r="7.5" fill={C.green} />
+                <text x="846" y="224" fontSize="15" fontWeight="700" textAnchor="end" fill={C.green}>
+                  {C0.chart.wimLabel}
+                </text>
+
+                <text x="452" y="286" fontSize="13.5" fill="var(--color-gray-02)">
+                  {C0.chart.note}
+                </text>
+              </svg>
+            </div>
+          </div>
+
+          {/* 오른쪽 — 여섯 축 레이더 */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2.5">
+              <span
+                className="rounded-full px-3 py-1 text-[12.5px] font-bold text-white"
+                style={{ background: C.green }}>
+                {C0.axes.label}
+              </span>
+              <span className="break-keep text-[15px] font-bold">{C0.axes.title}</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 rounded-[20px] bg-gray-00 p-5 tb:p-7">
+              <svg viewBox="0 0 300 290" role="img" aria-label="6개 지표 전후 비교 그래프" className="w-full max-w-[300px]">
+                {/* 눈금 육각형 3겹 */}
+                <polygon points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90" fill="none" stroke="#e3e2e0" strokeWidth="1" />
+                <polygon points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107" fill="none" stroke="#e3e2e0" strokeWidth="1" />
+                <polygon points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5" fill="none" stroke="#e3e2e0" strokeWidth="1" />
+                {/* 축 6개 */}
+                <line x1="150" y1="140" x2="150" y2="40" stroke="#e3e2e0" strokeWidth="1" />
+                <line x1="150" y1="140" x2="236.6" y2="90" stroke="#e3e2e0" strokeWidth="1" />
+                <line x1="150" y1="140" x2="236.6" y2="190" stroke="#e3e2e0" strokeWidth="1" />
+                <line x1="150" y1="140" x2="150" y2="240" stroke="#e3e2e0" strokeWidth="1" />
+                <line x1="150" y1="140" x2="63.4" y2="190" stroke="#e3e2e0" strokeWidth="1" />
+                <line x1="150" y1="140" x2="63.4" y2="90" stroke="#e3e2e0" strokeWidth="1" />
+                {/* 시작 */}
+                <polygon
+                  points="150,55 227.9,95 193.3,165 150,195 115.4,160 111,117.5"
+                  fill="#a1a0a1"
+                  fillOpacity="0.16"
+                  stroke="#a1a0a1"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 3"
+                />
+                {/* 관리 후 */}
+                <polygon
+                  points="150,85 189,117.5 219.3,180 150,225 72.1,185 76.4,97.5"
+                  fill={C.green}
+                  fillOpacity="0.14"
+                  stroke={C.green}
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                />
+                {DIET_AXES.map((axis, i) => {
+                  const pos = (
+                    [
+                      { x: 150, y: 26, anchor: "middle" },
+                      { x: 252, y: 84, anchor: "start" },
+                      { x: 252, y: 200, anchor: "start" },
+                      { x: 150, y: 264, anchor: "middle" },
+                      { x: 48, y: 200, anchor: "end" },
+                      { x: 48, y: 84, anchor: "end" },
+                    ] as const
+                  )[i];
                   return (
-                    <div key={text} className={`${"wd-planFeature"} ${off ? "wd-planFeatureOff" : ""}`}>
-                      <span className={`${"wd-planMark"} ${off ? "wd-planMarkOff" : ""}`} aria-hidden="true">
-                        {off ? "—" : "✓"}
-                      </span>
-                      {text}
-                      {state === "option" && <span className={"wd-planOption"}>{PLANS_COPY.optionLabel}</span>}
-                    </div>
+                    <text key={axis.label} x={pos.x} y={pos.y} textAnchor={pos.anchor} fontSize="12" fill="#5d5d5d">
+                      {axis.label}
+                    </text>
                   );
                 })}
-              </div>
+              </svg>
 
-              <div className={`${"wd-col"} ${"wd-gap6"}`} style={{ marginTop: "auto" }}>
-                <div className={"wd-planPriceLabel"}>{plan.priceLabel}</div>
-                <div className={"wd-planPrice"}>{plan.priceValue}</div>
+              <div className="flex flex-col items-center gap-2 text-center">
+                <span className="text-[17px] font-bold">{C0.axes.cardTitle}</span>
+                <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{C0.axes.cardBody}</p>
+                <div className="mt-1 flex items-center gap-5">
+                  <span className="flex items-center gap-2 text-[12.5px] text-gray-03">
+                    <span className="h-0.5 w-5 bg-gray-02" /> {C0.axes.legendStart}
+                  </span>
+                  <span className="flex items-center gap-2 text-[12.5px] text-gray-03">
+                    <span className="h-0.5 w-5" style={{ background: C.green }} /> {C0.axes.legendAfter}
+                  </span>
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
 
-              <a href="#contact" className={`${"wd-planCta"} ${plan.featured ? "wd-planCtaFeatured" : ""}`}>
-                {plan.cta}
+function Roadmap() {
+  const C0 = DIET_COPY.roadmap;
+  return (
+    <Section id="roadmap" className="bg-white">
+      <div className="flex flex-col gap-8 tb:gap-11">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[33px]">{C0.title}</h2>
+          <p className="m-0 text-[15.5px] leading-[1.8] text-gray-03">{C0.description}</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 tb:grid-cols-3 tb:gap-5">
+          {DIET_ROADMAP.map((step) => (
+            <div key={step.n} className="flex flex-col gap-3 rounded-[20px] bg-gray-00 px-7 py-8">
+              <span
+                className="grid h-[34px] w-[34px] place-items-center rounded-full text-[15px] font-bold text-white"
+                style={{ background: C.green }}>
+                {step.n}
+              </span>
+              <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
+              <span className="text-[14.5px] font-bold" style={{ color: C.green }}>
+                {step.lead}
+              </span>
+              <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{step.desc}</p>
+              <a href="#plans" className="mt-1 text-[13.5px] font-bold no-underline" style={{ color: C.green }}>
+                {C0.detailLabel}
               </a>
             </div>
           ))}
         </div>
 
-        <p className={"wd-refund"} style={{ margin: 0 }}>
-          <span className={"wd-refundLead"}>{PLANS_COPY.refundLead}</span>
-          {PLANS_COPY.refundBody}
-        </p>
+        {/* 버전2에서 사용하는 검사 6가지 · 관리 8가지 공용 섹션 */}
+        <div className="mt-6 border-t border-gray-01 pt-12 tb:mt-10 tb:pt-16">
+          <TestsSection singleRow hideCardDesc titleBelow />
+          <div className="mt-[26px] tb:mt-[34px]">
+            <CaresSection />
+          </div>
+        </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
-/* ─── FaqSection ──────────────────────────────────────── */
-
-function FaqSection() {
-  const [open, setOpen] = useState<number | null>(null);
-
+function Team() {
+  const C0 = DIET_COPY.team;
   return (
-    <section className={`${"wd-section"} ${"wd-faq"}`} aria-labelledby="faq-title">
-      <div className={`${"wd-inner"} ${"wd-gap44"}`}>
-        <div className={`${"wd-col"} ${"wd-gap16"}`}>
-          <div className={"wd-faqKicker"}>{FAQ_COPY.kicker}</div>
-          <h2 id="faq-title" className={"wd-faqTitle"}>{FAQ_COPY.title}</h2>
+    <Section id="team" className="bg-black">
+      <div className="flex flex-col gap-8 tb:gap-11">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow>{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 max-w-[760px] break-keep text-[26px] leading-[1.42] text-white tb:text-[34px]">
+            {C0.title}
+          </h2>
         </div>
 
-        <div className={`${"wd-col"} ${"wd-gap14"}`}>
-          {FAQ_COPY.items.map((item, i) => {
-            const isOpen = open === i;
+        <div className="grid grid-cols-1 gap-4 tb:grid-cols-3 tb:gap-5">
+          {DIET_TEAM.map((member) => (
+            <div key={member.eyebrow} className="flex flex-col gap-2.5 rounded-[20px] border border-white/10 p-7">
+              <span className="text-[12px] tracking-[0.14em]" style={{ color: C.mint }}>
+                {member.eyebrow}
+              </span>
+              <span className="text-[20px] font-bold tracking-[-0.02em] text-white">{member.name}</span>
+              <p className="m-0 break-keep text-[14px] leading-[1.7] text-white/60">{member.desc}</p>
+              <span className="mt-1 text-[13px] font-bold" style={{ color: C.mint }}>
+                {member.note}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 tb:gap-5 dt:grid-cols-2">
+          <div className="flex flex-col gap-3 rounded-[20px] p-7" style={{ background: C.greenDark }}>
+            <Eyebrow>{C0.oneDesign.eyebrow}</Eyebrow>
+            <span className="text-[20px] font-bold tracking-[-0.02em] text-white">{C0.oneDesign.title}</span>
+            <p className="m-0 break-keep text-[14.5px] leading-[1.8] text-white/70">{C0.oneDesign.body}</p>
+          </div>
+
+          <div className="flex flex-col gap-4 rounded-[20px] p-7" style={{ background: C.greenDark }}>
+            <Eyebrow>{C0.coaching.eyebrow}</Eyebrow>
+            <span className="break-keep text-[20px] font-bold tracking-[-0.02em] text-white">{C0.coaching.title}</span>
+            <p className="m-0 break-keep text-[14.5px] leading-[1.8] text-white/70">{C0.coaching.body}</p>
+
+            <div className="mt-1 flex items-center gap-3">
+              <div className="flex flex-1 flex-col gap-1 rounded-[14px] bg-white/10 px-4 py-3">
+                <span className="text-[11px] tracking-[0.12em]" style={{ color: C.mint }}>
+                  {C0.coaching.managerEyebrow}
+                </span>
+                <span className="text-[14.5px] font-bold text-white">{C0.coaching.managerName}</span>
+              </div>
+              <div className="flex flex-col items-center gap-1 text-[11.5px] text-white/60">
+                <span>{C0.coaching.arrowGive} →</span>
+                <span>← {C0.coaching.arrowBack}</span>
+              </div>
+              <div className="flex flex-1 flex-col gap-1 rounded-[14px] bg-white/10 px-4 py-3">
+                <span className="text-[11px] tracking-[0.12em]" style={{ color: C.mint }}>
+                  {C0.coaching.youEyebrow}
+                </span>
+                <span className="text-[14.5px] font-bold text-white">{C0.coaching.youName}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Plans() {
+  const C0 = DIET_COPY.plans;
+  return (
+    <Section id="plans" className="bg-white">
+      <div className="flex flex-col gap-8 tb:gap-11">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[36px]">{C0.title}</h2>
+          <p className="m-0 max-w-[620px] break-keep text-[15.5px] leading-[1.8] text-gray-03">
+            <Lines items={C0.descriptionLines} />
+          </p>
+        </div>
+
+        {/* 모바일은 가로 스크롤, PC 는 3열 */}
+        <div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] tb:mx-0 tb:grid tb:grid-cols-3 tb:gap-5 tb:overflow-visible tb:px-0 [&::-webkit-scrollbar]:hidden">
+          {DIET_PLANS.map((plan) => (
+            <article
+              key={plan.name}
+              className={`flex w-[300px] shrink-0 snap-start flex-col gap-5 rounded-[22px] border border-gray-02/50 bg-white p-7 tb:w-auto ${
+                plan.featured ? "ring-2" : ""
+              }`}
+              style={plan.featured ? { boxShadow: `0 0 0 2px ${C.green}` } : undefined}>
+              <div className="flex flex-col gap-2">
+                {plan.featured && (
+                  <span
+                    className="w-fit rounded-full px-3 py-1 text-[11.5px] font-bold text-white"
+                    style={{ background: C.green }}>
+                    {C0.badge}
+                  </span>
+                )}
+                <span className="text-[22px] font-bold tracking-[-0.02em]">{plan.name}</span>
+                <span className="text-[13px] font-bold" style={{ color: C.green }}>
+                  {plan.kind}
+                </span>
+                <p className="m-0 break-keep text-[13.5px] font-bold leading-[1.65] text-gray-03">{plan.target}</p>
+              </div>
+
+              <div className="flex flex-col gap-1 border-t border-gray-01 pt-5">
+                <span className="text-[12.5px] text-gray-02">{plan.priceNote}</span>
+                <span className="text-[19px] font-bold tracking-[-0.02em]">{plan.price}</span>
+              </div>
+
+              <div className="flex flex-col">
+                {DIET_PLAN_FEATURES.map((feature, i) => {
+                  const on = plan.included[i];
+                  return (
+                    <div
+                      key={feature}
+                      className={`flex items-center gap-2.5 py-[11px] ${i === 0 ? "" : "border-t border-gray-01"}`}>
+                      <span
+                        className="flex-none text-[13.5px] font-bold"
+                        style={{ color: on ? C.green : "#c9c9c9" }}>
+                        {on ? "✓" : "—"}
+                      </span>
+                      <span className={`flex-1 text-[14px] leading-[1.5] ${on ? "text-gray-03" : "text-gray-02"}`}>
+                        {feature}
+                      </span>
+                      {!on && <span className="text-[11.5px] text-gray-02">{C0.optionLabel}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <Link
+                href="/contact"
+                className="mt-auto rounded-full py-3.5 text-center text-[14.5px] font-bold no-underline transition hover:opacity-90"
+                style={
+                  plan.featured
+                    ? { background: C.green, color: "#fff" }
+                    : { background: C.pale, color: C.green }
+                }>
+                {plan.cta}
+              </Link>
+            </article>
+          ))}
+        </div>
+
+        <span className="text-center text-[13px] text-gray-02 tb:hidden">{C0.swipeHint}</span>
+      </div>
+    </Section>
+  );
+}
+
+function Reviews() {
+  const C0 = DIET_COPY.reviews;
+  return (
+    <Section id="reviews" className="bg-black">
+      <div className="flex flex-col gap-8 tb:gap-11">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 break-keep text-[26px] leading-[1.42] text-white tb:text-[33px]">
+            <Lines items={C0.titleLines} />
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 dt:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
+          {/* 평점 */}
+          <div className="flex flex-col gap-4 rounded-[20px] border border-white/10 p-7">
+            <span className="text-[12px] tracking-[0.14em]" style={{ color: C.mint }}>
+              {C0.ratingLabel}
+            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[46px] font-bold leading-none tracking-[-0.03em] text-white">
+                {C0.ratingValue}
+              </span>
+              <span className="text-[15px] text-gray-02">{C0.ratingMax}</span>
+            </div>
+            <span className="text-[14px]" style={{ color: C.mint }}>
+              ★★★★★
+            </span>
+            <span className="text-[12.5px] text-white/60">{C0.ratingCount}</span>
+
+            <div className="mt-1 flex flex-col gap-2.5">
+              {DIET_RATING_BARS.map((bar) => (
+                <div key={bar.label} className="flex items-center gap-3">
+                  <span className="w-[76px] shrink-0 text-[12.5px] text-white/70">{bar.label}</span>
+                  <span className="relative block h-1.5 flex-1 rounded-full bg-white/15">
+                    <span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${bar.percent}%`, background: C.mint }}
+                    />
+                  </span>
+                  <span className="w-[34px] shrink-0 text-right text-[12.5px] font-bold" style={{ color: C.mint }}>
+                    {bar.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 후기 */}
+          <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 tb:grid-cols-2">
+            {DIET_REVIEWS.map((review) => (
+              <li key={review.who} className="flex flex-col gap-2.5 rounded-[18px] bg-white p-6">
+                <span className="text-[13px]" style={{ color: C.green }}>
+                  ★★★★★
+                </span>
+                <p className="m-0 break-keep text-[14.5px] leading-[1.75]">{review.body}</p>
+                <span className="mt-auto text-[12.5px] text-gray-02">{review.who}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Faq() {
+  const C0 = DIET_COPY.faq;
+  const [open, setOpen] = useState<string | null>(DIET_FAQ[0].q);
+  return (
+    <Section id="faq" className="bg-white">
+      <div className="flex flex-col gap-8 tb:gap-11">
+        <div className="flex flex-col gap-3.5">
+          <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
+          <h2 className="m-0 text-[26px] leading-[1.42] tb:text-[36px]">{C0.title}</h2>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {DIET_FAQ.map((item) => {
+            const isOpen = open === item.q;
             return (
-              <div key={item.q} className={"wd-faqItem"}>
+              <div key={item.q} className="overflow-hidden rounded-[18px] bg-white">
                 <button
                   type="button"
-                  className={"wd-faqButton"}
+                  onClick={() => setOpen(isOpen ? null : item.q)}
                   aria-expanded={isOpen}
-                  aria-controls={`faq-panel-${i}`}
-                  onClick={() => setOpen(isOpen ? null : i)}
-                >
-                  <span className={"wd-faqQuestion"}>{item.q}</span>
-                  <span className={"wd-faqSign"} aria-hidden="true">{isOpen ? "−" : "+"}</span>
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-6 py-5 text-left">
+                  <span className="break-keep text-[15.5px] font-bold">{item.q}</span>
+                  <span className="flex-none text-[18px]" style={{ color: C.green }}>
+                    {isOpen ? "−" : "+"}
+                  </span>
                 </button>
-                <div id={`faq-panel-${i}`} className={"wd-faqAnswer"} hidden={!isOpen}>
-                  {item.a}
-                </div>
+                {isOpen && (
+                  <p className="m-0 break-keep px-6 pb-6 text-[14.5px] leading-[1.85] text-gray-03">{item.a}</p>
+                )}
               </div>
             );
           })}
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
-/* ─── FinalCtaSection ─────────────────────────────────── */
-
-function FinalCtaSection() {
+function Contact() {
+  const C0 = DIET_COPY.contact;
   return (
-    <section id="contact" className={`${"wd-section"} ${"wd-finalCta"}`} aria-labelledby="final-cta-title">
-      <div className={`${"wd-inner"} ${"wd-finalCtaInner"}`}>
-        <h2 id="final-cta-title" className={"wd-finalCtaTitle"}>{FINAL_CTA.title}</h2>
-        <p className={"wd-finalCtaBody"}>{FINAL_CTA.body}</p>
-        <div className={"wd-finalCtaRow"}>
-          <button type="button" className={"wd-btnLight"}>{FINAL_CTA.primary}</button>
-          <button type="button" className={"wd-btnOutline"}>{FINAL_CTA.secondary}</button>
+    <section id="contact" className="px-6 py-[116px]" style={{ background: C.greenDark }}>
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 text-center">
+        <h2 className="m-0 max-w-[760px] break-keep text-[28px] leading-[1.35] text-white tb:text-[44px]">
+          <Lines items={C0.titleLines} />
+        </h2>
+        <p className="m-0 text-[15.5px] leading-[1.8] text-white/75">{C0.description}</p>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/contact"
+            className="rounded-full bg-white px-7 py-3.5 text-[15px] font-bold no-underline transition hover:opacity-90"
+            style={{ color: C.green }}>
+            {C0.primaryCta}
+          </Link>
+          <Link
+            href="/contact"
+            className="rounded-full border border-white/50 px-7 py-3.5 text-[15px] font-bold text-white no-underline transition hover:bg-white/10">
+            {C0.secondaryCta}
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── 페이지 ────────────────────────────────────────────── */
+/* ─────────────────────────── 페이지 ─────────────────────────── */
 
 export default function DietLanding() {
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: STYLES }} />
-      <main className="wd-page">
-        <HeroSection />
-        <WorriesSection />
-        <DifferenceSection />
-        <ResultSection />
-        <RoadmapSection />
-        <TeamSection variant="converge" />
-        <CareSection />
-        <CasesSection variant="featured" />
-        <ReviewsSection />
-        <PlansSection />
-        <FaqSection />
-        <FinalCtaSection />
-      </main>
-    </>
+    <main className="w-full bg-white font-pretendard text-black antialiased">
+      <Hero />
+      <Problem />
+      <Difference />
+      <Result />
+      <Roadmap />
+      <Team />
+      <Plans />
+      <Reviews />
+      <Faq />
+      <Contact />
+    </main>
   );
 }
-
-/* ─── 스타일 ────────────────────────────────────────────── */
-
-const STYLES = `
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-/* 감량 프로그램 랜딩 D안 — 전 섹션 공용 스타일.
-   브레이크포인트: 767px 이하 = 모바일. */
-
-.wd-page {
-  --ink: #161616;
-  --ink-2: #3c3c3c;
-  --muted: #6b6b6b;
-  --muted-2: #8a8a8a;
-  --line: #e5e5e5;
-  --sand: #a3805a;
-  --sand-100: #faf7f2;
-  --sand-200: #f2ece1;
-  --sand-300: #e8dfd0;
-  --page-max: 1160px;
-
-  color: var(--ink);
-  font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
-}
-
-.wd-page a { color: #525252; text-decoration: none; }
-.wd-page a:hover { color: #262626; }
-.wd-page :focus-visible { outline: 2px solid #525252; outline-offset: 2px; }
-
-.wd-section { padding: 100px 0 110px; }
-.wd-inner {
-  width: 100%;
-  max-width: var(--page-max);
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  flex-direction: column;
-}
-.wd-kicker {
-  font-size: 13px;
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: 0.16em;
-  color: #737373;
-}
-.wd-h2 {
-  margin: 0;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-.wd-lead {
-  font-size: 15px;
-  line-height: 1.75;
-  max-width: 560px;
-  text-wrap: pretty;
-  color: var(--muted);
-}
-.wd-pre { white-space: pre-line; }
-
-/* ── HERO ─────────────────────────────── */
-.wd-hero { position: relative; width: 100%; overflow: hidden; border-bottom: 1px solid #d4d4d4; }
-.wd-heroGrid {
-  position: absolute;
-  inset: 0;
-  background-color: #a3a3a3;
-  background-image:
-    linear-gradient(to top right, transparent calc(50% - 0.5px), rgba(255,255,255,0.35) 50%, transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom right, transparent calc(50% - 0.5px), rgba(255,255,255,0.35) 50%, transparent calc(50% + 0.5px));
-  background-position: center;
-}
-.wd-heroScrim { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.4), rgba(0,0,0,0.2)); }
-.wd-heroBody {
-  position: relative;
-  margin: 0 auto;
-  display: flex;
-  min-height: 560px;
-  width: 100%;
-  max-width: 1200px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 96px 40px;
-}
-.wd-heroEyebrow { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: rgba(255,255,255,0.8); }
-.wd-heroTitle {
-  margin: 24px 0 0;
-  max-width: 680px;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1.25;
-  word-break: keep-all;
-  white-space: pre-line;
-  color: #fff;
-}
-.wd-heroText {
-  margin: 24px 0 0;
-  max-width: 600px;
-  font-size: 16px;
-  line-height: 1.75;
-  word-break: keep-all;
-  white-space: pre-line;
-  color: rgba(255,255,255,0.9);
-}
-.wd-heroActions { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 34px; }
-.wd-heroButton { display: inline-flex; min-height: 58px; align-items: center; justify-content: center; border-radius: 999px; padding: 0 38px; font-size: 15px; font-weight: 700; text-decoration: none; transition: transform .2s, background .2s, border-color .2s; }
-.wd-heroButton:hover { transform: translateY(-2px); }
-.wd-heroButtonPrimary { border: 1px solid #fff; background: #fff; color: #171717; }
-.wd-heroButtonSecondary { border: 1px solid rgba(255,255,255,.55); background: rgba(255,255,255,.06); color: #fff; }
-.wd-heroButtonSecondary:hover { border-color: #fff; background: rgba(255,255,255,.14); }
-.wd-heroNote { margin: 16px 0 0; font-size: 13px; color: rgba(255,255,255,.62); }
-
-/* ── 고민의 벽 ────────────────────────── */
-.wd-worries { position: relative; overflow: hidden; background: #0b1020; padding: 90px 0 0; }
-.wd-worriesHead {
-  position: relative; z-index: 3; margin: 0 auto; display: flex; max-width: 760px;
-  flex-direction: column; gap: 16px; padding: 0 16px; text-align: center;
-}
-.wd-worriesEyebrow { font-size: 15px; font-weight: 800; letter-spacing: 0.08em; color: #a3a3a3; }
-.wd-worriesTitle { font-size: 36px; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; white-space: pre-line; color: #fff; }
-.wd-worriesSub { font-size: 15px; line-height: 1.85; text-wrap: pretty; color: rgba(255,255,255,0.45); }
-.wd-marqueeWrap {
-  position: relative; margin: 64px auto 0; display: flex; width: 100%; max-width: 1000px;
-  flex-direction: column; gap: 16px; overflow: hidden; padding: 4px 0;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-.wd-marqueeRow { display: flex; width: max-content; gap: 16px; animation: marqueeLeft 40s linear infinite; }
-.wd-worryChip {
-  width: fit-content; white-space: nowrap; border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.04);
-  padding: 20px 24px; font-size: 16px; color: rgba(255,255,255,0.45);
-}
-@keyframes marqueeLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .wd-marqueeRow { animation: none; } }
-
-.wd-worriesStem { position: relative; z-index: 3; margin-top: 32px; display: flex; flex-direction: column; align-items: center; }
-.wd-worriesStemLine { height: 70px; width: 1px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.25), rgba(255,255,255,0.6)); }
-.wd-worriesStemDot { height: 11px; width: 11px; border-radius: 999px; background: #d4d4d4; box-shadow: 0 0 22px 7px rgba(212,212,212,0.5); }
-.wd-domeWrap { position: relative; margin-top: -12px; overflow: hidden; padding-bottom: 56px; }
-.wd-dome {
-  position: absolute; left: 50%; top: 40px; height: 1400px; width: 1400px;
-  transform: translateX(-50%); border-radius: 999px;
-  background: linear-gradient(to bottom, #8a8a8a, #5a5a5a, #2a2a2a);
-}
-.wd-domeBody {
-  position: relative; z-index: 2; margin: 0 auto; display: flex; max-width: 920px;
-  flex-direction: column; align-items: center; gap: 12px; padding: 80px 16px 0; text-align: center;
-}
-.wd-domeTitle { padding-top: 24px; font-size: 30px; font-weight: 700; color: rgba(255,255,255,0.85); }
-.wd-domeSub { font-size: 14px; line-height: 1.4; letter-spacing: -0.02em; color: #fff; }
-.wd-domeCtaText { margin: 20px 0 0; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,.72); }
-.wd-domeCtaButton { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; margin-top: 4px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; padding: 0 28px; background: rgba(255,255,255,.08); color: #fff; font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .2s, background .2s, border-color .2s; }
-.wd-domeCtaButton:hover { transform: translateY(-2px); border-color: #fff; background: rgba(255,255,255,.16); }
-
-/* ── 차별점 ───────────────────────────── */
-.wd-difference { background: #fafaf8; }
-.wd-differenceInner { align-items: center; text-align: center; }
-.wd-diffKicker { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--sand); }
-.wd-diffSteps { margin-top: 36px; display: flex; align-items: center; justify-content: center; gap: 20px; }
-.wd-diffCircle {
-  display: flex; height: 170px; width: 170px; flex-direction: column; align-items: center;
-  justify-content: center; gap: 8px; border-radius: 999px; border: 1px solid #e2d8c6;
-  background: #fff; padding: 16px; text-align: center;
-}
-.wd-diffCircleResult { border: 0; background: var(--sand); }
-.wd-diffOp { font-size: 26px; font-weight: 700; color: #c9b596; }
-.wd-diffStepKicker { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #b09472; }
-.wd-diffStepKickerLight { color: rgba(255,255,255,0.65); }
-.wd-diffStepTitle { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
-.wd-diffStepTitleLight { color: #fff; }
-.wd-diffStepDesc { font-size: 12px; line-height: 1.6; white-space: pre-line; color: var(--muted-2); }
-.wd-diffStepDescLight { color: rgba(255,255,255,0.75); }
-.wd-diffTitle { margin: 40px 0 0; font-size: 34px; font-weight: 700; line-height: 1.45; letter-spacing: -0.03em; color: var(--ink); }
-.wd-diffAccent { color: var(--sand); }
-.wd-diffRule { margin-top: 32px; height: 1px; width: 40px; background: #d8cbb8; }
-.wd-diffBodyWrap { margin-top: 32px; display: flex; max-width: 600px; flex-direction: column; gap: 20px; }
-.wd-diffBody { margin: 0; font-size: 16px; line-height: 1.9; white-space: pre-line; text-wrap: pretty; color: #5a5a5a; }
-.wd-diffBodyStrong { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.9; white-space: pre-line; text-wrap: pretty; color: var(--ink); }
-
-/* ── 실제 결과 ────────────────────────── */
-.wd-result { background: #fafafa; }
-.wd-resultBadge {
-  width: fit-content; border-radius: 999px; background: #f0f0f0; padding: 8px 16px;
-  font-size: 13px; font-weight: 700; letter-spacing: -0.01em; color: #525252;
-}
-.wd-resultTitle { margin: 24px 0 0; font-size: 58px; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: var(--ink); }
-.wd-resultSub { margin: 20px 0 0; max-width: 600px; font-size: 17px; font-weight: 500; line-height: 1.6; letter-spacing: -0.02em; text-wrap: pretty; color: var(--muted); }
-.wd-resultBody { margin: 12px 0 0; max-width: 600px; font-size: 16px; line-height: 1.8; white-space: pre-line; text-wrap: pretty; color: var(--muted); }
-.wd-photoPair { position: relative; margin: 48px auto 0; display: grid; width: 100%; max-width: 600px; grid-template-columns: 1fr 1fr; gap: 48px; }
-.wd-photoCol { display: flex; flex-direction: column; }
-.wd-photoSlot {
-  display: flex; aspect-ratio: 4 / 5; width: 100%; flex-direction: column; align-items: center;
-  justify-content: center; gap: 12px; border-radius: 16px; border: 2px dashed #d4d4d4;
-  background: #f0f0f0; color: #a3a3a3;
-}
-.wd-photoSlotLabel { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #525252; }
-.wd-photoCaption { margin-top: 16px; font-size: 13px; letter-spacing: 0.02em; color: var(--muted-2); }
-.wd-photoWeight { margin-top: 4px; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
-.wd-photoPin {
-  position: absolute; left: 50%; top: 38%; display: flex; height: 60px; width: 60px;
-  transform: translate(-50%, -50%); align-items: center; justify-content: center;
-  border-radius: 999px; background: #404040; font-size: 13px; font-weight: 700; color: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-}
-.wd-rule { margin-top: 56px; height: 1px; width: 100%; background: var(--line); }
-.wd-metricGrid { margin-top: 32px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
-.wd-metricLabel { font-size: 14px; color: var(--muted-2); }
-.wd-metricValue { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
-.wd-radarCard {
-  margin-top: 56px; display: grid; grid-template-columns: 340px minmax(0, 1fr);
-  align-items: center; gap: 48px; border-radius: 20px; border: 1px solid #eee;
-  background: #fff; padding: 36px 40px;
-}
-.wd-radarTitle { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
-.wd-radarBody { margin: 0; font-size: 15px; line-height: 1.8; text-wrap: pretty; color: var(--muted); }
-.wd-radarLegend { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #737373; }
-.wd-radarLegendStrong { font-weight: 700; color: #262626; }
-.wd-radarSwatchBefore { display: inline-block; width: 22px; height: 0; border-top: 2px dashed #a3a3a3; }
-.wd-radarSwatchAfter { display: inline-block; width: 22px; height: 0; border-top: 3px solid #262626; }
-
-/* ── 로드맵 ───────────────────────────── */
-.wd-roadmap { background: #f7f7f7; }
-.wd-roadmapTrack { position: relative; margin-top: 48px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.wd-roadmapLine { position: absolute; left: 10%; right: 10%; top: 24px; height: 1px; background: #d4d4d4; }
-.wd-roadmapStep { position: relative; display: flex; min-width: 0; flex-direction: column; align-items: center; padding: 0 16px; text-align: center; }
-.wd-roadmapDot {
-  position: relative; z-index: 1; display: grid; height: 48px; width: 48px; place-items: center;
-  border-radius: 999px; border: 2px solid #525252; background: #f7f7f7;
-  font-size: 18px; font-weight: 700; color: #404040;
-}
-.wd-roadmapTitle { margin: 20px 0 0; font-size: 18px; font-weight: 700; color: #171717; }
-.wd-roadmapLead { margin-top: 8px; max-width: 200px; font-size: 14px; font-weight: 600; color: #525252; }
-.wd-roadmapDesc { margin-top: 6px; max-width: 210px; font-size: 14px; line-height: 1.7; word-break: keep-all; color: #737373; }
-
-/* ── 담당 팀 ──────────────────────────── */
-.wd-team { background: #f7f7f7; }
-.wd-teamGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.wd-teamCard { display: flex; flex-direction: column; border-radius: 26px; background: #fff; padding: 28px; box-shadow: 0 4px 22px rgba(0,0,0,0.07); }
-.wd-teamAvatar {
-  display: grid; height: 56px; width: 56px; flex-shrink: 0; place-items: center;
-  border-radius: 999px; background: #eee; font-size: 14px; font-weight: 700; color: #525252;
-}
-.wd-teamRole { font-size: 12px; font-weight: 700; color: #737373; }
-.wd-teamName { margin-top: 4px; font-size: 24px; font-weight: 700; letter-spacing: -0.025em; color: var(--ink); }
-.wd-teamDesc { font-size: 16px; line-height: 1.75; text-wrap: pretty; color: var(--muted); }
-.wd-teamTag { border-radius: 999px; background: #eee; padding: 8px 12px; font-size: 12px; font-weight: 700; color: #525252; }
-
-.wd-converge { display: flex; flex-direction: column; align-items: center; border-radius: 28px; background: #fff; padding: 56px 56px 52px; box-shadow: 0 3px 18px rgba(0,0,0,0.05); }
-.wd-convergeRow { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.wd-convergeCol { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 24px; text-align: center; }
-.wd-convergeColDivided { border-left: 1px solid var(--line); }
-.wd-convergeKicker { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: #c9c9c9; }
-.wd-convergeName { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
-.wd-convergeRole { max-width: 210px; font-size: 13px; line-height: 1.7; word-break: keep-all; color: #9a9a9a; }
-.wd-convergeNote { font-size: 11px; font-weight: 700; color: #b09472; }
-.wd-convergeJoin { margin-top: 34px; display: flex; width: 100%; flex-direction: column; align-items: center; }
-.wd-convergeStems { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.wd-convergeStemCell { display: flex; justify-content: center; }
-.wd-convergeStem { height: 30px; width: 1px; background: #9a9a9a; }
-.wd-convergeBar { height: 1px; width: 66.66%; background: #9a9a9a; }
-.wd-convergeDrop { height: 34px; width: 1px; background: #9a9a9a; }
-.wd-convergeNode { height: 7px; width: 7px; border-radius: 999px; background: #8a8a8a; }
-.wd-convergeTail { height: 14px; width: 1px; background: #9a9a9a; }
-.wd-convergeHub {
-  display: grid; height: 186px; width: 186px; flex: none; place-items: center;
-  border-radius: 999px; background: var(--ink); text-align: center; box-shadow: 0 0 0 12px rgba(22,22,22,0.04);
-}
-.wd-convergeHubKicker { font-size: 9px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.4); }
-.wd-convergeHubTitle { font-size: 18px; font-weight: 700; line-height: 1.45; letter-spacing: -0.02em; white-space: pre-line; color: #fff; }
-.wd-convergeOutcome { font-size: 28px; font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
-.wd-convergeOutcomeSub { font-size: 14px; letter-spacing: -0.01em; color: #9a9a9a; }
-
-.wd-funnel { display: flex; flex-direction: column; align-items: center; border-radius: 26px; background: #fff; padding: 48px 40px 44px; box-shadow: 0 3px 18px rgba(0,0,0,0.05); }
-.wd-funnelTop {
-  display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr));
-  background: var(--sand-100); padding: 32px 28px;
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
-}
-.wd-funnelMid {
-  display: flex; width: 74%; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px; background: var(--sand-200); padding: 26px 24px;
-  clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); text-align: center;
-}
-.wd-funnelLow {
-  display: flex; width: 52%; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--sand-300); padding: 24px 22px;
-  clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%); text-align: center;
-}
-
-/* ── 관리 요소 ────────────────────────── */
-.wd-care { background: #fff; }
-.wd-methodGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.wd-methodCard { min-height: 180px; border-radius: 20px; border: 1px solid #d4d4d4; background: #fff; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.wd-methodTitle { margin: 0; font-size: 24px; font-weight: 700; color: #262626; }
-.wd-methodDesc { margin: 12px 0 0; font-size: 16px; line-height: 1.75; word-break: keep-all; color: #737373; }
-.wd-programChip {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; border-radius: 999px;
-  border: 1px solid #d4d4d4; background: #fff; padding: 12px 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-/* ── 12주 케이스 ──────────────────────── */
-.wd-cases { background: #fff; }
-.wd-caseFeatured { display: flex; flex-direction: column; gap: 26px; border-radius: 26px; background: var(--sand-100); padding: 44px 48px 40px; }
-.wd-caseFeaturedKicker { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: #b09472; }
-.wd-caseFeaturedTitle { font-size: 38px; font-weight: 700; line-height: 1.3; letter-spacing: -0.04em; white-space: pre-line; color: var(--ink); }
-.wd-caseStats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: end; border-top: 1px solid #e6ded1; padding-top: 24px; }
-.wd-caseStat { display: flex; flex-direction: column; gap: 5px; }
-.wd-caseStatDivided { border-left: 1px solid #e6ded1; padding-left: 28px; }
-.wd-caseStatLabel { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #b8ab98; }
-.wd-caseStatValue { font-size: 34px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; color: var(--ink); }
-.wd-caseStatValueSm { font-size: 20px; letter-spacing: -0.03em; }
-.wd-caseStatNote { font-size: 12px; line-height: 1.6; white-space: pre-line; color: #8a8073; }
-
-.wd-personaDesktopGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.wd-personaCarousel { display: none; flex-direction: column; gap: 18px; }
-.wd-personaViewport { overflow: hidden; border-radius: 22px; }
-.wd-personaTrack { display: flex; transition: transform 420ms cubic-bezier(.22,.61,.36,1); }
-.wd-personaSlide { min-width: 100%; }
-.wd-personaCard { display: flex; flex-direction: column; border-radius: 22px; border: 1px solid #ebebeb; background: #fff; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
-.wd-personaControls { display: flex; align-items: center; justify-content: center; gap: 16px; }
-.wd-personaArrow { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid #d4d4d4; border-radius: 999px; background: #fff; color: #404040; font-size: 18px; cursor: pointer; transition: background .2s, border-color .2s; }
-.wd-personaArrow:hover { border-color: #a3a3a3; background: #f5f5f5; }
-.wd-personaDots { display: flex; align-items: center; gap: 7px; }
-.wd-personaDot { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: #d4d4d4; cursor: pointer; transition: width .2s, background .2s; }
-.wd-personaDotActive { width: 26px; background: #525252; }
-.wd-personaHead { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 24px; border-bottom: 1px solid #f2f2f2; }
-.wd-personaName { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: #262626; }
-.wd-personaPlan { flex: none; border-radius: 999px; border: 1px solid var(--line); padding: 5px 11px; font-size: 11px; font-weight: 700; color: var(--muted-2); }
-.wd-personaLoss { font-size: 32px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; color: var(--ink); }
-.wd-personaRange { font-size: 13px; color: var(--muted-2); }
-.wd-personaSub { display: inline-block; border-radius: 999px; background: #f4f4f4; padding: 6px 12px; font-size: 12px; font-weight: 700; color: #525252; }
-.wd-personaQuote { margin: 0; border-top: 1px solid #f2f2f2; background: #fbfbfb; padding: 20px 24px; font-size: 14px; line-height: 1.75; word-break: keep-all; color: #4a4a4a; }
-
-.wd-recordCard { overflow: hidden; border-radius: 22px; border: 1px solid var(--line); background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.07); display: grid; grid-template-columns: 230px minmax(0, 1fr); }
-.wd-recordAside { display: flex; flex-direction: column; justify-content: center; background: #f5f5f5; padding: 28px; }
-.wd-recordProfile { font-size: 14px; font-weight: 700; color: #737373; }
-.wd-recordLoss { margin-top: 8px; font-size: 48px; font-weight: 700; letter-spacing: -0.04em; color: #262626; }
-.wd-recordMeta { margin-top: 4px; font-size: 14px; color: #737373; }
-.wd-recordFat { margin-top: 16px; width: fit-content; border-radius: 999px; border: 1px solid #d4d4d4; background: #fff; padding: 8px 12px; font-size: 12px; font-weight: 700; color: #525252; }
-.wd-recordRow { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.wd-recordRow:last-child { border-bottom: 0; }
-.wd-recordRowLabel { font-size: 14px; font-weight: 500; color: #737373; }
-.wd-recordRowValue { font-size: 16px; line-height: 1.75; word-break: keep-all; color: #404040; }
-.wd-recordRowQuote { font-style: italic; color: #737373; }
-
-/* ── 후기 ─────────────────────────────── */
-.wd-reviews { background: #f7f7f7; }
-.wd-reviewsHead { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; }
-.wd-reviewsScore { font-size: 34px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; color: #525252; }
-.wd-reviewsGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 20px; }
-.wd-reviewCard { display: flex; flex-direction: column; gap: 16px; border-radius: 24px; background: #fff; padding: 34px 32px; box-shadow: 0 3px 18px rgba(0,0,0,0.06); }
-.wd-reviewTag { border-radius: 999px; background: #eee; padding: 6px 14px; font-size: 12px; font-weight: 700; color: #525252; }
-.wd-reviewBody { font-size: 16px; line-height: 1.8; text-wrap: pretty; color: var(--ink-2); }
-.wd-reviewAuthor { font-size: 14px; color: var(--muted-2); }
-.wd-reviewHighlight { grid-column: span 2; display: flex; align-items: center; gap: 28px; border-radius: 24px; background: #404040; padding: 32px; }
-.wd-reviewHighlightBody { font-size: 18px; line-height: 1.75; font-weight: 600; letter-spacing: -0.02em; text-wrap: pretty; color: #fff; }
-.wd-reviewHighlightAuthor { flex: none; margin-left: auto; text-align: right; white-space: pre-line; font-size: 14px; color: #bdbdbd; }
-.wd-disclaimer { font-size: 12px; color: var(--muted-2); }
-
-/* ── 플랜 ─────────────────────────────── */
-.wd-plans { background: #fafafa; }
-.wd-planIntro { max-width: 820px; margin: 8px 0 0; border-left: 3px solid #737373; border-radius: 0 14px 14px 0; background: #f0f0f0; padding: 16px 20px; font-size: 18px; font-weight: 600; line-height: 1.8; letter-spacing: -0.02em; color: #404040; }
-.wd-planGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
-.wd-planCard { position: relative; display: flex; flex-direction: column; gap: 26px; border-radius: 22px; background: #fff; padding: 36px 34px 34px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
-.wd-planCardFeatured { border: 2px solid #525252; box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
-.wd-planBadge {
-  position: absolute; left: 50%; top: -15px; transform: translateX(-50%); white-space: nowrap;
-  border-radius: 999px; background: #404040; padding: 8px 16px; font-size: 12px; font-weight: 700; color: #fff;
-}
-.wd-planName { font-size: 14px; font-weight: 600; font-style: italic; letter-spacing: -0.01em; color: #737373; }
-.wd-planSubtitle { font-size: 30px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
-.wd-planTarget { font-size: 14px; line-height: 1.7; color: #7a7a7a; }
-.wd-planFeature { display: flex; align-items: center; gap: 14px; padding: 14px 0; font-size: 14px; border-bottom: 1px solid #f3f3f3; color: #4a4a4a; }
-.wd-planFeature:last-child { border-bottom: 0; }
-.wd-planFeatureOff { color: #bcbcbc; }
-.wd-planMark { font-weight: 700; color: #525252; }
-.wd-planMarkOff { color: #c9c9c9; }
-.wd-planOption { font-size: 11px; font-weight: 700; color: var(--muted-2); }
-.wd-planPriceLabel { font-size: 14px; color: #9a9a9a; }
-.wd-planPrice { font-size: 30px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
-.wd-planCta {
-  display: flex; height: 52px; align-items: center; justify-content: center; border-radius: 999px;
-  font-size: 16px; font-weight: 700; background: #fff; color: #525252; border: 1px solid #d4d4d4;
-}
-.wd-planCtaFeatured { background: #404040; color: #fff; border: 0; }
-.wd-planCta:hover { color: #525252; }
-.wd-planCtaFeatured:hover { color: #fff; }
-.wd-refund { padding: 26px 30px; background: #f5f5f5; border-radius: 18px; font-size: 14px; line-height: 1.8; text-wrap: pretty; color: #4a4a4a; }
-.wd-refundLead { font-weight: 700; color: #404040; }
-
-/* ── FAQ ──────────────────────────────── */
-.wd-faq { background: #fafafa; }
-.wd-faqKicker { font-size: 15px; font-weight: 600; font-style: italic; letter-spacing: 0.14em; color: #737373; }
-.wd-faqTitle { font-size: 46px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.3; color: var(--ink); }
-.wd-faqItem { overflow: hidden; border-radius: 20px; background: #fff; box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
-.wd-faqButton {
-  display: flex; width: 100%; cursor: pointer; align-items: center; justify-content: space-between;
-  gap: 24px; padding: 30px 32px; text-align: left; background: transparent; border: 0; font-family: inherit;
-}
-.wd-faqQuestion { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
-.wd-faqSign { font-size: 22px; line-height: 1; color: #525252; }
-.wd-faqAnswer { padding: 0 32px 26px; font-size: 15px; line-height: 1.8; text-wrap: pretty; color: var(--muted); }
-
-/* ── 마무리 CTA ───────────────────────── */
-.wd-finalCta { background: var(--ink); }
-.wd-finalCtaInner { align-items: center; text-align: center; }
-.wd-finalCtaTitle { margin: 0; font-size: 38px; font-weight: 700; line-height: 1.4; letter-spacing: -0.03em; color: #fff; }
-.wd-finalCtaBody { margin: 24px 0 0; max-width: 560px; font-size: 16px; line-height: 1.9; white-space: pre-line; text-wrap: pretty; color: rgba(255,255,255,0.6); }
-.wd-finalCtaRow { margin-top: 40px; display: flex; justify-content: center; gap: 12px; }
-.wd-btnLight {
-  border-radius: 999px; background: #fff; padding: 16px 32px; font-size: 15px; font-weight: 700;
-  letter-spacing: -0.01em; color: var(--ink); border: 0; cursor: pointer; font-family: inherit;
-}
-.wd-btnLight:hover { background: var(--line); }
-.wd-btnOutline {
-  border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); background: transparent;
-  padding: 16px 32px; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #fff;
-  cursor: pointer; font-family: inherit;
-}
-.wd-btnOutline:hover { background: rgba(255,255,255,0.1); }
-
-/* ── 공용 유틸 ────────────────────────── */
-.wd-col { display: flex; flex-direction: column; }
-.wd-row { display: flex; }
-.wd-rowCenter { display: flex; align-items: center; }
-.wd-wrapRow { display: flex; flex-wrap: wrap; }
-.wd-gap4 { gap: 4px; }
-.wd-gap6 { gap: 6px; }
-.wd-gap8 { gap: 8px; }
-.wd-gap10 { gap: 10px; }
-.wd-gap12 { gap: 12px; }
-.wd-gap14 { gap: 14px; }
-.wd-gap16 { gap: 16px; }
-.wd-gap20 { gap: 20px; }
-.wd-gap24 { gap: 24px; }
-.wd-gap32 { gap: 32px; }
-.wd-gap40 { gap: 40px; }
-.wd-gap44 { gap: 44px; }
-.wd-starRow { display: flex; gap: 3px; }
-
-/* ── 모바일 (≤767px) ──────────────────── */
-@media (max-width: 767px) {
-  .wd-section { padding: 64px 0; }
-  .wd-inner { padding: 0 16px; }
-  .wd-h2 { font-size: 24px; }
-  .wd-lead { font-size: 15px; }
-
-  .wd-heroBody { min-height: 420px; padding: 64px 16px; }
-  .wd-heroEyebrow { font-size: 11px; }
-  .wd-heroTitle { font-size: 30px; }
-  .wd-heroText { font-size: 14px; }
-  .wd-heroActions { width: 100%; flex-direction: column; gap: 10px; margin-top: 28px; }
-  .wd-heroButton { width: 100%; min-height: 52px; padding: 0 18px; font-size: 14px; }
-  .wd-heroNote { font-size: 11px; line-height: 1.6; }
-
-  .wd-worriesTitle { font-size: 24px; }
-  .wd-worriesSub { font-size: 14px; }
-  .wd-marqueeWrap {
-    margin-top: 40px; max-height: 220px; flex-direction: row; flex-wrap: wrap;
-    justify-content: center; gap: 10px; padding: 0 16px;
-    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent);
-    mask-image: linear-gradient(to bottom, black 60%, transparent);
-  }
-  .wd-marqueeRow { display: contents; }
-  .wd-worryChip { border-radius: 999px; padding: 10px 16px; font-size: 13px; }
-  .wd-domeBody { padding: 64px 16px 0; }
-  .wd-domeTitle { font-size: 22px; }
-  .wd-domeCtaText { margin-top: 16px; font-size: 13px; }
-  .wd-domeCtaButton { width: 100%; max-width: 320px; }
-
-  .wd-difference .wd-diffSteps { flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
-  .wd-difference .wd-diffSteps .wd-rowCenter { flex-direction: column; width: 100%; gap: 12px; }
-  .wd-difference .wd-diffCircle {
-    width: 100%; height: auto; min-height: 0; border-radius: 16px; padding: 26px 20px; gap: 6px;
-  }
-  .wd-difference .wd-diffStepTitle { font-size: 22px; }
-  .wd-difference .wd-diffStepDesc { font-size: 13px; white-space: normal; }
-  .wd-diffTitle { font-size: 22px; }
-
-  .wd-resultTitle { font-size: 36px; }
-  .wd-photoPair { gap: 24px; }
-  .wd-photoWeight { font-size: 24px; }
-  .wd-photoPin { display: none; }
-  .wd-metricGrid { grid-template-columns: 1fr; }
-  .wd-metricValue { font-size: 24px; }
-  .wd-radarCard { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
-
-  .wd-roadmapTrack { grid-template-columns: 1fr; gap: 28px; }
-  .wd-roadmapLine { display: none; }
-  .wd-roadmapStep { flex-direction: row; align-items: flex-start; gap: 16px; padding: 0; text-align: left; }
-  .wd-roadmapDot { height: 40px; width: 40px; flex: none; font-size: 14px; }
-  .wd-roadmapTitle { margin: 0; font-size: 16px; }
-  .wd-roadmapLead { max-width: none; }
-  .wd-roadmapDesc { max-width: none; font-size: 13px; }
-
-  .wd-teamGrid { grid-template-columns: 1fr; }
-  .wd-teamName { font-size: 18px; }
-  .wd-teamDesc { font-size: 14px; }
-  .wd-converge, .wd-funnel { padding: 30px 20px; }
-  .wd-convergeRow, .wd-funnelTop { grid-template-columns: 1fr; gap: 20px; }
-  .wd-convergeColDivided { border-left: 0; border-top: 1px solid var(--line); padding-top: 20px; }
-  .wd-convergeStems { display: none; }
-  .wd-convergeHub { height: 150px; width: 150px; }
-  .wd-convergeOutcome { font-size: 21px; }
-  .wd-funnelMid, .wd-funnelLow { width: 100%; clip-path: none; border-radius: 14px; }
-
-  .wd-methodGrid { grid-template-columns: 1fr; }
-  .wd-methodTitle { font-size: 18px; }
-  .wd-methodDesc { font-size: 14px; }
-
-  .wd-caseFeatured { padding: 26px 22px; }
-  .wd-caseFeaturedTitle { font-size: 24px; }
-  .wd-personaDesktopGrid { display: none; }
-  .wd-personaCarousel { display: flex; }
-  .wd-caseStats { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .wd-caseStatDivided { border-left: 0; padding-left: 0; }
-  .wd-caseStatValue { font-size: 26px; }
-  .wd-recordCard { grid-template-columns: 1fr; }
-
-  .wd-reviewsHead { flex-direction: column; align-items: flex-start; gap: 24px; }
-  .wd-reviewsGrid { grid-template-columns: 1fr; }
-  .wd-reviewCard { padding: 24px 16px; }
-  .wd-reviewBody { font-size: 14px; }
-  .wd-reviewHighlight { grid-column: span 1; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px 16px; }
-  .wd-reviewHighlightAuthor { margin-left: 0; text-align: left; font-size: 12px; }
-
-  .wd-planGrid { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .wd-planGrid::-webkit-scrollbar { display: none; }
-  .wd-planIntro { padding: 14px 16px; font-size: 15px; line-height: 1.75; }
-  .wd-planCard { width: 82vw; max-width: 320px; flex: 0 0 auto; scroll-snap-align: start; padding: 36px 24px 28px; }
-  .wd-planSubtitle { font-size: 20px; }
-  .wd-planFeature { font-size: 12px; padding: 12px 0; }
-  .wd-planPrice { font-size: 20px; }
-  .wd-refund { padding: 26px 20px; font-size: 12px; }
-
-  .wd-faqTitle { font-size: 26px; }
-  .wd-faqButton { gap: 16px; padding: 24px 20px; }
-  .wd-faqQuestion { font-size: 16px; }
-  .wd-faqAnswer { padding: 0 20px 24px; font-size: 14px; }
-
-  .wd-finalCtaTitle { font-size: 24px; }
-  .wd-finalCtaBody { font-size: 15px; }
-  .wd-finalCtaRow { width: 100%; flex-direction: column; }
-}
-
-`;
