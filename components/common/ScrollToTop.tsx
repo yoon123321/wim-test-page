@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { COMMON_CONTENT } from "@/content/common";
+import { COMMON_CONTENT } from "@/data/common";
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);

@@ -28,7 +28,7 @@ import HomeManagement from "@/components/home/HomeManagement";
 import {
   HERO, WORRIES, WORRIES_COPY, DIFFERENCE, RESULT, ROADMAP, TEAM,
   CARE, CASES, REVIEWS_COPY, PLAN_FEATURES, PLANS_COPY, FAQ_COPY, FINAL_CTA,
-} from "@/content/wireframe-e";
+} from "@/data/diet";
 
 
 /* ─── primitives ──────────────────────────────────────── */
@@ -78,7 +78,7 @@ function HeroSection() {
         </h1>
         <p className={"wd-heroText"}>{HERO.body}</p>
         <div className={"wd-heroActions"}>
-          <a href="/bp-check" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>{HERO.primaryCta}</a>
+          <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonPrimary"}`}>{HERO.primaryCta}</a>
           <a href="/contact" className={`${"wd-heroButton"} ${"wd-heroButtonSecondary"}`}>{HERO.secondaryCta}</a>
         </div>
         <p className={"wd-heroNote"}>{HERO.note}</p>
@@ -124,7 +124,7 @@ function WorriesSection() {
           <p className={"wd-domeTitle"}>{WORRIES_COPY.domeTitle}</p>
           <p className={"wd-domeSub"}>{WORRIES_COPY.domeSub}</p>
           <p className={"wd-domeCtaText"}>{WORRIES_COPY.domeCtaText}</p>
-          <a href="/bp-check" className={"wd-domeCtaButton"}>{WORRIES_COPY.domeCtaButton}</a>
+          <a href="/contact" className={"wd-domeCtaButton"}>{WORRIES_COPY.domeCtaButton}</a>
         </div>
       </div>
     </section>
@@ -723,7 +723,7 @@ function FinalCtaSection() {
 
 /* ─── 페이지 ────────────────────────────────────────────── */
 
-export default function WireframeEView() {
+export default function DietLanding() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />

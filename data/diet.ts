@@ -1,5 +1,5 @@
 /** 감량 프로그램 E안 — 화면 문구와 데이터.
- *  이 파일의 문자열만 고치면 /wireframe-1 의 E안 화면에 반영됩니다. */
+ *  이 파일의 문자열만 고치면 /diet-program 의 E안 화면에 반영됩니다. */
 
 export type PlanFeatureState = "on" | "off" | "option";
 
