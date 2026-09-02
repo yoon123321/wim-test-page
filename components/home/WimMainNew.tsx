@@ -1020,7 +1020,7 @@ export default function WimMainNew() {
       </section>
 
       {/* ─────────────── FOOTER ─────────────── */}
-      <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
+      <footer className="hidden">
         <div className="mx-auto w-full px-5 dt:max-w-[1440px] dt:px-20">
           {/* 로고 — 푸터 맨 위 */}
           <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
@@ -1136,7 +1136,7 @@ export function WimMainBottom() {
         </Container>
       </section>
 
-      <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
+      <footer className="hidden">
         <div className="mx-auto w-full px-5 dt:max-w-[1200px]">
           <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
