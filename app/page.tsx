@@ -39,43 +39,35 @@ function CenterCards() {
         // 아무것도 안 눌렀을 때 5:5, 호버하면 6:4 — 세로로 쌓이는 모바일에서는 적용하지 않는다
         const grow = hovered === null ? 5 : hovered === index ? 6 : 4;
         return (
-          <article
+          <Link
             key={center.title}
+            href={center.href}
+            aria-label={`${center.title} 자세히 보기`}
             onMouseEnter={() => setHovered(index)}
             onMouseLeave={() => setHovered(null)}
             style={{ "--grow": grow } as React.CSSProperties}
-            className="relative isolate h-[380px] overflow-hidden rounded-[16px] tb:h-[450px] tb:basis-0 tb:rounded-[20px] tb:[flex-grow:var(--grow)] tb:transition-[flex-grow] tb:duration-500 tb:ease-out">
+            className="group relative isolate h-[380px] overflow-hidden rounded-[16px] no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-main tb:h-[450px] tb:basis-0 tb:rounded-[20px] tb:[flex-grow:var(--grow)] tb:transition-[flex-grow] tb:duration-500 tb:ease-out">
             <Image src={center.image} alt={center.alt} fill sizes="(min-width:768px) 60vw, 100vw" className="object-cover" />
             {/* 초록 딤은 카드 하단 42%에만 적용해 이미지 노출 영역을 확보한다 */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-primary-deeper via-primary-main/65 to-transparent" />
 
-            <div className="absolute inset-0 flex flex-col justify-between p-5 tb:p-7 dt:p-8">
-              {/* 센터 이름 — 상단 좌측, 아래 연두 밑줄 */}
-              <div className="flex w-fit flex-col gap-2">
-                <Text as="h2" size="md" weight="bold" className="m-0 tracking-[-0.02em] text-white tb:text-[17px]">
+            <div className="absolute inset-0 flex flex-col justify-end p-5 tb:p-7 dt:p-8">
+              <div className="flex max-w-[560px] flex-col">
+                <Text as="h2" size="2xl" weight="bold" className="m-0 break-keep tracking-[-0.035em] text-white tb:text-[32px]">
                   {center.title}
                 </Text>
-                <span aria-hidden="true" className="h-[3px] w-[44px] rounded-full bg-primary-sub-02" />
-              </div>
-
-              <div className="flex max-w-[560px] flex-col gap-2">
-                <Text as="p" size="xl" weight="bold" className="m-0 break-keep leading-[1.3] tracking-[-0.03em] text-white">
+                <Text as="p" size="md" className="mb-0 mt-4 break-keep leading-[1.65] text-white/90 tb:mt-5 tb:text-[17px]">
                   {center.message}
                 </Text>
-                <Text as="span" size="md" className="break-keep text-white/90">
-                  {center.sub}
-                </Text>
-                <Link
-                  href={center.href}
-                  className="mt-3 inline-flex h-[40px] w-fit items-center gap-1.5 rounded-full bg-white px-5 text-[14px] font-bold text-primary-main no-underline shadow-sm transition hover:bg-primary-sub-03 tb:mt-4 tb:h-[44px] tb:px-6 tb:text-[15px]">
+                <span className="mt-5 inline-flex h-[42px] w-fit items-center gap-2.5 rounded-full border border-white/75 bg-white/25 px-5 text-[14px] font-medium text-white shadow-sm backdrop-blur-[5px] transition group-hover:bg-white/35 tb:mt-6 tb:h-[50px] tb:gap-3 tb:px-6 tb:text-[16px]">
                   자세히 보기
-                  <svg width="14" height="14" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-                    <path d="M5 17 17 5M8 5h9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                    <path d="M4 18 18 4M7 4h11v11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </Link>
+                </span>
               </div>
             </div>
-          </article>
+          </Link>
         );
       })}
     </div>

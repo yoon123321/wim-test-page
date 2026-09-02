@@ -61,7 +61,7 @@ export default function HeaderMain() {
         className="sticky top-0 z-30 bg-white shadow-[0_4px_7px_rgba(0,0,0,0.1)] tb:shadow-[0_4px_7px_rgba(0,0,0,0.13)]"
         onMouseLeave={() => setOpenMenu(null)}
       >
-        <div className="mx-auto flex h-[56px] w-full items-center px-5 tb:max-w-[688px] dt:h-[80px] dt:max-w-[1280px] dt:px-0">
+        <div className="mx-auto flex h-[64px] w-full items-center px-5 tb:max-w-[688px] dt:h-[64px] dt:max-w-[1280px] dt:px-0">
           {/* 로고 */}
           <Link href="/" className="flex items-end gap-[4px] no-underline dt:gap-[6.5px]" aria-label="윔센터 홈">
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
@@ -82,7 +82,7 @@ export default function HeaderMain() {
               return link.children ? (
                 <div
                   key={link.label}
-                  className="relative flex h-[80px] items-center"
+                  className="relative flex h-[64px] items-center"
                   onMouseEnter={() => setOpenMenu(link.label)}
                 >
                   <button type="button" className={`flex cursor-pointer items-center gap-2 border-0 bg-transparent p-0 ${labelClass}`}>
@@ -113,7 +113,7 @@ export default function HeaderMain() {
                   key={link.href}
                   href={link.href!}
                   onMouseEnter={() => setOpenMenu(null)}
-                  className={`flex h-[80px] items-center no-underline ${labelClass}`}
+                  className={`flex h-[64px] items-center no-underline ${labelClass}`}
                 >
                   <Typography mobile="body-01" weight={labelWeight} className="relative flex flex-col items-center gap-1">
                     {link.label}
@@ -127,9 +127,9 @@ export default function HeaderMain() {
           {/* PC CTA */}
           <Link
             href={NAVIGATION_MAIN_CTA.href}
-            className="ml-[35px] hidden items-center justify-center rounded-full bg-primary-main px-[23px] py-[5px] text-white no-underline transition hover:opacity-90 dt:flex"
+            className="ml-[35px] hidden items-center justify-center rounded-full bg-primary-main px-[18px] py-[4px] text-white no-underline transition hover:opacity-90 dt:flex"
           >
-            <Typography mobile="headline-03" weight="medium">{NAVIGATION_MAIN_CTA.label}</Typography>
+            <Typography mobile="body-02" weight="medium">{NAVIGATION_MAIN_CTA.label}</Typography>
           </Link>
 
           {/* 기존안/개선안 스위치 (목업 전용) */}
