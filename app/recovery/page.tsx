@@ -1,11 +1,15 @@
+"use client";
+
 import RecoveryLandingNew from "@/components/recovery/RecoveryLandingNew";
+import { useVariant } from "@/components/common/VariantProvider";
 
 /* ------------------------------------------------------------------
-   기기관리(리커버리) 페이지 — 단일 버전
-   문구·데이터는 data/recovery-new.ts
-   (헤더의 버전 스위치와 무관하게 항상 이 화면)
+   기기관리(리커버리) 페이지
+   - 레이아웃은 하나. 버전3(개선안 C)에서만 히어로가 옥시젠챔버 영상 배경으로 바뀐다
+   - 문구·데이터는 data/recovery-new.ts
 ------------------------------------------------------------------- */
 
 export default function RecoveryPage() {
-  return <RecoveryLandingNew />;
+  const { variant } = useVariant();
+  return <RecoveryLandingNew videoHero={variant === "v3"} />;
 }

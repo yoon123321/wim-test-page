@@ -5,10 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import Text from "@/components/common/Text";
 import RevealOnScroll from "@/components/common/RevealOnScroll";
-import { useHomeContent } from "@/components/home/useHomeContent";
 import { HOME_CENTERS, HOME_MAIN_V1 } from "@/data/home";
-import { useVariant } from "@/components/common/VariantProvider";
-import WimMainNew, { HeroA, IntroSection, WimMainBottom } from "@/components/home/WimMainNew";
+import { HeroA, IntroSection, WimMainBottom } from "@/components/home/WimMainNew";
+import { HOME_CONTENT_E } from "@/data/home";
 
 /** 센터 소개 2종 — 기본 50:50, 호버한 카드가 70:30 으로 넓어진다 */
 const CENTERS = [
@@ -75,11 +74,8 @@ function CenterCards() {
 }
 
 export default function HomePage() {
-  const CONTENT = useHomeContent();
-  const { variant } = useVariant();
-
-  // 개선안: 새 메인페이지 시안(WimMainNew)을 통째로 렌더
-  if (variant !== "base") return <WimMainNew />;
+  // 메인은 버전 스위치와 무관하게 단일 버전 (문구는 data/home.ts HOME_CONTENT_E)
+  const CONTENT = HOME_CONTENT_E;
 
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">
@@ -91,12 +87,31 @@ export default function HomePage() {
         mobileTopAligned
       />
 
+      {/* 센터 소개 영상 — 살짝 회색 배경으로 위아래 흰 섹션과 구분 */}
+      <section className="bg-gray-00 px-5 py-[54px] tb:py-[80px]">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 tb:gap-7">
+          <h2 className="m-0 break-keep text-[24px] font-bold leading-[1.35] tracking-[-0.03em] text-primary-main tb:text-[34px]">
+            {HOME_MAIN_V1.introVideo.title}
+          </h2>
+          <video
+            src={HOME_MAIN_V1.introVideo.src}
+            aria-label={HOME_MAIN_V1.introVideo.label}
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="metadata"
+            className="pointer-events-none block aspect-[16/9] w-full rounded-[16px] object-cover tb:rounded-[22px]"
+          />
+        </div>
+      </section>
+
       {/* 센터 소개 */}
       <IntroSection
         eyebrow={HOME_MAIN_V1.intro.eyebrow}
         titleLines={HOME_MAIN_V1.intro.titleLines}
         showDesc={false}
-        showTestChips
+
         gradientBackground
         desktopMaxWidth="1200px"
         largeImage

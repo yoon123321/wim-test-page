@@ -69,6 +69,12 @@ export const RECOVERY_COPY = {
   },
 } as const;
 
+/** 버전3(개선안 C) 히어로 배경 영상 */
+export const RECOVERY_HERO_VIDEO = {
+  video: "/videos/device-oxygen-chamber-hero.mp4",
+  label: "옥시젠챔버 히어로 영상",
+} as const;
+
 export const RECOVERY_DEVICES: RecoveryDevice[] = [
   {
     kicker: "DEVICE 01 · CRYO",

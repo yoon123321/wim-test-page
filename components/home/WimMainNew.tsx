@@ -646,12 +646,14 @@ export function TestsSection({
 export function IntroSection({
   eyebrow,
   titleLines,
+  descLines,
+  video,
   showDesc = true,
   showTestChips = false,
   gradientBackground = false,
   desktopMaxWidth = "1280px",
   largeImage = false,
-}: { eyebrow?: string; titleLines?: readonly string[]; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean; desktopMaxWidth?: "1200px" | "1280px"; largeImage?: boolean } = {}) {
+}: { eyebrow?: string; titleLines?: readonly string[]; descLines?: readonly string[]; video?: string; showDesc?: boolean; showTestChips?: boolean; gradientBackground?: boolean; desktopMaxWidth?: "1200px" | "1280px"; largeImage?: boolean } = {}) {
   const COPY = WIM_NEW_COPY;
   return (
     <section
@@ -671,7 +673,7 @@ export function IntroSection({
           </Typography>
           {showDesc && (
             <Typography as="p" mobile="body-03" tablet="headline-03" weight="medium" className="mt-[28px] break-keep text-black tb:mt-[36px]">
-              <Lines items={COPY.intro.descLines} />
+              <Lines items={descLines ?? COPY.intro.descLines} />
             </Typography>
           )}
           {showTestChips && (
@@ -689,12 +691,24 @@ export function IntroSection({
           )}
           </div>
           <div className={`relative aspect-[320/200] w-full overflow-hidden rounded-[7px] dt:shrink-0 ${largeImage ? "dt:h-[456.64px] dt:w-[757.36px] dt:aspect-auto" : "dt:aspect-[640/360] dt:w-[640px]"}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
-            <img
-              src={COPY.intro.image}
-              alt={COPY.intro.imageAlt}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            {video ? (
+              <video
+                src={video}
+                muted
+                loop
+                playsInline
+                autoPlay
+                preload="metadata"
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element -- 피그마 원본
+              <img
+                src={COPY.intro.image}
+                alt={COPY.intro.imageAlt}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
           </div>
         </div>
 

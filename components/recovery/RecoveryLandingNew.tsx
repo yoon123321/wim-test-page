@@ -14,6 +14,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   RECOVERY_COPY,
+  RECOVERY_HERO_VIDEO,
   RECOVERY_DEVICES,
   RECOVERY_SITUATIONS,
   RECOVERY_COMBOS,
@@ -64,7 +65,8 @@ const lines = (arr: readonly string[]) =>
     </span>
   ));
 
-export default function RecoveryLandingNew() {
+/** videoHero: 버전3(개선안 C)에서 히어로 배경을 옥시젠챔버 영상으로 */
+export default function RecoveryLandingNew({ videoHero = false }: { videoHero?: boolean } = {}) {
   const [situation, setSituation] = useState(0);
   const [tab, setTab] = useState<"theme" | "single">("single");
   const [faqOpen, setFaqOpen] = useState<number>(0);
@@ -76,8 +78,22 @@ export default function RecoveryLandingNew() {
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
       {/* 히어로 */}
-      <section id="top" className="bg-gradient-to-b from-primary-deeper to-black">
-        <div className="mx-auto flex w-full max-w-[350px] flex-col items-center gap-[18px] px-5 pb-[88px] pt-24 text-center tb:max-w-[688px] tb:gap-[26px] tb:pb-[140px] tb:pt-[152px] dt:max-w-[1280px]">
+      <section id="top" className="relative overflow-hidden bg-gradient-to-b from-primary-deeper to-black">
+        {/* 버전3(개선안 C): 문구 없이 영상만 */}
+        {videoHero && (
+          <video
+            src={RECOVERY_HERO_VIDEO.video}
+            aria-label={RECOVERY_HERO_VIDEO.label}
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="metadata"
+            className="pointer-events-none block h-[420px] w-full object-cover tb:h-[640px]"
+          />
+        )}
+        {!videoHero && (
+        <div className="relative mx-auto flex w-full max-w-[350px] flex-col items-center gap-[18px] px-5 pb-[88px] pt-24 text-center tb:max-w-[688px] tb:gap-[26px] tb:pb-[140px] tb:pt-[152px] dt:max-w-[1280px]">
           <span className={`${EN} text-[13.5px] tracking-[0.28em] text-primary-sub-02`}>{COPY.hero.kicker}</span>
           <h1 className="m-0 max-w-[900px] break-keep text-[30px] font-bold leading-[1.4] tracking-[-0.025em] text-white tb:text-[48px] tb:leading-[1.36]">
             {lines(COPY.hero.titleLines)}
@@ -90,6 +106,7 @@ export default function RecoveryLandingNew() {
             {COPY.hero.ctaButton}
           </Link>
         </div>
+        )}
       </section>
 
       {/* 왜 회복인가 */}
