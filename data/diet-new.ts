@@ -29,27 +29,27 @@ export const DIET_NEW_COPY = {
     quizButton: "3분 유형 검사 (무료)",
   },
   diff: {
-    eyebrow: "아는 것에서, 실제로 빼는 것까지",
+    eyebrow: "아는 것만으로는 부족합니다",
     steps: [
       { step: "STEP 1", title: "나를 아는 것", subLines: ["검사로 원인과", "방향을 확인"] },
       { step: "STEP 2", title: "실제 빼는 것", subLines: ["전략을 짜고", "매일 실행"] },
     ],
-    titleLines: ["나를 아는 데서"],
-    titleAccent: "멈추지 않습니다.",
+    titleLines: ["알게 된 원인을,"],
+    titleAccent: "실제 행동으로 바꿉니다.",
     bodyLines: ["원인을 알면 방향이 정해집니다.", "남은 일은 매일 실행하는 것."],
     bodyStrong: "윔은 설계와 실행을 함께 맡습니다.",
   },
   result: {
     badge: "회원 김OO (34) · 실제 기록",
-    title: "말 보다는 기록으로 보여드립니다.",
+    title: "달라진 몸을,\n기록으로 확인해보세요.",
     before: { cap: "BEFORE · 2026.03.02", kg: "68.4kg", slot: "BEFORE 사진" },
     after: { cap: "AFTER · 2026.05.25", kg: "55.1kg", slot: "AFTER 사진" },
     moreLabel: "변화 기록 더 보기",
     stays: {
       kicker: "AND IT STAYS",
-      lead: "관리가 끝나도 습관은 남습니다.",
-      title: "살이 잘 찌지 않는 몸이 됩니다.",
-      body: "식욕이 돌아오는 구간까지 함께 관리해, 관리가 끝난 뒤에도 스스로 유지되는 상태를 만듭니다.",
+      lead: "애쓰지 않아도 이어지도록",
+      title: "몸에 맞는 습관을 일상에 남깁니다.",
+      body: "먹고 자고 움직이는 방식을 조금씩 바꾸고 반복해, 감량을 위한 행동이 자연스러운 생활이 되도록 돕습니다.",
     },
     curve: { badge: "결과", title: "관리가 끝나도 체중이 돌아오지 않습니다" },
     hexagon: {
@@ -63,7 +63,7 @@ export const DIET_NEW_COPY = {
   },
   journey: {
     kicker: "THE JOURNEY",
-    title: "검사부터 유지까지, 이렇게 흘러갑니다",
+    title: "검사로 시작해, 유지되는 습관으로 완성합니다.",
     description: "카드를 누르면 각 단계에서 하는 것이 열립니다.",
     detailLabel: "자세히 보기 →",
     modalListLabel: "이 단계에서 하는 것",
@@ -71,7 +71,7 @@ export const DIET_NEW_COPY = {
   },
   team: {
     kicker: "YOUR TEAM",
-    title: "한 명의 전문가가 아니라, 하나의 팀이 당신의 감량을 설계합니다",
+    title: "각 분야의 전문가가, 하나의 방향으로 감량을 설계합니다.",
     description: "한 명이 순서대로 붙는 것이 아니라, 세 팀이 처음부터 같은 설계를 씁니다.",
     oneDesign: { kicker: "ONE DESIGN", title: "하나의 프로그램 설계", body: "검사 결과 하나를 세 팀이 함께 읽고, 한 장의 계획으로 정리합니다." },
     coaching: {
@@ -106,7 +106,7 @@ export const DIET_NEW_COPY = {
   plans: {
     kicker: "PLANS & PRICING",
     title: "당신에게 맞는 프로그램을 찾아보세요.",
-    descriptionLines: ["가격은 진단에서 나옵니다.", "필요 없는 관리를 더하지 않기 위해서입니다."],
+    descriptionLines: [],
     featuredBadge: "가장 많이 선택",
     optionLabel: "옵션",
     swipeHint: "옆으로 넘겨 세 플랜을 비교하세요",

@@ -640,7 +640,7 @@ function Result() {
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 break-keep text-[28px] leading-[1.35] tb:text-[54px]">{C0.title}</h2>
+          <h2 className="m-0 whitespace-pre-line break-keep text-[28px] leading-[1.35] tb:text-[54px]">{C0.title}</h2>
         </div>
 
         {/* 비포 · 애프터 */}
@@ -947,9 +947,11 @@ function Plans() {
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
           <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[36px]">{C0.title}</h2>
-          <p className="m-0 max-w-[620px] break-keep text-[15.5px] leading-[1.8] text-gray-03">
-            <Lines items={C0.descriptionLines} />
-          </p>
+          {C0.descriptionLines.length > 0 && (
+            <p className="m-0 max-w-[620px] break-keep text-[15.5px] leading-[1.8] text-gray-03">
+              <Lines items={C0.descriptionLines} />
+            </p>
+          )}
         </div>
 
         {/* 모바일은 가로 스크롤, PC 는 3열 */}
