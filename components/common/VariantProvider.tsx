@@ -2,11 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type HomeVariant = "base" | "improved";
+export type HomeVariant = "base" | "improved" | "v3";
 
 export const VARIANT_LABELS: Record<HomeVariant, string> = {
   base: "버전1",
   improved: "버전2",
+  v3: "버전3",
 };
 
 interface VariantContextValue {
@@ -30,7 +31,7 @@ export function VariantProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("home-variant");
-    if (saved === "base" || saved === "improved") setVariantState(saved);
+    if (saved === "base" || saved === "improved" || saved === "v3") setVariantState(saved);
   }, []);
 
   const setVariant = (v: HomeVariant) => {

@@ -79,7 +79,7 @@ export default function HomePage() {
   const { variant } = useVariant();
 
   // 개선안: 새 메인페이지 시안(WimMainNew)을 통째로 렌더
-  if (variant === "improved") return <WimMainNew />;
+  if (variant !== "base") return <WimMainNew />;
 
   return (
     <main className="w-full bg-white font-['Noto_Sans_KR',sans-serif] text-neutral-900">

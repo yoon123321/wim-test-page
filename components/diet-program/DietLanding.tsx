@@ -33,6 +33,8 @@ import {
   DIET_FAQ,
 } from "@/data/diet";
 import { DIET_NEW_COPY } from "@/data/diet-new";
+import { DIET_COACHING } from "@/data/diet-coaching";
+import RevealOnScroll from "@/components/common/RevealOnScroll";
 
 /** 버전2 문구를 버전1 레이아웃에서 사용하는 동일한 문구 구조로 연결한다. */
 const DIET_COPY_V2 = {
@@ -521,7 +523,130 @@ function CaseDeck() {
   );
 }
 
-function Problem() {
+
+/** 버전3 — 검사지 한 장이 코칭이 되기까지. 한 사람의 검사 결과를 4스텝으로 따라간다 */
+function CoachingBarRow({ label, value, percent }: { label: string; value: string; percent: number }) {
+  return (
+    <div className="flex flex-col gap-1.5 border-t border-gray-01 pt-2.5 tb:flex-row tb:items-center tb:gap-3">
+      <span className="min-w-0 flex-1 break-keep text-[13.5px] font-medium text-gray-03 tb:text-[14px]">
+        {label} <b className="font-bold" style={{ color: "var(--color-primary-main)" }}>{value}</b>
+      </span>
+      <span className="relative block h-[6px] w-full flex-none rounded-full bg-gray-01 tb:w-[180px]">
+        <span className="block h-[6px] rounded-full" style={{ width: `${percent}%`, background: "var(--color-primary-main)" }} />
+        <span aria-hidden="true" className="absolute -inset-y-px left-1/3 w-px bg-white/90" />
+        <span aria-hidden="true" className="absolute -inset-y-px left-2/3 w-px bg-white/90" />
+      </span>
+      <span className="flex-none text-[13px] font-bold tabular-nums text-gray-02 tb:w-[38px] tb:text-right">{percent}%</span>
+    </div>
+  );
+}
+
+function CoachingConnector({ children }: { children: string }) {
+  return (
+    <div className="flex items-center gap-4 py-1">
+      <span className="h-px flex-1 bg-white/15" />
+      <span className="flex items-center gap-2 text-[14px] font-bold" style={{ color: C.mint }}>
+        {children}
+        <span aria-hidden="true" className="grid h-6 w-6 place-items-center rounded-full border border-white/30 text-[12px] text-white/80">↓</span>
+      </span>
+      <span className="h-px flex-1 bg-white/15" />
+    </div>
+  );
+}
+
+function CoachingStory() {
+  const S = DIET_COACHING;
+  return (
+    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-4">
+      <div className="flex flex-col items-center gap-2 text-center">
+        <span className={`${"text-[13px] font-bold tracking-[0.18em]"}`} style={{ color: C.mint }}>{S.kicker}</span>
+        <h3 className="m-0 break-keep text-[22px] font-bold leading-[1.4] text-white tb:text-[28px]">{S.title}</h3>
+        <p className="m-0 break-keep text-[14.5px] leading-[1.75] text-white/65 tb:text-[15.5px]">
+          <Lines items={S.subLines} />
+        </p>
+      </div>
+
+      {S.steps.map((step) => (
+        <div key={step.tag} className="contents">
+          <RevealOnScroll>
+            <article className="flex flex-col gap-3.5 rounded-[16px] bg-white px-4 py-5 tb:gap-4 tb:rounded-[20px] tb:px-[26px] tb:py-7">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <span
+                  className="flex h-8 flex-none items-center rounded-full px-3.5 text-[12px] font-bold tracking-[0.06em] tb:h-[30px]"
+                  style={{ background: "var(--color-primary-sub-03)", color: "var(--color-primary-main)" }}>
+                  {step.tag}
+                </span>
+                <h4 className="m-0 min-w-0 break-keep text-[17px] font-bold tb:text-[19px]">{step.title}</h4>
+              </div>
+
+              {"habitsStrong" in step && (
+                <ul className="m-0 grid list-none grid-cols-2 gap-px overflow-hidden rounded-[12px] bg-gray-01 p-px tb:grid-cols-5">
+                  {DIET_HABITS.map((habit) => {
+                    const level = (step.habitsStrong as readonly string[]).includes(habit)
+                      ? "strong"
+                      : (step.habitsSoft as readonly string[]).includes(habit)
+                        ? "soft"
+                        : "off";
+                    const tile = {
+                      strong: { background: "var(--color-primary-main)", color: "#fff" },
+                      soft: { background: "var(--color-primary-sub-03)", color: "var(--color-primary-main)" },
+                      off: { background: "var(--color-gray-00)", color: "var(--color-gray-02)" },
+                    }[level];
+                    return (
+                      <li key={habit} className="flex min-h-[40px] items-center justify-center px-2 py-1.5 text-center text-[12px] font-bold tb:min-h-[46px]" style={tile}>
+                        {habit}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              <div className="flex flex-col gap-1">
+                {step.bars.map((bar) => (
+                  <CoachingBarRow key={bar.label} {...bar} />
+                ))}
+              </div>
+
+              <p
+                className="m-0 break-keep rounded-r-[10px] border-l-[3px] py-1 pl-3.5 text-[14.5px] leading-[1.8] text-gray-03 tb:text-[15px]"
+                style={{ borderColor: "var(--color-primary-main)" }}>
+                {step.comment}
+              </p>
+            </article>
+          </RevealOnScroll>
+          <CoachingConnector>{step.connector}</CoachingConnector>
+        </div>
+      ))}
+
+      <RevealOnScroll>
+        <article className="flex flex-col gap-4 rounded-[16px] px-4 py-6 text-white tb:rounded-[20px] tb:px-[26px] tb:py-8" style={{ background: "var(--color-primary-main)" }}>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <span className="flex h-8 flex-none items-center rounded-full border border-white/40 px-3.5 text-[12px] font-bold tracking-[0.1em]">{S.solution.tag}</span>
+            <h4 className="m-0 min-w-0 break-keep text-[18px] font-bold tb:text-[21px]">{S.solution.title}</h4>
+          </div>
+          <div className="flex flex-col gap-3">
+            {S.solution.items.map((item) => (
+              <div key={item.no} className="flex items-start gap-3 border-t border-dashed border-white/25 pt-3">
+                <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-white text-[13px] font-bold" style={{ color: "var(--color-primary-main)" }}>
+                  {item.no}
+                </span>
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className="break-keep text-[15.5px] font-bold">{item.title}</span>
+                  <p className="m-0 break-keep text-[14px] leading-[1.75] text-white/85">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="m-0 break-keep border-t border-dashed border-white/25 pt-4 text-center text-[15.5px] font-bold leading-[1.6] tb:text-[17px]">{S.solution.closing}</p>
+        </article>
+      </RevealOnScroll>
+
+      <p className="m-0 text-center text-[12px] text-white/45">{S.note}</p>
+    </div>
+  );
+}
+
+function Problem({ coaching = false }: { coaching?: boolean }) {
   const C0 = useDietCopy().problem;
   return (
     <section id="problem" className="overflow-hidden px-6 py-[96px]" style={{ background: C.greenDark }}>
@@ -560,13 +685,18 @@ function Problem() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-3 text-center">
-          <span className="text-[17px] font-bold" style={{ color: C.mint }}>
-            {C0.caseIntroLabel}
-          </span>
-        </div>
-
-        <CaseDeck />
+        {coaching ? (
+          <CoachingStory />
+        ) : (
+          <>
+            <div className="flex flex-col items-center gap-3 text-center">
+              <span className="text-[17px] font-bold" style={{ color: C.mint }}>
+                {C0.caseIntroLabel}
+              </span>
+            </div>
+            <CaseDeck />
+          </>
+        )}
 
         <div className="flex flex-col items-center gap-3.5">
           <span className="text-[14.5px] text-white/70">{C0.ctaLead}</span>
@@ -1156,13 +1286,14 @@ function Contact() {
 
 /* ─────────────────────────── 페이지 ─────────────────────────── */
 
-export default function DietLanding({ copyVariant = "base" }: { copyVariant?: "base" | "improved" }) {
-  const copy = copyVariant === "improved" ? DIET_COPY_V2 : DIET_COPY;
+export default function DietLanding({ copyVariant = "base" }: { copyVariant?: "base" | "improved" | "v3" }) {
+  // 버전3은 버전2 문구를 쓰되, 고민 섹션의 "자주 나오는 유형" 카드 대신 코칭 스토리를 보여준다
+  const copy = copyVariant === "base" ? DIET_COPY : DIET_COPY_V2;
   return (
     <DietCopyContext.Provider value={copy}>
       <main className="w-full bg-white font-pretendard text-black antialiased">
         <Hero />
-        <Problem />
+        <Problem coaching={copyVariant === "v3"} />
         <Difference />
         <Result />
         <Roadmap />
