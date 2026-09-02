@@ -22,12 +22,12 @@ import { Typography } from "./Typography";
 
 const ICONS = "/images/main/icons";
 
-/** 버전1/버전2 미리보기 스위치 (목업 전용) */
+/** 버전1/버전2/버전3 미리보기 스위치 (목업 전용). 버전3 시안이 없는 화면은 버전2로 보인다 */
 function VariantSwitch() {
   const { variant, setVariant } = useVariant();
   return (
     <div className="flex items-center gap-1 rounded-full border border-neutral-300 p-1">
-      {(["base", "improved"] as HomeVariant[]).map((v) => (
+      {(["base", "improved", "v3"] as HomeVariant[]).map((v) => (
         <button
           key={v}
           type="button"
