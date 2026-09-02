@@ -35,11 +35,6 @@ export const RECOVERY_COPY = {
     kicker: "FIVE MODALITIES",
     title: "서로 다른 원리로 회복을 돕는 다섯 가지 기기",
   },
-  journey: {
-    kicker: "DEVICE CARE JOURNEY",
-    titleLines: ["컨디션은 매일 다르니까,", "방문할 때마다 다시 정합니다."],
-    description: "현재 컨디션을 확인한 뒤 필요한 기기와 순서를 정하고, 다음 관리 기준까지 남깁니다.",
-  },
   records: {
     kicker: "MEMBER STORIES",
     title: "먼저 경험한 분들의 이야기를 확인해보세요.",
@@ -134,12 +129,6 @@ export const RECOVERY_COMBOS: RecoveryCombo[] = [
   { steps: ["옥시챔버 40′", "인프라레드 20′"], title: "Oxygen & Heat Recovery", desc: "고압산소로 산소를 채운 뒤 인프라레드로 몸을 데워, 쌓인 피로와 무거움을 덜어냅니다.", alt: "조합 — 옥시챔버 캡슐 내부", src: "/images/main/program-03.png" },
   { steps: ["인프라레드 30′", "에어프레셔 20′"], title: "Heat & Compression", desc: "인프라레드로 체온을 올린 뒤 에어프레셔로 압력을 더해, 순환과 대사 흐름을 돕습니다.", alt: "조합 — 인프라레드 발한 장면", src: "/assets/combo-4.png" },
 ];
-
-export const RECOVERY_JOURNEY = [
-  { no: "1", title: "처음 한 번, 상담", desc: "목표와 생활 패턴을 듣고 관리 방향을 정합니다." },
-  { no: "2", title: "올 때마다, 오늘의 조합", desc: "그날 컨디션을 보고 기기와 순서를 정합니다." },
-  { no: "3", title: "끝나고, 기록", desc: "받은 관리와 반응을 남겨 다음 방문의 기준으로 씁니다." },
-] as const;
 
 export const RECOVERY_RECORDS = [
   { handle: "@runner_jw", body: "운동 끝나고 크라이오 3분. 다음 날이 다르다", alt: "인스타 — 크라이오 캡슐 앞", src: "/assets/ig-1.png" },

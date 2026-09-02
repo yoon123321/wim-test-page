@@ -6,7 +6,7 @@
  *
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
  * - 문구·데이터는 data/recovery-new.ts 에서 수정
- * - 히어로(유형 검사 CTA) → 왜 회복인가 → 오늘의 조합 → 기기 5종 → 관리 흐름 → 방문 기록 → 가격 → FAQ → 마무리 CTA
+ * - 히어로(유형 검사 CTA) → 왜 회복인가 → 오늘의 조합 → 기기 5종 → 방문 기록 → 가격 → FAQ → 마무리 CTA
  * - 사진은 src 가 있으면 보여주고, 파일이 없으면 alt 문구를 자리표시로 그린다
  */
 
@@ -17,7 +17,6 @@ import {
   RECOVERY_DEVICES,
   RECOVERY_SITUATIONS,
   RECOVERY_COMBOS,
-  RECOVERY_JOURNEY,
   RECOVERY_RECORDS,
   RECOVERY_THEMES,
   RECOVERY_TRIALS,
@@ -118,11 +117,11 @@ export default function RecoveryLandingNew() {
             <p className="m-0 max-w-[680px] break-keep text-[15px] leading-[1.8] text-gray-03 tb:text-[16px]">{COPY.combos.description}</p>
           </div>
 
-          <div className="grid grid-cols-1 items-start gap-6 dt:grid-cols-2 dt:gap-10">
-            <Photo src={combo.src} alt={combo.alt} className="aspect-[4/3] rounded-[26px] dt:order-2" />
-            <div className="flex flex-col gap-[22px] dt:order-1">
+          {/* 목표 선택(테마) → 사진 → 조합 설명 순서, 모바일·PC 동일한 세로 흐름 */}
+          <div className="mx-auto flex w-full max-w-[760px] flex-col gap-3.5 tb:gap-6">
+            <div className="flex flex-col gap-3">
               <span className={`${EN} text-[12.5px] tracking-[0.18em] text-gray-02`}>{COPY.combos.selectLabel}</span>
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 gap-2 tb:grid-cols-4">
                 {RECOVERY_SITUATIONS.map((label, i) => {
                   const on = situation === i;
                   return (
@@ -131,25 +130,28 @@ export default function RecoveryLandingNew() {
                       type="button"
                       onClick={() => setSituation(i)}
                       aria-pressed={on}
-                      className={`flex w-full cursor-pointer items-center justify-between gap-2.5 rounded-full border-2 px-5 py-3.5 text-left text-[15px] font-bold tracking-[-0.01em] transition tb:px-[22px] tb:py-[15px] tb:text-[15.5px] ${
+                      className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-full border-2 px-4 py-2.5 text-left text-[14px] font-bold tracking-[-0.01em] transition tb:justify-center tb:py-3.5 tb:text-[15px] ${
                         on ? "border-primary-main bg-primary-main text-white shadow-[0_8px_20px_rgba(21,94,53,.28)]" : "border-primary-sub-02 bg-white text-primary-main shadow-sm"
                       }`}
                     >
                       {label}
-                      <span aria-hidden="true" className="text-[15px] font-medium">→</span>
+                      <span aria-hidden="true" className="text-[15px] font-medium tb:hidden">→</span>
                     </button>
                   );
                 })}
               </div>
-              <div className="mt-2.5 flex flex-col gap-3.5 border-t border-gray-01 pt-[22px] tb:gap-[18px] tb:pt-8">
-                <div className="flex flex-wrap gap-2">
-                  {combo.steps.map((s) => (
-                    <span key={s} className="rounded-full bg-white px-5 py-[11px] text-[15px] font-bold text-primary-main">{s}</span>
-                  ))}
-                </div>
-                <h3 className={`${EN} m-0 text-[28px] leading-[1.24] tracking-[-0.025em] tb:text-[42px]`}>{combo.title}</h3>
-                <p className="m-0 break-keep text-[15.5px] leading-[1.8] text-gray-03 tb:text-[17.5px]">{combo.desc}</p>
+            </div>
+
+            <Photo src={combo.src} alt={combo.alt} className="aspect-[16/9] rounded-[20px] tb:rounded-[26px]" />
+
+            <div className="flex flex-col gap-2.5 tb:gap-[18px]">
+              <div className="flex flex-wrap gap-2">
+                {combo.steps.map((s) => (
+                  <span key={s} className="rounded-full bg-white px-4 py-2 text-[13.5px] font-bold text-primary-main tb:px-5 tb:py-[11px] tb:text-[15px]">{s}</span>
+                ))}
               </div>
+              <h3 className={`${EN} m-0 text-[24px] leading-[1.2] tracking-[-0.025em] tb:text-[38px]`}>{combo.title}</h3>
+              <p className="m-0 break-keep text-[14px] leading-[1.7] text-gray-03 tb:text-[17px]">{combo.desc}</p>
             </div>
           </div>
 
@@ -181,11 +183,11 @@ export default function RecoveryLandingNew() {
                     {d.badge && <span className="rounded-full border border-primary-main px-[11px] py-1 text-[12px] font-bold text-primary-main">{d.badge}</span>}
                   </div>
                   <h3 className="m-0 break-keep text-[20px] font-bold leading-[1.4] tracking-[-0.025em] tb:text-[26px] tb:leading-[1.35]">{d.name}</h3>
-                  <p className="m-0 break-keep text-[15px] font-bold leading-[1.6] tb:text-[17px]">{d.lead}</p>
+                  <p className="m-0 break-keep text-[15px] font-medium leading-[1.6] text-primary-main tb:text-[16.5px]">{d.lead}</p>
                   <p className="m-0 break-keep text-[13.5px] leading-[1.7] text-gray-03 tb:text-[15.5px] tb:leading-[1.85]">{d.desc}</p>
-                  <div className="mt-1 flex flex-wrap gap-2">
+                  <div className="mt-1 flex flex-wrap gap-1.5">
                     {d.tags.map((t) => (
-                      <span key={t} className="rounded-full bg-primary-main px-4 py-2 text-[13px] font-bold text-white">{t}</span>
+                      <span key={t} className="rounded-full bg-primary-sub-03 px-3 py-1.5 text-[12.5px] font-bold text-primary-main">{t}</span>
                     ))}
                   </div>
                 </div>
@@ -195,25 +197,6 @@ export default function RecoveryLandingNew() {
         </div>
       </Section>
 
-      {/* 관리 흐름 */}
-      <Section id="journey" bg="bg-gray-00">
-        <div className="flex flex-col gap-6 tb:gap-10">
-          <div className="flex flex-col gap-3.5">
-            <Kicker>{COPY.journey.kicker}</Kicker>
-            <h2 className={`${H2} max-w-[760px]`}>{lines(COPY.journey.titleLines)}</h2>
-            <p className="m-0 max-w-[620px] break-keep text-[15px] leading-[1.8] text-gray-03 tb:text-[16px]">{COPY.journey.description}</p>
-          </div>
-          <div className="grid grid-cols-1 gap-2.5 tb:grid-cols-3 tb:gap-4">
-            {RECOVERY_JOURNEY.map((j) => (
-              <div key={j.no} className="flex flex-row flex-wrap items-start gap-3.5 rounded-[22px] bg-white px-4 py-[18px] tb:flex-col tb:gap-3 tb:px-6 tb:py-7">
-                <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-primary-sub-03 text-[13px] font-bold text-primary-main tb:h-8 tb:w-8 tb:text-[14px]">{j.no}</span>
-                <span className="flex-1 break-keep text-[16.5px] font-bold leading-[1.35] tb:flex-none tb:text-[18px]">{j.title}</span>
-                <p className="m-0 basis-full break-keep text-[13.5px] leading-[1.75] text-gray-03 tb:basis-auto tb:text-[14px]">{j.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Section>
 
       {/* 방문 기록 */}
       <Section id="records" bg="bg-primary-main">
