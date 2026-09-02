@@ -14,7 +14,7 @@ export const DIET_COACHING = {
   steps: [
     {
       tag: "STEP 1 · 타고난 기질 — WIM-I",
-      title: "타고난 반응부터 확인합니다",
+      title: "나만의 반응 패턴을 확인합니다",
       bars: [
         { label: "스트레스 내성", value: "낮음", percent: 20 },
         { label: "부정적 충동성", value: "높음", percent: 80 },
