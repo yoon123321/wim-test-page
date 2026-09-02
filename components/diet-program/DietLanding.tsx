@@ -658,20 +658,38 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
           </h2>
         </div>
 
-        {/* 고민 마퀴 — 두 벌을 이어 붙여 끊김 없이 흐른다 */}
-        <div className="relative -mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
-          <div className="flex w-max gap-3 [animation:wim-marquee_38s_linear_infinite]">
-            {[0, 1].map((dup) => (
-              <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
-                {DIET_WORRIES.map((worry) => (
-                  <span
-                    key={worry}
-                    className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
-                    {worry}
-                  </span>
-                ))}
-              </div>
-            ))}
+        {/* 고민 마퀴 — 두 줄이 서로 반대 방향으로 끊김 없이 흐른다 */}
+        <div className="-mx-6 flex flex-col gap-3">
+          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+            <div className="flex w-max gap-3 [animation:wim-marquee_38s_linear_infinite]">
+              {[0, 1].map((dup) => (
+                <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
+                  {DIET_WORRIES.map((worry) => (
+                    <span
+                      key={worry}
+                      className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
+                      {worry}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+            <div className="flex w-max gap-3 [animation:wim-marquee_44s_linear_infinite] [animation-direction:reverse]">
+              {[0, 1].map((dup) => (
+                <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
+                  {[...DIET_WORRIES].reverse().map((worry) => (
+                    <span
+                      key={worry}
+                      className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
+                      {worry}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -716,13 +734,12 @@ function Difference() {
   const C0 = useDietCopy().difference;
   return (
     <Section id="difference" className="bg-white">
-      {/* 가운데 정렬 · 원 두 개를 + 로 잇는다 (원본 시안) */}
-      <div className="flex flex-col items-center gap-9 text-center">
-        <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+      <div className="flex flex-col items-center gap-9 text-center dt:gap-8">
+        <span className="text-[13px] font-medium tracking-[0.14em] dt:order-1 dt:text-[15px] dt:font-bold dt:tracking-[-0.02em]" style={{ color: C.green }}>
           {C0.eyebrow}
         </span>
 
-        <div className="flex flex-wrap items-center justify-center gap-5">
+        <div className="flex flex-wrap items-center justify-center gap-5 dt:order-3 dt:flex-nowrap">
           {C0.steps.map((step, i) => (
             <div key={step.step} className="flex items-center gap-5">
               {i > 0 && (
@@ -731,14 +748,14 @@ function Difference() {
                 </span>
               )}
               <div
-                className="flex h-[180px] w-[180px] flex-col items-center justify-center gap-1.5 rounded-full px-6"
-                style={{ background: C.pale }}>
-                <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+                className="flex h-[180px] w-[180px] flex-col items-center justify-center gap-1.5 rounded-full bg-[#eef1ea] px-6 dt:h-[160px] dt:w-[340px] dt:gap-4 dt:rounded-[20px] dt:border dt:border-primary-sub-02 dt:bg-white">
+                <span className="text-[13px] font-medium tracking-[0.14em] dt:rounded-full dt:border dt:border-primary-main dt:px-3 dt:py-1 dt:text-[12px] dt:tracking-[0.04em]" style={{ color: C.green }}>
                   {step.step}
                 </span>
-                <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
-                <p className="m-0 break-keep text-[12.5px] leading-[1.6] text-gray-02">
-                  <Lines items={step.descLines} />
+                <span className="text-[20px] font-bold tracking-[-0.02em] dt:text-[23px]" style={{ color: C.green }}>{step.title}</span>
+                <p className="m-0 break-keep text-[12.5px] leading-[1.6] text-gray-02 dt:text-[14px]">
+                  <span className="dt:hidden"><Lines items={step.descLines} /></span>
+                  <span className="hidden dt:inline">{step.descLines.join(" ")}</span>
                 </p>
               </div>
             </div>
@@ -746,13 +763,13 @@ function Difference() {
         </div>
 
         {/* 두 번째 줄만 초록 */}
-        <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[31px]">
+        <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[31px] dt:order-2 dt:text-[34px] dt:leading-[1.55]">
           {C0.titleLines[0]}
           <br />
-          <span style={{ color: C.green }}>{C0.titleLines[1]}</span>
+          <span className="font-bold" style={{ color: C.green }}>{C0.titleLines[1]}</span>
         </h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 dt:order-4 dt:mt-2">
           <p className="m-0 break-keep text-[16px] leading-[1.9] text-gray-03">
             <Lines items={C0.bodyLines.slice(0, 2)} />
           </p>
@@ -765,43 +782,52 @@ function Difference() {
 
 function Result() {
   const C0 = useDietCopy().result;
+  const titleComma = C0.title.indexOf(",");
+  const titleLead = titleComma >= 0 ? C0.title.slice(0, titleComma + 1) : C0.title;
+  const titleAccent = titleComma >= 0 ? C0.title.slice(titleComma + 1).trim() : "";
   return (
     <Section id="result" className="bg-white">
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 whitespace-pre-line break-keep text-[28px] leading-[1.35] tb:text-[54px]">{C0.title}</h2>
+          <h2 className="m-0 break-keep text-[28px] leading-[1.35] tb:text-[42px]">
+            {titleLead}{titleAccent && <> <span className="whitespace-pre-line font-bold text-primary-main">{titleAccent}</span></>}
+          </h2>
         </div>
 
-        {/* 비포 · 애프터 */}
-        <div className="grid grid-cols-1 gap-4 tb:grid-cols-2">
-          {[C0.before, C0.after].map((side) => (
-            <div key={side.label} className="flex flex-col gap-3 rounded-[20px] bg-white p-5">
-              <ImageSlot label={side.imageLabel} className="aspect-[4/5] rounded-[14px]" />
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-[13px] text-gray-02">{side.label}</span>
-                <span className="text-[22px] font-bold tracking-[-0.02em]">{side.weight}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 수치 */}
-        <div className="flex flex-col gap-4">
-          <span className="text-[12px] font-bold text-gray-02">{C0.metricsLabel}</span>
-          <div className="grid grid-cols-1 gap-4 tb:grid-cols-3">
-            {DIET_METRICS.map((m) => (
-              <div key={m.label} className="flex flex-col gap-1.5 rounded-[16px] bg-white px-6 py-5">
-                <span className="text-[13px] text-gray-02">{m.label}</span>
-                <span className="text-[19px] font-bold tracking-[-0.02em]" style={{ color: C.green }}>
-                  {m.value}
-                </span>
+        <div className="grid grid-cols-1 items-end gap-8 dt:grid-cols-[minmax(0,1fr)_255px] dt:gap-16">
+          {/* 비포 · 애프터 */}
+          <div className="grid grid-cols-1 gap-5 tb:grid-cols-2">
+            {[C0.before, C0.after].map((side, index) => (
+              <div key={side.label} className="flex min-w-0 flex-col gap-4">
+                <div className="flex flex-col items-center gap-1">
+                  <span className={`text-[14px] font-medium ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.label.split("·")[0]}</span>
+                  <span className={`text-[28px] font-bold tracking-[-0.03em] ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.weight}</span>
+                </div>
+                <ImageSlot
+                  label={side.imageLabel}
+                  className={`aspect-[4/5] rounded-[18px] ${index === 1 ? "bg-primary-sub-03" : "bg-gray-00"}`}
+                />
               </div>
             ))}
           </div>
-          <a href="#reviews" className="self-start text-[14px] font-bold no-underline" style={{ color: C.green }}>
-            {C0.moreLabel}
-          </a>
+
+          {/* 변화 수치 */}
+          <div className="flex flex-col">
+            {DIET_METRICS.map((m) => (
+              <div key={m.label} className="flex flex-col gap-2 border-b border-gray-01 py-5 first:pt-0">
+                <span className="text-[14px] font-bold text-black">{m.label}</span>
+                <div className="flex items-center gap-2 text-[24px] font-bold tracking-[-0.03em]">
+                  <span className="text-gray-02">{m.value.split("→")[0].trim()}</span>
+                  <span className="text-primary-main">→</span>
+                  <span className="bg-primary-sub-02/60 px-1 text-primary-main">{m.value.split("→")[1].trim()}</span>
+                </div>
+              </div>
+            ))}
+            <a href="#reviews" className="mt-7 inline-flex h-[46px] w-fit items-center rounded-full bg-primary-main px-6 text-[14px] font-medium text-white no-underline transition hover:opacity-90">
+              {C0.moreLabel}&nbsp; ↗
+            </a>
+          </div>
         </div>
 
         {/* 유지 — AND IT STAYS */}
