@@ -101,7 +101,7 @@ export default function HomePage() {
             playsInline
             autoPlay
             preload="metadata"
-            className="pointer-events-none block aspect-[16/9] w-full rounded-[16px] object-cover tb:rounded-[22px]"
+            className="pointer-events-none block aspect-[16/9] w-full rounded-[16px] object-cover tb:rounded-[22px] dt:aspect-[21/9]"
           />
         </div>
       </section>
