@@ -566,7 +566,7 @@ function CoachingStory() {
         </p>
       </div>
 
-      {S.steps.map((step) => (
+      {S.steps.map((step, stepIndex) => (
         <div key={step.tag} className="contents">
           <RevealOnScroll>
             <article className="flex flex-col gap-3.5 rounded-[16px] bg-white px-4 py-5 tb:gap-4 tb:rounded-[20px] tb:px-[26px] tb:py-7">
@@ -601,11 +601,50 @@ function CoachingStory() {
                 </ul>
               )}
 
-              <div className="flex flex-col gap-1">
-                {step.bars.map((bar) => (
-                  <CoachingBarRow key={bar.label} {...bar} />
-                ))}
-              </div>
+              {(
+                <div className="grid grid-cols-[64px_18px_minmax(0,1fr)] items-stretch gap-2 rounded-[14px] border border-gray-01 bg-gray-00 p-3 tb:grid-cols-[86px_28px_minmax(0,1fr)] tb:gap-3 tb:p-4">
+                  <div className="flex min-w-0 flex-col justify-between gap-1.5 rounded-[10px] bg-white p-1.5 shadow-sm tb:p-2">
+                    <div className="relative min-h-0 flex-1 overflow-hidden rounded-[6px] border border-gray-01 bg-white">
+                      <Image
+                        src={stepIndex === 0 ? "/images/diet/analysis-report-02.png" : "/images/diet/analysis-report-01.png"}
+                        alt={stepIndex === 0 ? "WIM-I 기질 분석 리포트" : "WIM-S 생활 및 식습관 분석 리포트"}
+                        fill
+                        sizes="86px"
+                        className="object-contain blur-[1.5px]"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={`absolute rounded-[3px] border-2 border-primary-main bg-primary-main/5 shadow-[0_0_0_2px_rgba(255,255,255,0.7)] ${
+                          stepIndex === 0
+                            ? "left-[7%] top-[13%] h-[34%] w-[86%]"
+                            : stepIndex === 1
+                              ? "left-[36%] top-[29%] h-[42%] w-[31%]"
+                              : "left-[3%] top-[18%] h-[57%] w-[31%]"
+                        }`}
+                      />
+                    </div>
+                    <span className="text-center text-[9px] font-medium text-gray-02 tb:text-[10px]">
+                      {stepIndex === 0 ? "기질 분석 영역" : stepIndex === 1 ? "생활 분석 영역" : "식습관 분석 영역"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-center justify-center gap-1 self-center text-primary-main">
+                    <span className="hidden whitespace-nowrap text-[9px] font-bold tb:block">영역 추출</span>
+                    <span aria-hidden="true" className="text-[20px] leading-none tb:text-[26px]">→</span>
+                  </div>
+
+                  <div className="min-w-0 rounded-[10px] bg-white px-2.5 py-2 shadow-sm tb:px-4 tb:py-3">
+                    <span className="mb-1.5 block text-[10px] font-bold tracking-[0.08em] text-primary-main tb:text-[11px]">
+                      {stepIndex === 0 ? "WIM-I" : "WIM-S"} REPORT DETAIL
+                    </span>
+                    <div className="flex flex-col gap-1">
+                      {step.bars.map((bar) => (
+                        <CoachingBarRow key={bar.label} {...bar} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <p
                 className="m-0 break-keep rounded-r-[10px] border-l-[3px] py-1 pl-3.5 text-[14.5px] leading-[1.8] text-gray-03 tb:text-[15px]"
@@ -658,20 +697,38 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
           </h2>
         </div>
 
-        {/* 고민 마퀴 — 두 벌을 이어 붙여 끊김 없이 흐른다 */}
-        <div className="relative -mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
-          <div className="flex w-max gap-3 [animation:wim-marquee_38s_linear_infinite]">
-            {[0, 1].map((dup) => (
-              <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
-                {DIET_WORRIES.map((worry) => (
-                  <span
-                    key={worry}
-                    className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
-                    {worry}
-                  </span>
-                ))}
-              </div>
-            ))}
+        {/* 고민 마퀴 — 두 줄이 서로 반대 방향으로 끊김 없이 흐른다 */}
+        <div className="-mx-6 flex flex-col gap-3">
+          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+            <div className="flex w-max gap-3 [animation:wim-marquee_38s_linear_infinite]">
+              {[0, 1].map((dup) => (
+                <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
+                  {DIET_WORRIES.map((worry) => (
+                    <span
+                      key={worry}
+                      className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
+                      {worry}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+            <div className="flex w-max gap-3 [animation:wim-marquee_44s_linear_infinite] [animation-direction:reverse]">
+              {[0, 1].map((dup) => (
+                <div key={dup} className="flex gap-3" aria-hidden={dup === 1}>
+                  {[...DIET_WORRIES].reverse().map((worry) => (
+                    <span
+                      key={worry}
+                      className="flex-none whitespace-nowrap rounded-full border border-white/15 px-5 py-3 text-[14.5px] text-white/70">
+                      {worry}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -683,6 +740,30 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
           <p className="m-0 break-keep text-[15px] font-medium leading-[1.8] text-white/70 tb:text-[17px]">
             <Lines items={C0.caseIntroLines} />
           </p>
+        </div>
+
+        <div className="mx-auto grid w-full max-w-[620px] grid-cols-2 items-stretch gap-3 dt:grid-cols-[1.35fr_0.75fr]">
+          {[
+            { src: "/images/diet/analysis-report-01.png", alt: "생활 패턴과 신체 상태 종합 분석 결과 예시", label: "WIM-S" },
+            { src: "/images/diet/analysis-report-02.png", alt: "기질 성향 분석 결과 예시", label: "WIM-I" },
+          ].map((report) => (
+            <div key={report.src} className="relative h-[140px] overflow-hidden rounded-[12px] border border-white/15 bg-white/95 tb:h-[170px] dt:h-[190px]">
+              <Image
+                src={report.src}
+                alt={report.alt}
+                fill
+                sizes="(min-width: 1200px) 55vw, (min-width: 768px) 50vw, 100vw"
+                className="scale-[1.03] object-contain blur-[6px]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-white/5" />
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="flex flex-col items-center rounded-[10px] border border-white/80 bg-white/85 px-4 py-2 text-center shadow-sm backdrop-blur-sm">
+                  <span className="text-[10px] font-medium text-gray-03 tb:text-[11px]">실제 검사지</span>
+                  <span className="mt-0.5 text-[17px] font-bold tracking-[0.08em] text-primary-main tb:text-[20px]">{report.label}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {coaching ? (
@@ -698,6 +779,17 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
           </>
         )}
 
+        {coaching && (
+          <div className="mx-auto flex max-w-[680px] flex-col items-center gap-2 text-center">
+            <span className="text-[14px] font-bold text-white/90 tb:text-[15px]">위 사례는 하나의 예시입니다.</span>
+            <p className="m-0 break-keep text-[14px] leading-[1.8] text-white/65 tb:text-[15px]">
+              실제 검사에서는 여러 기질과 성향, 생활 속 문제를 복합적으로 분석합니다.
+              <br className="hidden tb:block" />
+              나의 기질과 성향이 일상에서 어떤 문제로 이어지는지 확인해 보세요.
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col items-center gap-3.5">
           <span className="text-[14.5px] text-white/70">{C0.ctaLead}</span>
           <Link
@@ -706,6 +798,9 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
             style={{ background: C.mint, color: C.greenDark }}>
             {C0.ctaLabel}
           </Link>
+          {coaching && (
+            <span className="text-[11.5px] text-white/45">※ 본 검사는 정식 검사의 간략 버전입니다.</span>
+          )}
         </div>
       </div>
     </section>
@@ -716,13 +811,12 @@ function Difference() {
   const C0 = useDietCopy().difference;
   return (
     <Section id="difference" className="bg-white">
-      {/* 가운데 정렬 · 원 두 개를 + 로 잇는다 (원본 시안) */}
-      <div className="flex flex-col items-center gap-9 text-center">
-        <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+      <div className="flex flex-col items-center gap-9 text-center dt:gap-8">
+        <span className="text-[16px] font-bold tracking-[0.04em] dt:order-1 dt:text-[18px] dt:tracking-[-0.02em]" style={{ color: C.green }}>
           {C0.eyebrow}
         </span>
 
-        <div className="flex flex-wrap items-center justify-center gap-5">
+        <div className="flex flex-wrap items-center justify-center gap-5 dt:order-3 dt:flex-nowrap">
           {C0.steps.map((step, i) => (
             <div key={step.step} className="flex items-center gap-5">
               {i > 0 && (
@@ -731,14 +825,14 @@ function Difference() {
                 </span>
               )}
               <div
-                className="flex h-[180px] w-[180px] flex-col items-center justify-center gap-1.5 rounded-full px-6"
-                style={{ background: C.pale }}>
-                <span className="text-[13px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
+                className="flex h-[180px] w-[180px] flex-col items-center justify-center gap-1.5 rounded-full bg-[#eef1ea] px-6 dt:h-[160px] dt:w-[340px] dt:gap-4 dt:rounded-[20px] dt:border dt:border-primary-sub-02 dt:bg-white">
+                <span className="text-[13px] font-medium tracking-[0.14em] dt:rounded-full dt:border dt:border-primary-main dt:px-3 dt:py-1 dt:text-[12px] dt:tracking-[0.04em]" style={{ color: C.green }}>
                   {step.step}
                 </span>
-                <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
-                <p className="m-0 break-keep text-[12.5px] leading-[1.6] text-gray-02">
-                  <Lines items={step.descLines} />
+                <span className="text-[20px] font-bold tracking-[-0.02em] dt:text-[23px]" style={{ color: C.green }}>{step.title}</span>
+                <p className="m-0 break-keep text-[12.5px] leading-[1.6] text-gray-02 dt:text-[14px]">
+                  <span className="dt:hidden"><Lines items={step.descLines} /></span>
+                  <span className="hidden dt:inline">{step.descLines.join(" ")}</span>
                 </p>
               </div>
             </div>
@@ -746,13 +840,13 @@ function Difference() {
         </div>
 
         {/* 두 번째 줄만 초록 */}
-        <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[31px]">
+        <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[31px] dt:order-2 dt:text-[34px] dt:leading-[1.55]">
           {C0.titleLines[0]}
           <br />
-          <span style={{ color: C.green }}>{C0.titleLines[1]}</span>
+          <span className="font-bold" style={{ color: C.green }}>{C0.titleLines[1]}</span>
         </h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 dt:order-4 dt:mt-2">
           <p className="m-0 break-keep text-[16px] leading-[1.9] text-gray-03">
             <Lines items={C0.bodyLines.slice(0, 2)} />
           </p>
@@ -765,43 +859,52 @@ function Difference() {
 
 function Result() {
   const C0 = useDietCopy().result;
+  const titleComma = C0.title.indexOf(",");
+  const titleLead = titleComma >= 0 ? C0.title.slice(0, titleComma + 1) : C0.title;
+  const titleAccent = titleComma >= 0 ? C0.title.slice(titleComma + 1).trim() : "";
   return (
     <Section id="result" className="bg-white">
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 whitespace-pre-line break-keep text-[28px] leading-[1.35] tb:text-[54px]">{C0.title}</h2>
+          <h2 className="m-0 break-keep text-[28px] leading-[1.35] tb:text-[42px]">
+            {titleLead}{titleAccent && <> <span className="whitespace-pre-line font-bold text-primary-main">{titleAccent}</span></>}
+          </h2>
         </div>
 
-        {/* 비포 · 애프터 */}
-        <div className="grid grid-cols-1 gap-4 tb:grid-cols-2">
-          {[C0.before, C0.after].map((side) => (
-            <div key={side.label} className="flex flex-col gap-3 rounded-[20px] bg-white p-5">
-              <ImageSlot label={side.imageLabel} className="aspect-[4/5] rounded-[14px]" />
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-[13px] text-gray-02">{side.label}</span>
-                <span className="text-[22px] font-bold tracking-[-0.02em]">{side.weight}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 수치 */}
-        <div className="flex flex-col gap-4">
-          <span className="text-[12px] font-bold text-gray-02">{C0.metricsLabel}</span>
-          <div className="grid grid-cols-1 gap-4 tb:grid-cols-3">
-            {DIET_METRICS.map((m) => (
-              <div key={m.label} className="flex flex-col gap-1.5 rounded-[16px] bg-white px-6 py-5">
-                <span className="text-[13px] text-gray-02">{m.label}</span>
-                <span className="text-[19px] font-bold tracking-[-0.02em]" style={{ color: C.green }}>
-                  {m.value}
-                </span>
+        <div className="grid grid-cols-1 items-end gap-8 dt:grid-cols-[minmax(0,1fr)_255px] dt:gap-16">
+          {/* 비포 · 애프터 */}
+          <div className="grid grid-cols-1 gap-5 tb:grid-cols-2">
+            {[C0.before, C0.after].map((side, index) => (
+              <div key={side.label} className="flex min-w-0 flex-col gap-4">
+                <div className="flex flex-col items-center gap-1">
+                  <span className={`text-[14px] font-medium ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.label.split("·")[0]}</span>
+                  <span className={`text-[28px] font-bold tracking-[-0.03em] ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.weight}</span>
+                </div>
+                <ImageSlot
+                  label={side.imageLabel}
+                  className={`aspect-[4/5] rounded-[18px] ${index === 1 ? "bg-primary-sub-03" : "bg-gray-00"}`}
+                />
               </div>
             ))}
           </div>
-          <a href="#reviews" className="self-start text-[14px] font-bold no-underline" style={{ color: C.green }}>
-            {C0.moreLabel}
-          </a>
+
+          {/* 변화 수치 */}
+          <div className="flex flex-col">
+            {DIET_METRICS.map((m) => (
+              <div key={m.label} className="flex flex-col gap-2 border-b border-gray-01 py-5 first:pt-0">
+                <span className="text-[14px] font-bold text-black">{m.label}</span>
+                <div className="flex items-center gap-2 text-[24px] font-bold tracking-[-0.03em]">
+                  <span className="text-gray-02">{m.value.split("→")[0].trim()}</span>
+                  <span className="text-primary-main">→</span>
+                  <span className="bg-primary-sub-02/60 px-1 text-primary-main">{m.value.split("→")[1].trim()}</span>
+                </div>
+              </div>
+            ))}
+            <a href="#reviews" className="mt-7 inline-flex h-[46px] w-fit items-center rounded-full bg-primary-main px-6 text-[14px] font-medium text-white no-underline transition hover:opacity-90">
+              {C0.moreLabel}&nbsp; ↗
+            </a>
+          </div>
         </div>
 
         {/* 유지 — AND IT STAYS */}
@@ -964,34 +1067,58 @@ function Result() {
 
 function Roadmap() {
   const C0 = useDietCopy().roadmap;
+  const compactJourney = !C0.detailLabel;
   return (
-    <Section id="roadmap" className="bg-white">
+    <Section
+      id="roadmap"
+      className={compactJourney ? "bg-[linear-gradient(115deg,#fff_8%,#f3faef_58%,#fff_100%)]" : "bg-white"}>
       <div className="flex flex-col gap-8 tb:gap-11">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[33px]">{C0.title}</h2>
-          <p className="m-0 text-[15.5px] leading-[1.8] text-gray-03">{C0.description}</p>
+          <h2
+            className={`m-0 break-keep text-[26px] leading-[1.42] tb:text-[33px] ${compactJourney ? "text-primary-main" : ""}`}>
+            {C0.title}
+          </h2>
+          {C0.description && (
+            <p className="m-0 text-[15.5px] leading-[1.8] text-gray-03">{C0.description}</p>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 tb:grid-cols-3 tb:gap-5">
-          {DIET_ROADMAP.map((step) => (
-            <div key={step.n} className="flex flex-col gap-3 rounded-[20px] bg-gray-00 px-7 py-8">
-              <span
-                className="grid h-[34px] w-[34px] place-items-center rounded-full text-[15px] font-bold text-white"
-                style={{ background: C.green }}>
-                {step.n}
-              </span>
-              <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
-              <span className="text-[14.5px] font-bold" style={{ color: C.green }}>
-                {step.lead}
-              </span>
-              <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{step.desc}</p>
-              <a href="#plans" className="mt-1 text-[13.5px] font-bold no-underline" style={{ color: C.green }}>
-                {C0.detailLabel}
-              </a>
-            </div>
-          ))}
-        </div>
+        {compactJourney ? (
+          <div className="relative ml-2 grid grid-cols-1 gap-0 border-l border-primary-main/45 pl-7 tb:ml-0 tb:grid-cols-3 tb:border-l-0 tb:border-t tb:pl-0">
+            {DIET_ROADMAP.map((step) => (
+              <div key={step.n} className="relative flex min-h-[92px] items-start py-3 tb:min-h-0 tb:pt-8">
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[33px] top-[19px] h-[9px] w-[9px] rounded-full bg-primary-main tb:-top-[5px] tb:left-0"
+                />
+                <span className="break-keep text-[18px] font-bold tracking-[-0.02em] text-primary-main tb:text-[20px]">
+                  {step.title}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 tb:grid-cols-3 tb:gap-5">
+            {DIET_ROADMAP.map((step) => (
+              <div key={step.n} className="flex flex-col gap-3 rounded-[20px] bg-gray-00 px-7 py-8">
+                <span
+                  className="grid h-[34px] w-[34px] place-items-center rounded-full text-[15px] font-bold text-white"
+                  style={{ background: C.green }}>
+                  {step.n}
+                </span>
+                <span className="text-[20px] font-bold tracking-[-0.02em]">{step.title}</span>
+                <span className="text-[14.5px] font-bold" style={{ color: C.green }}>
+                  {step.lead}
+                </span>
+                <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{step.desc}</p>
+                <a href="#plans" className="mt-1 text-[13.5px] font-bold no-underline" style={{ color: C.green }}>
+                  {C0.detailLabel}
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* 버전2에서 사용하는 검사 6가지 · 관리 8가지 공용 섹션 */}
         <div className="mt-6 border-t border-gray-01 pt-12 tb:mt-10 tb:pt-16">

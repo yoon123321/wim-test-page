@@ -658,7 +658,7 @@ export function IntroSection({
       // 흰색 → gray-00 세로 그라데이션 (피그마 Center_White → Center_Gray00)
       className={`${
         gradientBackground ? "bg-gradient-to-b from-white to-gray-00" : "bg-white"
-      } px-5 pb-0 pt-[54px] tb:pt-[110px]`}
+      } px-5 pt-[54px] tb:pt-[110px] ${largeImage ? "pb-[70px] tb:pb-[96px]" : "pb-0"}`}
     >
       <Container desktopMaxWidth={desktopMaxWidth}>
         <div className={`flex flex-col gap-[30px] dt:flex-row dt:gap-[60px] ${largeImage ? "dt:w-[calc(100%+50px)] dt:items-end" : "dt:items-center"}`}>
@@ -697,6 +697,36 @@ export function IntroSection({
             />
           </div>
         </div>
+
+        {largeImage && (
+          <div className="mx-auto mt-[42px] w-full max-w-[860px] border-t border-primary-sub-02 pt-7 tb:mt-[56px] tb:pt-8">
+            <Typography as="p" mobile="body-03" tablet="body-02" weight="medium" className="m-0 text-center text-gray-03">
+              검사 결과를 바탕으로, 목적에 맞는 전문 센터로 연결합니다.
+            </Typography>
+
+            <div className="mt-6 grid grid-cols-1 items-center gap-5 tb:grid-cols-[1fr_auto_1fr] tb:gap-8">
+              <div className="flex flex-col items-center text-center">
+                <Typography as="h3" mobile="headline-03" tablet="headline-02" weight="bold" className="text-primary-main">
+                  다이어트 센터
+                </Typography>
+                <Typography as="p" mobile="body-03" tablet="body-02" className="mt-1.5 break-keep text-primary-sub-01">
+                  감량 · 식습관 · 생활 리듬
+                </Typography>
+              </div>
+
+              <span aria-hidden="true" className="mx-auto h-px w-10 bg-primary-sub-02 tb:h-10 tb:w-px" />
+
+              <div className="flex flex-col items-center text-center">
+                <Typography as="h3" mobile="headline-03" tablet="headline-02" weight="bold" className="text-primary-main">
+                  리커버리 센터
+                </Typography>
+                <Typography as="p" mobile="body-03" tablet="body-02" className="mt-1.5 break-keep text-primary-sub-01">
+                  회복 · 컨디션 · 신체 균형
+                </Typography>
+              </div>
+            </div>
+          </div>
+        )}
       </Container>
     </section>
   );
@@ -1020,7 +1050,7 @@ export default function WimMainNew() {
       </section>
 
       {/* ─────────────── FOOTER ─────────────── */}
-      <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
+      <footer className="hidden">
         <div className="mx-auto w-full px-5 dt:max-w-[1440px] dt:px-20">
           {/* 로고 — 푸터 맨 위 */}
           <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
@@ -1136,7 +1166,7 @@ export function WimMainBottom() {
         </Container>
       </section>
 
-      <footer className="bg-primary-sub-01 pb-[32px] pt-[36px] tb:pb-[40px] tb:pt-[60px]">
+      <footer className="hidden">
         <div className="mx-auto w-full px-5 dt:max-w-[1200px]">
           <div className="flex items-end gap-[4px] tb:h-[26px] tb:w-[152px] tb:gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element -- 피그마 원본 */}
