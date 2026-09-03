@@ -213,7 +213,7 @@ function ImageSlot({ label, className = "" }: { label: string; className?: strin
 function Hero() {
   const C0 = useDietCopy().hero;
   return (
-    <section id="top" className="relative overflow-hidden bg-black">
+    <section id="top" className="relative h-[calc(100svh-110px)] overflow-hidden bg-black tb:h-[640px]">
       <div className="absolute inset-0">
         <Image
           src="/images/diet/diet_hero.png"
@@ -224,7 +224,7 @@ function Hero() {
           className="object-cover"
         />
       </div>
-      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 px-6 pb-[120px] pt-[128px] text-center">
+      <div className="relative mx-auto flex h-full w-full max-w-[1280px] flex-col items-center justify-center gap-6 px-6 text-center">
         <Eyebrow>{C0.eyebrow}</Eyebrow>
         <h1 className="max-w-[800px] break-keep text-[32px] leading-[1.32] text-white tb:text-[46px]">
           <Lines items={C0.titleLines} />
@@ -807,8 +807,11 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
 
 function Difference() {
   const C0 = useDietCopy().difference;
+  const imageBackground = C0.eyebrow === "아는 것만으로는 부족합니다";
   return (
-    <Section id="difference" className="bg-white">
+    <Section
+      id="difference"
+      className={imageBackground ? "bg-[url('/images/diet/diet-difference-bg.png')] bg-cover bg-center bg-no-repeat" : "bg-white"}>
       <div className="flex flex-col items-center gap-9 text-center dt:gap-8">
         <span className="text-[16px] font-bold tracking-[0.04em] dt:order-1 dt:text-[18px] dt:tracking-[-0.02em]" style={{ color: C.green }}>
           {C0.eyebrow}
@@ -864,7 +867,7 @@ function Result() {
   return (
     <Section
       id="result"
-      className={habitBackground ? "bg-[url('/images/diet/diet-habits-bg.png')] bg-cover bg-center bg-no-repeat" : "bg-white"}>
+      className="bg-white">
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
@@ -934,6 +937,13 @@ function Result() {
           </div>
         </div>
 
+        <div
+          className={
+            habitBackground
+              ? "relative left-1/2 -mb-[72px] w-screen -translate-x-1/2 bg-[url('/images/diet/diet-habits-bg.png')] bg-cover bg-center bg-no-repeat px-6 pb-[72px] pt-[72px] tb:-mb-[100px] tb:pb-[100px] tb:pt-[100px]"
+              : "contents"
+          }>
+          <div className={habitBackground ? "mx-auto flex w-full max-w-[1280px] flex-col gap-12" : "contents"}>
         {/* 유지 — AND IT STAYS */}
         <div className="flex flex-col gap-3">
           <span className="text-[14px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
@@ -1078,6 +1088,8 @@ function Result() {
                 <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{C0.axes.cardBody}</p>
               </div>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>

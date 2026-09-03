@@ -2,6 +2,7 @@ import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from "reac
 
 export type TypographyFont = "pretendard" | "franklin" | "garamond";
 export type TypographyWeight = "regular" | "medium" | "semibold" | "bold" | "extrabold";
+export type TypographySize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "display";
 export type TypographyScale =
   | "design-01"
   | "display-01"
@@ -19,6 +20,50 @@ export type TypographyScale =
 
 type ScaleValue = { size: number; lineHeight: number };
 type ScaleMap = Partial<Record<TypographyScale, ScaleValue>>;
+
+/** 단순 본문 UI에서 사용하는 반응형 크기 프리셋 (기존 Text 컴포넌트 통합) */
+const RESPONSIVE_SIZE: Record<TypographySize, { mobile: ScaleValue; tablet: ScaleValue; desktop: ScaleValue }> = {
+  xs: {
+    mobile: { size: 11, lineHeight: 1.45 },
+    tablet: { size: 12, lineHeight: 1.33 },
+    desktop: { size: 12, lineHeight: 1.33 },
+  },
+  sm: {
+    mobile: { size: 12, lineHeight: 1.33 },
+    tablet: { size: 14, lineHeight: 1.43 },
+    desktop: { size: 14, lineHeight: 1.43 },
+  },
+  md: {
+    mobile: { size: 14, lineHeight: 1.43 },
+    tablet: { size: 16, lineHeight: 1.5 },
+    desktop: { size: 16, lineHeight: 1.5 },
+  },
+  lg: {
+    mobile: { size: 16, lineHeight: 1.5 },
+    tablet: { size: 18, lineHeight: 1.56 },
+    desktop: { size: 18, lineHeight: 1.56 },
+  },
+  xl: {
+    mobile: { size: 18, lineHeight: 1.56 },
+    tablet: { size: 20, lineHeight: 1.4 },
+    desktop: { size: 24, lineHeight: 1.33 },
+  },
+  "2xl": {
+    mobile: { size: 20, lineHeight: 1.4 },
+    tablet: { size: 24, lineHeight: 1.33 },
+    desktop: { size: 30, lineHeight: 1.2 },
+  },
+  "3xl": {
+    mobile: { size: 24, lineHeight: 1.33 },
+    tablet: { size: 30, lineHeight: 1.2 },
+    desktop: { size: 36, lineHeight: 1.11 },
+  },
+  display: {
+    mobile: { size: 30, lineHeight: 1.2 },
+    tablet: { size: 36, lineHeight: 1.11 },
+    desktop: { size: 48, lineHeight: 1 },
+  },
+};
 
 const PRETENDARD_DESKTOP: ScaleMap = {
   "display-01": { size: 36, lineHeight: 1.5 },
@@ -106,7 +151,10 @@ type TypographyStyle = CSSProperties & {
 
 export interface TypographyProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   as?: ElementType;
-  mobile: TypographyScale;
+  /** 간단한 반응형 크기 프리셋. 기존 Text의 size API를 대체한다. */
+  size?: TypographySize;
+  /** 디자인 시스템의 세부 타이포그래피 스케일 */
+  mobile?: TypographyScale;
   tablet?: TypographyScale;
   desktop?: TypographyScale;
   font?: TypographyFont;
@@ -121,7 +169,8 @@ export interface TypographyProps extends Omit<HTMLAttributes<HTMLElement>, "chil
 }
 
 export function Typography({
-  as: Component = "span",
+  as,
+  size,
   mobile,
   tablet,
   desktop,
@@ -138,29 +187,42 @@ export function Typography({
   children,
   ...props
 }: TypographyProps) {
-  const scales = SCALE_BY_FONT[font];
-  const mobileValue = scales.mobile[mobile];
+  const Component = as ?? (size ? "p" : "span");
+  let mobileValue: ScaleValue;
+  let tabletValue: ScaleValue;
+  let desktopValue: ScaleValue;
 
-  if (!mobileValue) {
-    throw new Error(`Typography: ${font} 모바일 scale에 "${mobile}"이 없습니다.`);
-  }
-
-  let tabletValue = mobileValue;
-  if (tablet) {
-    const explicitTabletValue = scales.desktop[tablet];
-    if (!explicitTabletValue) {
-      throw new Error(`Typography: ${font} 태블릿 scale에 "${tablet}"이 없습니다.`);
+  if (size) {
+    ({ mobile: mobileValue, tablet: tabletValue, desktop: desktopValue } = RESPONSIVE_SIZE[size]);
+  } else {
+    if (!mobile) {
+      throw new Error('Typography: "size" 또는 "mobile" 중 하나는 반드시 필요합니다.');
     }
-    tabletValue = explicitTabletValue;
-  }
 
-  let desktopValue = tabletValue;
-  if (desktop) {
-    const explicitDesktopValue = scales.desktop[desktop];
-    if (!explicitDesktopValue) {
-      throw new Error(`Typography: ${font} PC scale에 "${desktop}"이 없습니다.`);
+    const scales = SCALE_BY_FONT[font];
+    const selectedMobileValue = scales.mobile[mobile];
+    if (!selectedMobileValue) {
+      throw new Error(`Typography: ${font} 모바일 scale에 "${mobile}"이 없습니다.`);
     }
-    desktopValue = explicitDesktopValue;
+    mobileValue = selectedMobileValue;
+    tabletValue = mobileValue;
+
+    if (tablet) {
+      const explicitTabletValue = scales.desktop[tablet];
+      if (!explicitTabletValue) {
+        throw new Error(`Typography: ${font} 태블릿 scale에 "${tablet}"이 없습니다.`);
+      }
+      tabletValue = explicitTabletValue;
+    }
+
+    desktopValue = tabletValue;
+    if (desktop) {
+      const explicitDesktopValue = scales.desktop[desktop];
+      if (!explicitDesktopValue) {
+        throw new Error(`Typography: ${font} PC scale에 "${desktop}"이 없습니다.`);
+      }
+      desktopValue = explicitDesktopValue;
+    }
   }
 
   const typographyStyle: TypographyStyle = {
@@ -179,7 +241,7 @@ export function Typography({
 
   return (
     <Component
-      className={`wim-typography ${FONT_CLASS[font]} ${className}`.trim()}
+      className={`wim-typography ${FONT_CLASS[font]} ${size ? "whitespace-pre-line" : ""} ${className}`.trim()}
       style={typographyStyle}
       {...props}
     >
