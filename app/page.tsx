@@ -87,25 +87,6 @@ export default function HomePage() {
         mobileTopAligned
       />
 
-      {/* 센터 소개 영상 — 살짝 회색 배경으로 위아래 흰 섹션과 구분 */}
-      <section className="bg-gray-00 px-5 py-[54px] tb:py-[80px]">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 tb:gap-7">
-          <h2 className="m-0 break-keep text-[24px] font-bold leading-[1.35] tracking-[-0.03em] text-primary-main tb:text-[34px]">
-            {HOME_MAIN_V1.introVideo.title}
-          </h2>
-          <video
-            src={HOME_MAIN_V1.introVideo.src}
-            aria-label={HOME_MAIN_V1.introVideo.label}
-            muted
-            loop
-            playsInline
-            autoPlay
-            preload="metadata"
-            className="pointer-events-none block aspect-[16/9] w-full rounded-[16px] object-cover tb:rounded-[22px] dt:aspect-[21/9]"
-          />
-        </div>
-      </section>
-
       {/* 센터 소개 */}
       <IntroSection
         eyebrow={HOME_MAIN_V1.intro.eyebrow}

@@ -219,12 +219,6 @@ export const HOME_CENTERS = [
 
 /** 메인(버전1) 히어로·인트로 문구 — 두 센터(다이어트·리커버리)를 함께 품는 기조 */
 export const HOME_MAIN_V1 = {
-  /** 히어로 바로 아래 — 센터 소개 영상 섹션 */
-  introVideo: {
-    title: "윔센터를 소개합니다",
-    src: "/videos/wim-center-intro.mp4",
-    label: "윔센터 소개 영상",
-  },
   hero: {
     titleLines: ["강남에서 시작하는 새로운 웰니스의 기준"],
   },
