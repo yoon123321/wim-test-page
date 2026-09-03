@@ -14,6 +14,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   RECOVERY_COPY,
+  RECOVERY_HERO_VIDEO,
   RECOVERY_DEVICES,
   RECOVERY_SITUATIONS,
   RECOVERY_COMBOS,
@@ -75,21 +76,18 @@ export default function RecoveryLandingNew() {
     <div className="bg-white font-['Pretendard_Variable',Pretendard,sans-serif] text-black antialiased">
       <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
 
-      {/* 히어로 */}
-      <section id="top" className="bg-gradient-to-b from-primary-deeper to-black">
-        <div className="mx-auto flex w-full max-w-[350px] flex-col items-center gap-[18px] px-5 pb-[88px] pt-24 text-center tb:max-w-[688px] tb:gap-[26px] tb:pb-[140px] tb:pt-[152px] dt:max-w-[1280px]">
-          <span className={`${EN} text-[13.5px] tracking-[0.28em] text-primary-sub-02`}>{COPY.hero.kicker}</span>
-          <h1 className="m-0 max-w-[900px] break-keep text-[30px] font-bold leading-[1.4] tracking-[-0.025em] text-white tb:text-[48px] tb:leading-[1.36]">
-            {lines(COPY.hero.titleLines)}
-          </h1>
-          <p className="m-0 max-w-[620px] break-keep text-[15px] leading-[1.8] text-white/70 tb:text-[17px] tb:leading-[1.85]">{lines(COPY.hero.descriptionLines)}</p>
-          <Link
-            href={COPY.hero.ctaHref}
-            className="mt-2 w-full rounded-full bg-primary-sub-02 px-6 py-[17px] text-center text-[16px] font-bold text-primary-deeper no-underline transition hover:opacity-90 tb:mt-[18px] tb:w-auto tb:px-[42px] tb:py-[18px]"
-          >
-            {COPY.hero.ctaButton}
-          </Link>
-        </div>
+      {/* 히어로 — 옥시젠챔버 영상만 */}
+      <section id="top" className="bg-black">
+        <video
+          src={RECOVERY_HERO_VIDEO.video}
+          aria-label={RECOVERY_HERO_VIDEO.label}
+          muted
+          loop
+          playsInline
+          autoPlay
+          preload="metadata"
+          className="pointer-events-none block h-[420px] w-full object-cover tb:h-[640px]"
+        />
       </section>
 
       {/* 왜 회복인가 */}

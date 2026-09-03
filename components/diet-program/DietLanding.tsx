@@ -777,17 +777,7 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
           </>
         )}
 
-        {coaching && (
-          <div className="mx-auto flex max-w-[680px] flex-col items-center gap-2 text-center">
-            <span className="text-[14px] font-bold text-white/90 tb:text-[15px]">위 사례는 하나의 예시입니다.</span>
-            <p className="m-0 break-keep text-[14px] leading-[1.8] text-white/65 tb:text-[15px]">
-              실제 검사에서는 여러 기질과 성향, 생활 속 문제를 복합적으로 분석합니다.
-              <br className="hidden tb:block" />
-              나의 기질과 성향이 일상에서 어떤 문제로 이어지는지 확인해 보세요.
-            </p>
-          </div>
-        )}
-
+        {!coaching && (
         <div className="flex flex-col items-center gap-3.5">
           <span className="text-[14.5px] text-white/70">{C0.ctaLead}</span>
           <Link
@@ -796,9 +786,35 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
             style={{ background: C.mint, color: C.greenDark }}>
             {C0.ctaLabel}
           </Link>
-          {coaching && (
-            <span className="text-[11.5px] text-white/45">※ 본 검사는 정식 검사의 간략 버전입니다.</span>
-          )}
+        </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** 버전3 — 코칭 스토리 다음, 예시 안내 + 검사 CTA 독립 섹션 */
+function CoachingCta() {
+  return (
+    <section className="px-6 py-[72px] tb:py-[96px]" style={{ background: C.green }}>
+      <div className="mx-auto flex w-full max-w-[860px] flex-col items-center gap-5 text-center tb:gap-6">
+        <span className="text-[14px] font-bold text-white/75 tb:text-[15px]">위 사례는 하나의 예시입니다</span>
+        <h2 className="m-0 break-keep text-[24px] font-bold leading-[1.45] tracking-[-0.03em] text-white tb:text-[34px] tb:leading-[1.4]">
+          나의 기질과 성향은,
+          <br />
+          <span style={{ color: C.mint }}>일상에서 어떤 문제로 이어지고 있을까요?</span>
+        </h2>
+        <p className="m-0 break-keep text-[14.5px] leading-[1.8] text-white/70 tb:text-[16px]">
+          실제 검사에서는 여러 기질과 성향, 생활 속 문제를 복합적으로 분석합니다.
+        </p>
+        <div className="mt-2 flex flex-col items-center gap-3">
+          <Link
+            href="/diet-type-test"
+            className="rounded-full px-9 py-[16px] text-[16px] font-bold no-underline transition hover:opacity-90 tb:px-11 tb:py-[18px] tb:text-[17px]"
+            style={{ background: C.mint, color: C.greenDark }}>
+            3분 유형 검사 (무료)
+          </Link>
+          <span className="text-[12px] text-white/50">※ 본 검사는 정식 검사의 간략 버전입니다.</span>
         </div>
       </div>
     </section>
@@ -813,7 +829,7 @@ function Difference() {
       id="difference"
       className={imageBackground ? "bg-[url('/images/diet/diet-difference-bg.png')] bg-cover bg-center bg-no-repeat" : "bg-white"}>
       <div className="flex flex-col items-center gap-9 text-center dt:gap-8">
-        <span className="text-[16px] font-bold tracking-[0.04em] dt:order-1 dt:text-[18px] dt:tracking-[-0.02em]" style={{ color: C.green }}>
+        <span className="text-[19px] font-bold tracking-[0.02em] dt:order-1 dt:text-[22px] dt:tracking-[-0.02em]" style={{ color: C.green }}>
           {C0.eyebrow}
         </span>
 
@@ -1085,7 +1101,6 @@ function Result() {
 
               <div className="flex flex-col items-center gap-2 text-center">
                 <span className="text-[17px] font-bold">{C0.axes.cardTitle}</span>
-                <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{C0.axes.cardBody}</p>
               </div>
             </div>
           </div>
@@ -1529,6 +1544,7 @@ export default function DietLanding({ copyVariant = "base" }: { copyVariant?: "b
       <main className="w-full bg-white font-pretendard text-black antialiased">
         <Hero />
         <Problem coaching={copyVariant === "v3"} />
+        {copyVariant === "v3" && <CoachingCta />}
         <Difference />
         <Result />
         <Roadmap />

@@ -335,7 +335,7 @@ export const DIET_PLANS: readonly DietPlan[] = [
   {
     name: "Wellness",
     kind: "대면 관리 프로그램",
-    target: "이번엔 제대로, 사람과 함께 바꾸고 싶은 분",
+    target: "이번엔 제대로, 매니저와 함께 바꾸고 싶은 분",
     priceNote: "8월 프로모션 적용 · 6주",
     price: "진단 후 견적",
     cta: "이 플랜으로 상담",
