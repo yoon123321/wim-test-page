@@ -1,4 +1,4 @@
-import Text from "@/components/common/Text";
+import { Typography } from "@/components/common/Typography";
 
 interface HeroProps {
   /** 실제 이미지 적용 시 페이지별 초점 위치 */
@@ -50,13 +50,13 @@ export default function Hero({
         className={`relative mx-auto flex min-h-[420px] w-full max-w-[1200px] flex-col justify-center px-4 py-16 tb:min-h-[480px] tb:px-8 tb:py-20 dt:min-h-[560px] dt:px-10 dt:py-24 ${alignBox}`}
       >
         {eyebrow ? (
-          <Text as="p" size="xs" weight="semibold" className="m-0 tracking-[.18em] text-white/80">{eyebrow}</Text>
+          <Typography as="p" size="xs" weight="semibold" className="m-0 tracking-[.18em] text-white/80">{eyebrow}</Typography>
         ) : (
           <div className="h-3 w-36 rounded-sm bg-white/40" />
         )}
 
         {title ? (
-          <Text as="h1" size="display" weight="bold" className="mt-6 max-w-[680px] break-keep leading-tight text-white">{title}</Text>
+          <Typography as="h1" size="display" weight="bold" className="mt-6 max-w-[680px] break-keep leading-tight text-white">{title}</Typography>
         ) : (
           <>
             <div className="mt-6 h-10 w-[88%] max-w-[440px] rounded bg-white/40" />
@@ -65,7 +65,7 @@ export default function Hero({
         )}
 
         {description ? (
-          <Text as="p" size="md" className="mt-6 max-w-[600px] break-keep leading-7 text-white/90">{description}</Text>
+          <Typography as="p" size="md" className="mt-6 max-w-[600px] break-keep leading-7 text-white/90">{description}</Typography>
         ) : (
           <div className={`mt-6 space-y-3 ${align === "center" ? "flex flex-col items-center" : ""}`}>
             <div className="h-3 w-[78%] max-w-[390px] rounded-sm bg-white/30" />
