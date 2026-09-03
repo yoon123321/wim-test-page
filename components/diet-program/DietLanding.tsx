@@ -213,7 +213,7 @@ function ImageSlot({ label, className = "" }: { label: string; className?: strin
 function Hero() {
   const C0 = useDietCopy().hero;
   return (
-    <section id="top" className="relative overflow-hidden bg-black">
+    <section id="top" className="relative h-[calc(100svh-110px)] overflow-hidden bg-black tb:h-[640px]">
       <div className="absolute inset-0">
         <Image
           src="/images/diet/diet_hero.png"
@@ -224,9 +224,7 @@ function Hero() {
           className="object-cover"
         />
       </div>
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(29,30,30,0.55),rgba(29,30,30,0.82))]" />
-
-      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 px-6 pb-[120px] pt-[128px] text-center">
+      <div className="relative mx-auto flex h-full w-full max-w-[1280px] flex-col items-center justify-center gap-6 px-6 text-center">
         <Eyebrow>{C0.eyebrow}</Eyebrow>
         <h1 className="max-w-[800px] break-keep text-[32px] leading-[1.32] text-white tb:text-[46px]">
           <Lines items={C0.titleLines} />
@@ -809,8 +807,11 @@ function Problem({ coaching = false }: { coaching?: boolean }) {
 
 function Difference() {
   const C0 = useDietCopy().difference;
+  const imageBackground = C0.eyebrow === "아는 것만으로는 부족합니다";
   return (
-    <Section id="difference" className="bg-white">
+    <Section
+      id="difference"
+      className={imageBackground ? "bg-[url('/images/diet/diet-difference-bg.png')] bg-cover bg-center bg-no-repeat" : "bg-white"}>
       <div className="flex flex-col items-center gap-9 text-center dt:gap-8">
         <span className="text-[16px] font-bold tracking-[0.04em] dt:order-1 dt:text-[18px] dt:tracking-[-0.02em]" style={{ color: C.green }}>
           {C0.eyebrow}
@@ -859,11 +860,14 @@ function Difference() {
 
 function Result() {
   const C0 = useDietCopy().result;
+  const habitBackground = C0.keepTitleLines[1] === "몸에 맞는 습관을 일상에 남깁니다.";
   const titleComma = C0.title.indexOf(",");
   const titleLead = titleComma >= 0 ? C0.title.slice(0, titleComma + 1) : C0.title;
   const titleAccent = titleComma >= 0 ? C0.title.slice(titleComma + 1).trim() : "";
   return (
-    <Section id="result" className="bg-white">
+    <Section
+      id="result"
+      className="bg-white">
       <div className="flex flex-col gap-12">
         <div className="flex flex-col gap-3.5">
           <Eyebrow tone="gray">{C0.eyebrow}</Eyebrow>
@@ -872,27 +876,53 @@ function Result() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 items-end gap-8 dt:grid-cols-[minmax(0,1fr)_255px] dt:gap-16">
+        <div className="grid grid-cols-1 items-end gap-8 dt:grid-cols-[minmax(0,1fr)_255px] dt:gap-[88px]">
           {/* 비포 · 애프터 */}
-          <div className="grid grid-cols-1 gap-5 tb:grid-cols-2">
+          <div className="relative mx-auto grid w-full grid-cols-1 gap-5 tb:w-fit tb:grid-cols-[350px_350px] tb:gap-9 dt:ml-auto dt:mr-0">
+            <svg
+              width="128"
+              height="26"
+              viewBox="0 0 128 26"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              className="absolute left-1/2 top-[15px] z-10 hidden -translate-x-1/2 tb:block">
+              <path
+                d="M0 24.1228H126.201L103.139 1.06055"
+                stroke="url(#before-after-arrow)"
+                strokeWidth="3"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient id="before-after-arrow" x1="0" y1="12.5917" x2="126.201" y2="12.5917" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#A1A0A1" />
+                  <stop offset="1" stopColor="#155E35" />
+                </linearGradient>
+              </defs>
+            </svg>
             {[C0.before, C0.after].map((side, index) => (
-              <div key={side.label} className="flex min-w-0 flex-col gap-4">
+              <div key={side.label} className="flex min-w-0 flex-col items-center gap-4">
                 <div className="flex flex-col items-center gap-1">
                   <span className={`text-[14px] font-medium ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.label.split("·")[0]}</span>
                   <span className={`text-[28px] font-bold tracking-[-0.03em] ${index === 1 ? "text-primary-main" : "text-gray-02"}`}>{side.weight}</span>
                 </div>
-                <ImageSlot
-                  label={side.imageLabel}
-                  className={`aspect-[4/5] rounded-[18px] ${index === 1 ? "bg-primary-sub-03" : "bg-gray-00"}`}
-                />
+                <div className="relative h-[420px] w-full max-w-[350px] overflow-hidden rounded-[18px]">
+                  <Image
+                    src={index === 0 ? "/images/diet/diet-result-before.png" : "/images/diet/diet-result-after.png"}
+                    alt={side.imageLabel}
+                    fill
+                    sizes="350px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             ))}
           </div>
 
           {/* 변화 수치 */}
-          <div className="flex flex-col">
+          <div className="flex h-[420px] flex-col self-end">
             {DIET_METRICS.map((m) => (
-              <div key={m.label} className="flex flex-col gap-2 border-b border-gray-01 py-5 first:pt-0">
+              <div key={m.label} className="flex flex-1 flex-col justify-center gap-2 border-b border-gray-01 py-5 first:pt-0">
                 <span className="text-[14px] font-bold text-black">{m.label}</span>
                 <div className="flex items-center gap-2 text-[24px] font-bold tracking-[-0.03em]">
                   <span className="text-gray-02">{m.value.split("→")[0].trim()}</span>
@@ -907,6 +937,13 @@ function Result() {
           </div>
         </div>
 
+        <div
+          className={
+            habitBackground
+              ? "relative left-1/2 -mb-[72px] w-screen -translate-x-1/2 bg-[url('/images/diet/diet-habits-bg.png')] bg-cover bg-center bg-no-repeat px-6 pb-[72px] pt-[72px] tb:-mb-[100px] tb:pb-[100px] tb:pt-[100px]"
+              : "contents"
+          }>
+          <div className={habitBackground ? "mx-auto flex w-full max-w-[1280px] flex-col gap-12" : "contents"}>
         {/* 유지 — AND IT STAYS */}
         <div className="flex flex-col gap-3">
           <span className="text-[14px] font-medium tracking-[0.14em]" style={{ color: C.green }}>
@@ -920,14 +957,14 @@ function Result() {
         </div>
 
         {/* 결과(체중 곡선) · 이유(여섯 축) 두 장 */}
-        <div className="grid grid-cols-1 gap-5 dt:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 bg-transparent dt:grid-cols-2">
           {/* 왼쪽 — 체중 곡선 */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="rounded-full bg-black px-3 py-1 text-[12.5px] font-bold text-white">{C0.chart.label}</span>
-              <span className="break-keep text-[15px] font-bold">{C0.chart.title}</span>
+          <div className="flex w-full max-w-[625px] min-w-0 flex-col overflow-hidden rounded-[18px] border border-gray-01 bg-white dt:h-[490px] dt:justify-self-end">
+            <div className="flex min-h-[48px] items-center justify-center gap-3 bg-[#a1a0a1] px-5 py-3 text-center text-white">
+              <span className="text-[13px] font-bold">{C0.chart.label}</span>
+              <span className="break-keep text-[13px] font-medium">{C0.chart.title}</span>
             </div>
-            <div className="rounded-[20px] bg-gray-00 p-5 tb:p-7">
+            <div className="flex flex-1 flex-col justify-center bg-white p-5 tb:p-7">
               <svg
                 viewBox="0 0 900 340"
                 role="img"
@@ -936,8 +973,9 @@ function Result() {
                 <line x1="60" y1="290" x2="860" y2="290" stroke="var(--color-gray-01)" strokeWidth="1" />
                 <line x1="60" y1="40" x2="60" y2="290" stroke="var(--color-gray-01)" strokeWidth="1" />
 
-                <line x1="440" y1="34" x2="440" y2="296" stroke="var(--color-gray-02)" strokeWidth="1.5" strokeDasharray="6 6" />
-                <text x="440" y="24" fontSize="15" fontWeight="700" textAnchor="middle" fill={C.green}>
+                <rect x="405" y="25" width="70" height="270" rx="8" fill="var(--color-primary-sub-03)" fillOpacity="0.9" />
+                <rect x="402" y="10" width="76" height="30" rx="15" fill={C.green} />
+                <text x="440" y="30" fontSize="13" fontWeight="700" textAnchor="middle" fill="white">
                   {C0.chart.endLabel}
                 </text>
 
@@ -985,18 +1023,14 @@ function Result() {
           </div>
 
           {/* 오른쪽 — 여섯 축 레이더 */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
-              <span
-                className="rounded-full px-3 py-1 text-[12.5px] font-bold text-white"
-                style={{ background: C.green }}>
-                {C0.axes.label}
-              </span>
-              <span className="break-keep text-[15px] font-bold">{C0.axes.title}</span>
+          <div className="flex w-full max-w-[625px] min-w-0 flex-col overflow-hidden rounded-[18px] border border-gray-01 bg-white dt:h-[490px] dt:justify-self-start">
+            <div className="flex min-h-[48px] items-center justify-center gap-3 bg-primary-main px-5 py-3 text-center text-white">
+              <span className="text-[13px] font-bold">{C0.axes.label}</span>
+              <span className="break-keep text-[13px] font-medium">{C0.axes.title}</span>
             </div>
 
-            <div className="flex flex-col items-center gap-4 rounded-[20px] bg-gray-00 p-5 tb:p-7">
-              <svg viewBox="0 0 300 290" role="img" aria-label="6개 지표 전후 비교 그래프" className="w-full max-w-[300px]">
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 bg-white p-5 tb:p-7">
+              <svg viewBox="0 0 360 290" role="img" aria-label="6개 지표 전후 비교 그래프" className="w-full max-w-[360px]">
                 {/* 눈금 육각형 3겹 */}
                 <polygon points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90" fill="none" stroke="#e3e2e0" strokeWidth="1" />
                 <polygon points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107" fill="none" stroke="#e3e2e0" strokeWidth="1" />
@@ -1043,21 +1077,19 @@ function Result() {
                     </text>
                   );
                 })}
+                <line x1="278" y1="220" x2="306" y2="220" stroke="#a1a0a1" strokeWidth="1.5" strokeDasharray="4 3" />
+                <text x="314" y="224" fontSize="11" fill="#737e72">{C0.axes.legendStart}</text>
+                <line x1="278" y1="242" x2="306" y2="242" stroke={C.green} strokeWidth="2" />
+                <text x="314" y="246" fontSize="11" fontWeight="700" fill={C.green}>{C0.axes.legendAfter}</text>
               </svg>
 
               <div className="flex flex-col items-center gap-2 text-center">
                 <span className="text-[17px] font-bold">{C0.axes.cardTitle}</span>
                 <p className="m-0 break-keep text-[14px] leading-[1.75] text-gray-03">{C0.axes.cardBody}</p>
-                <div className="mt-1 flex items-center gap-5">
-                  <span className="flex items-center gap-2 text-[12.5px] text-gray-03">
-                    <span className="h-0.5 w-5 bg-gray-02" /> {C0.axes.legendStart}
-                  </span>
-                  <span className="flex items-center gap-2 text-[12.5px] text-gray-03">
-                    <span className="h-0.5 w-5" style={{ background: C.green }} /> {C0.axes.legendAfter}
-                  </span>
-                </div>
               </div>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>
@@ -1198,12 +1230,16 @@ function Team() {
 
 function Plans() {
   const C0 = useDietCopy().plans;
+  const comparisonStyle = C0.descriptionLines.length === 0;
+  const [selectedPlan, setSelectedPlan] = useState(
+    DIET_PLANS.find((plan) => plan.featured)?.name ?? DIET_PLANS[0].name,
+  );
   return (
     <Section id="plans" className="bg-white">
       <div className="flex flex-col gap-8 tb:gap-11">
-        <div className="flex flex-col gap-3.5">
+        <div className={`flex flex-col gap-3.5 ${comparisonStyle ? "items-center text-center" : ""}`}>
           <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 break-keep text-[26px] leading-[1.42] tb:text-[36px]">{C0.title}</h2>
+          <h2 className={`m-0 break-keep text-[26px] leading-[1.42] tb:text-[36px] ${comparisonStyle ? "text-primary-main" : ""}`}>{C0.title}</h2>
           {C0.descriptionLines.length > 0 && (
             <p className="m-0 max-w-[620px] break-keep text-[15.5px] leading-[1.8] text-gray-03">
               <Lines items={C0.descriptionLines} />
@@ -1213,49 +1249,90 @@ function Plans() {
 
         {/* 모바일은 가로 스크롤, PC 는 3열 */}
         <div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] tb:mx-0 tb:grid tb:grid-cols-3 tb:gap-5 tb:overflow-visible tb:px-0 [&::-webkit-scrollbar]:hidden">
-          {DIET_PLANS.map((plan) => (
+          {DIET_PLANS.map((plan) => {
+            const selected = comparisonStyle ? selectedPlan === plan.name : Boolean(plan.featured);
+            return (
             <article
               key={plan.name}
-              className={`flex w-[300px] shrink-0 snap-start flex-col gap-5 rounded-[22px] border border-gray-02/50 bg-white p-7 tb:w-auto ${
-                plan.featured ? "ring-2" : ""
+              role={comparisonStyle ? "button" : undefined}
+              tabIndex={comparisonStyle ? 0 : undefined}
+              aria-pressed={comparisonStyle ? selected : undefined}
+              onClick={comparisonStyle ? () => setSelectedPlan(plan.name) : undefined}
+              onKeyDown={
+                comparisonStyle
+                  ? (event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        setSelectedPlan(plan.name);
+                      }
+                    }
+                  : undefined
+              }
+              className={`relative flex w-[300px] shrink-0 snap-start flex-col gap-5 border bg-white tb:w-auto ${
+                comparisonStyle ? "cursor-pointer rounded-[16px] border-gray-01 p-6 transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5" : "rounded-[22px] border-gray-02/50 p-7"
+              } ${
+                selected && !comparisonStyle ? "ring-2" : ""
               }`}
-              style={plan.featured ? { boxShadow: `0 0 0 2px ${C.green}` } : undefined}>
+              style={
+                selected
+                  ? comparisonStyle
+                    ? { borderColor: C.green, background: C.pale }
+                    : { boxShadow: `0 0 0 2px ${C.green}` }
+                  : undefined
+              }>
               <div className="flex flex-col gap-2">
-                {plan.featured && (
+                {selected && comparisonStyle && (
+                  <span
+                    aria-label={C0.badge}
+                    className="absolute -top-1 right-5 h-[54px] w-[28px] bg-primary-main [clip-path:polygon(0_0,100%_0,100%_100%,50%_78%,0_100%)]"
+                  />
+                )}
+                {selected && !comparisonStyle && (
                   <span
                     className="w-fit rounded-full px-3 py-1 text-[11.5px] font-bold text-white"
                     style={{ background: C.green }}>
                     {C0.badge}
                   </span>
                 )}
-                <span className="text-[22px] font-bold tracking-[-0.02em]">{plan.name}</span>
-                <span className="text-[13px] font-bold" style={{ color: C.green }}>
+                <span className={`${comparisonStyle ? "text-[28px] text-primary-main" : "text-[22px]"} font-bold tracking-[-0.03em]`}>{plan.name}</span>
+                <span className={`font-bold ${comparisonStyle ? "mt-2 text-[14px] text-black" : "text-[13px]"}`} style={comparisonStyle ? undefined : { color: C.green }}>
                   {plan.kind}
                 </span>
-                <p className="m-0 break-keep text-[13.5px] font-bold leading-[1.65] text-gray-03">{plan.target}</p>
+                <p className={`m-0 break-keep leading-[1.65] text-gray-03 ${comparisonStyle ? "text-[12.5px] font-medium" : "text-[13.5px] font-bold"}`}>{plan.target}</p>
               </div>
 
-              <div className="flex flex-col gap-1 border-t border-gray-01 pt-5">
+              <div className={`flex flex-col gap-1 border-t pt-4 ${comparisonStyle ? "border-gray-02/60" : "border-gray-01 pt-5"}`}>
                 <span className="text-[12.5px] text-gray-02">{plan.priceNote}</span>
-                <span className="text-[19px] font-bold tracking-[-0.02em]">{plan.price}</span>
+                <span className={`${comparisonStyle ? "text-[15px]" : "text-[19px]"} font-bold tracking-[-0.02em]`}>{plan.price}</span>
               </div>
 
-              <div className="flex flex-col">
+              <div className={`flex flex-col ${comparisonStyle ? "gap-0.5" : ""}`}>
                 {DIET_PLAN_FEATURES.map((feature, i) => {
                   const on = plan.included[i];
                   return (
                     <div
                       key={feature}
-                      className={`flex items-center gap-2.5 py-[11px] ${i === 0 ? "" : "border-t border-gray-01"}`}>
+                      className={`flex items-center gap-2.5 ${comparisonStyle ? "py-[7px]" : `py-[11px] ${i === 0 ? "" : "border-t border-gray-01"}`}`}>
                       <span
-                        className="flex-none text-[13.5px] font-bold"
-                        style={{ color: on ? C.green : "#c9c9c9" }}>
-                        {on ? "✓" : "—"}
+                        className={
+                          comparisonStyle
+                            ? "grid h-[13px] w-[13px] flex-none place-items-center rounded-full text-[9px] font-bold"
+                            : "flex-none text-[13.5px] font-bold"
+                        }
+                        style={
+                          comparisonStyle
+                            ? on
+                              ? { background: C.pale, color: C.green }
+                              : { border: "1px solid #d7d7d7", color: "#c9c9c9" }
+                            : { color: on ? C.green : "#c9c9c9" }
+                        }>
+                        {comparisonStyle ? "✓" : on ? "✓" : "—"}
                       </span>
                       <span className={`flex-1 text-[14px] leading-[1.5] ${on ? "text-gray-03" : "text-gray-02"}`}>
+                        {!on && comparisonStyle && <span className="mr-1 text-gray-02">[추가 옵션]</span>}
                         {feature}
                       </span>
-                      {!on && <span className="text-[11.5px] text-gray-02">{C0.optionLabel}</span>}
+                      {!on && !comparisonStyle && <span className="text-[11.5px] text-gray-02">{C0.optionLabel}</span>}
                     </div>
                   );
                 })}
@@ -1263,16 +1340,19 @@ function Plans() {
 
               <Link
                 href="/contact"
-                className="mt-auto rounded-full py-3.5 text-center text-[14.5px] font-bold no-underline transition hover:opacity-90"
+                className={`mt-auto rounded-full border py-3 text-center text-[14.5px] font-bold no-underline transition hover:opacity-90 ${comparisonStyle ? "border-primary-main" : "border-transparent py-3.5"}`}
                 style={
-                  plan.featured
+                  selected
                     ? { background: C.green, color: "#fff" }
-                    : { background: C.pale, color: C.green }
+                    : comparisonStyle
+                      ? { background: "#fff", color: C.green }
+                      : { background: C.pale, color: C.green }
                 }>
                 {plan.cta}
               </Link>
             </article>
-          ))}
+            );
+          })}
         </div>
 
         <span className="text-center text-[13px] text-gray-02 tb:hidden">{C0.swipeHint}</span>
@@ -1283,34 +1363,46 @@ function Plans() {
 
 function Reviews() {
   const C0 = useDietCopy().reviews;
+  const lightReviews = C0.titleLines[0].startsWith("218명");
   return (
-    <Section id="reviews" className="bg-black">
+    <Section
+      id="reviews"
+      className={lightReviews ? "bg-[url('/images/diet/diet-reviews-bg.png')] bg-cover bg-center bg-no-repeat" : "bg-black"}>
       <div className="flex flex-col gap-8 tb:gap-11">
         <div className="flex flex-col gap-3.5">
-          <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
-          <h2 className="m-0 break-keep text-[26px] leading-[1.42] text-white tb:text-[33px]">
-            <Lines items={C0.titleLines} />
-          </h2>
+          <Eyebrow tone={lightReviews ? "gray" : "green"}>{C0.eyebrow}</Eyebrow>
+          {lightReviews ? (
+            <>
+              <h2 className="m-0 break-keep text-[26px] leading-[1.42] text-black tb:text-[33px]">{C0.titleLines[0]}</h2>
+              <p className="m-0 mt-2 break-keep text-[15px] text-gray-03 tb:text-[17px]">{C0.titleLines[1]}</p>
+            </>
+          ) : (
+            <h2 className="m-0 break-keep text-[26px] leading-[1.42] text-white tb:text-[33px]">
+              <Lines items={C0.titleLines} />
+            </h2>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 gap-5 dt:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
+        <div className={`grid grid-cols-1 gap-5 ${lightReviews ? "items-center dt:grid-cols-[280px_minmax(0,1fr)] dt:gap-14" : "dt:grid-cols-[minmax(0,320px)_minmax(0,1fr)]"}`}>
           {/* 평점 */}
-          <div className="flex flex-col gap-4 rounded-[20px] border border-white/10 p-7">
-            <span className="text-[12px] tracking-[0.14em]" style={{ color: C.mint }}>
-              {C0.ratingLabel}
+          <div className={`flex flex-col ${lightReviews ? "items-center gap-3 text-center dt:items-start dt:text-left" : "gap-4 rounded-[20px] border border-white/10 p-7"}`}>
+            <span className={`${lightReviews ? "text-[18px] font-bold text-primary-main" : "text-[12px] tracking-[0.14em]"}`} style={lightReviews ? undefined : { color: C.mint }}>
+              {lightReviews ? "총 만족도" : C0.ratingLabel}
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-[46px] font-bold leading-none tracking-[-0.03em] text-white">
+              <span className={`${lightReviews ? "text-[72px] text-primary-main tb:text-[82px]" : "text-[46px] text-white"} font-bold leading-none tracking-[-0.04em]`}>
                 {C0.ratingValue}
               </span>
-              <span className="text-[15px] text-gray-02">{C0.ratingMax}</span>
+              <span className={`${lightReviews ? "text-[18px]" : "text-[15px]"} text-gray-02`}>{C0.ratingMax}</span>
             </div>
-            <span className="text-[14px]" style={{ color: C.mint }}>
-              ★★★★★
-            </span>
-            <span className="text-[12.5px] text-white/60">{C0.ratingCount}</span>
+            {!lightReviews && (
+              <>
+                <span className="text-[14px]" style={{ color: C.mint }}>★★★★★</span>
+                <span className="text-[12.5px] text-white/60">{C0.ratingCount}</span>
+              </>
+            )}
 
-            <div className="mt-1 flex flex-col gap-2.5">
+            {!lightReviews && <div className="mt-1 flex flex-col gap-2.5">
               {DIET_RATING_BARS.map((bar) => (
                 <div key={bar.label} className="flex items-center gap-3">
                   <span className="w-[76px] shrink-0 text-[12.5px] text-white/70">{bar.label}</span>
@@ -1325,18 +1417,18 @@ function Reviews() {
                   </span>
                 </div>
               ))}
-            </div>
+            </div>}
           </div>
 
           {/* 후기 */}
           <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 tb:grid-cols-2">
             {DIET_REVIEWS.map((review) => (
-              <li key={review.who} className="flex flex-col gap-2.5 rounded-[18px] bg-white p-6">
-                <span className="text-[13px]" style={{ color: C.green }}>
+              <li key={review.who} className={`flex flex-col gap-2.5 bg-white p-6 ${lightReviews ? "rounded-[10px] border border-white/75 bg-white/55 shadow-sm backdrop-blur-sm" : "rounded-[18px]"}`}>
+                <span className="text-[13px]" style={{ color: lightReviews ? "#a8d88e" : C.green }}>
                   ★★★★★
                 </span>
-                <p className="m-0 break-keep text-[14.5px] leading-[1.75]">{review.body}</p>
-                <span className="mt-auto text-[12.5px] text-gray-02">{review.who}</span>
+                <p className={`m-0 break-keep leading-[1.75] ${lightReviews ? "text-[14px] font-medium text-primary-main" : "text-[14.5px]"}`}>{review.body}</p>
+                <span className={`mt-auto text-[12.5px] ${lightReviews ? "text-primary-main/35" : "text-gray-02"}`}>{review.who}</span>
               </li>
             ))}
           </ul>
@@ -1352,28 +1444,40 @@ function Faq() {
   return (
     <Section id="faq" className="bg-white">
       <div className="flex flex-col gap-8 tb:gap-11">
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col items-center gap-3.5 text-center">
           <Eyebrow tone="green">{C0.eyebrow}</Eyebrow>
           <h2 className="m-0 text-[26px] leading-[1.42] tb:text-[36px]">{C0.title}</h2>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="mx-auto flex w-full max-w-[840px] flex-col gap-2.5">
           {DIET_FAQ.map((item) => {
             const isOpen = open === item.q;
             return (
-              <div key={item.q} className="overflow-hidden rounded-[18px] bg-white">
+              <div
+                key={item.q}
+                className={`overflow-hidden rounded-[6px] transition-colors ${
+                  isOpen ? "border border-primary-sub-02/70 bg-primary-sub-03/55 shadow-sm" : "border border-transparent bg-white"
+                }`}>
                 <button
                   type="button"
                   onClick={() => setOpen(isOpen ? null : item.q)}
                   aria-expanded={isOpen}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-6 py-5 text-left">
-                  <span className="break-keep text-[15.5px] font-bold">{item.q}</span>
-                  <span className="flex-none text-[18px]" style={{ color: C.green }}>
-                    {isOpen ? "−" : "+"}
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-5 py-[17px] text-left tb:px-6">
+                  <span className="flex min-w-0 items-start gap-2 break-keep text-[15px] font-bold tb:text-[15.5px]">
+                    <span className="flex-none text-primary-main">Q.</span>
+                    <span>{item.q}</span>
                   </span>
+                  <span
+                    aria-hidden="true"
+                    className={`mr-1 h-[10px] w-[10px] flex-none border-b border-r border-gray-02 transition-transform ${
+                      isOpen ? "rotate-[225deg] translate-y-1" : "rotate-45 -translate-y-1"
+                    }`}
+                  />
                 </button>
                 {isOpen && (
-                  <p className="m-0 break-keep px-6 pb-6 text-[14.5px] leading-[1.85] text-gray-03">{item.a}</p>
+                  <p className="m-0 break-keep px-5 pb-5 pl-[48px] text-[14px] leading-[1.8] text-gray-03 tb:px-6 tb:pb-6 tb:pl-[48px]">
+                    {item.a}
+                  </p>
                 )}
               </div>
             );
@@ -1386,23 +1490,27 @@ function Faq() {
 
 function Contact() {
   const C0 = useDietCopy().contact;
+  const compactCta = C0.primaryCta.startsWith("3분");
   return (
-    <section id="contact" className="px-6 py-[116px]" style={{ background: C.greenDark }}>
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6 text-center">
-        <h2 className="m-0 max-w-[760px] break-keep text-[28px] leading-[1.35] text-white tb:text-[44px]">
-          <Lines items={C0.titleLines} />
+    <section
+      id="contact"
+      className={`px-6 ${compactCta ? "py-[52px] tb:py-[60px]" : "py-[116px]"}`}
+      style={{ background: compactCta ? C.green : C.greenDark }}>
+      <div className={`mx-auto flex w-full max-w-[1280px] flex-col items-center text-center ${compactCta ? "gap-5" : "gap-6"}`}>
+        <h2 className={`m-0 max-w-[760px] break-keep font-bold leading-[1.35] text-white ${compactCta ? "text-[22px] tb:text-[28px]" : "text-[28px] tb:text-[44px]"}`}>
+          {compactCta ? C0.titleLines.join(" ") : <Lines items={C0.titleLines} />}
         </h2>
-        <p className="m-0 text-[15.5px] leading-[1.8] text-white/75">{C0.description}</p>
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+        {!compactCta && <p className="m-0 text-[15.5px] leading-[1.8] text-white/75">{C0.description}</p>}
+        <div className={`${compactCta ? "" : "mt-2"} flex flex-wrap items-center justify-center gap-3`}>
           <Link
             href="/contact"
-            className="rounded-full bg-white px-7 py-3.5 text-[15px] font-bold no-underline transition hover:opacity-90"
+            className={`rounded-full bg-white font-bold no-underline transition hover:opacity-90 ${compactCta ? "px-5 py-2.5 text-[13px]" : "px-7 py-3.5 text-[15px]"}`}
             style={{ color: C.green }}>
-            {C0.primaryCta}
+            {C0.primaryCta}{compactCta && <>&nbsp; ↗</>}
           </Link>
           <Link
             href="/contact"
-            className="rounded-full border border-white/50 px-7 py-3.5 text-[15px] font-bold text-white no-underline transition hover:bg-white/10">
+            className={`rounded-full border border-white/70 font-bold text-white no-underline transition hover:bg-white/10 ${compactCta ? "px-5 py-2.5 text-[13px]" : "px-7 py-3.5 text-[15px]"}`}>
             {C0.secondaryCta}
           </Link>
         </div>

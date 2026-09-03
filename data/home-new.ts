@@ -51,20 +51,12 @@ export const WIM_NEW_IMAGES = {
   care08Maintenance: `${IMG}/care-08.png`, // TODO: PC 전용 사진 파일 추가 필요
   care08MaintenanceMobile: `${IMG}/care-08_mobile.png`,
 
-  /** CASES 프로그램 3종 — PC/모바일 이미지가 다르다 */
-  program01Wellness: `${IMG}/program-01.png`, // TODO: PC 전용 사진 파일 추가 필요
-  program01WellnessMobile: `${IMG}/program-01_mobile.png`,
-  program02Light: `${IMG}/program-02.png`, // TODO: PC 전용 사진 파일 추가 필요
-  program02LightMobile: `${IMG}/program-02_mobile.png`,
-  program03Recovery: `${IMG}/program-03.png`, // TODO: PC 전용 사진 파일 추가 필요
-  program03RecoveryMobile: `${IMG}/program-03_mobile.png`,
 } as const;
 
 /** 아이콘 · 로고 (피그마 export SVG) */
 export const WIM_NEW_ICONS = {
   arrow: `${IMG}/icons/icon-arrow.svg`,
   arrowGreen: `${IMG}/icons/icon-arrow-sm.svg`,
-  arrowBox: `${IMG}/icons/icon-arrow-box.svg`,
   careArrow: `${IMG}/icons/icon-care-arrow.svg`,
   chevron: `${IMG}/icons/icon-chevron.svg`,
   plus: `${IMG}/icons/icon-plus.svg`,
@@ -82,11 +74,6 @@ export const WIM_NEW_COPY = {
     primaryCta: "무료 기질 검사 받기",
     secondaryCta: "프로그램 살펴보기",
   },
-  /** 히어로 B안 전용 카피 (A/B 테스트) — CTA 문구는 A안과 동일하게 유지 */
-  heroB: {
-    titleLines: ["나만의 위해 설계하는 단하나의 다이어트"],
-    sub: "Wellness in Me",
-  },
   intro: {
     eyebrow: "나는 왜 항상 다이어트에 실패할까?",
     titleLines: ["윔은 감량 이전에", "먼저 ‘나’를 깊이 있게 알아봅니다."],
@@ -96,10 +83,6 @@ export const WIM_NEW_COPY = {
     ],
     image: WIM_NEW_IMAGES.intro,
     imageAlt: "윔 앱으로 검사 결과를 확인하는 모습",
-  },
-  philosophy: {
-    normalLines: ["의료진이 설계한 프로그램을 바탕으로"],
-    boldLines: ["전문 관리사가 감량의 전 과정을", "끝까지 케어합니다."],
   },
   step1: {
     label: "STEP 01",
@@ -111,21 +94,6 @@ export const WIM_NEW_COPY = {
     title: "맞춤 설계로 이렇게 관리합니다.",
     swipeHint: "옆으로 넘겨 8가지의 관리 방식을 확인하세요.",
     detailLabel: "자세히 보기 -->",
-  },
-  results: {
-    eyebrow: "RESULTS",
-    title: "말보다 숫자로 보여 드리겠습니다.",
-    footnoteLines: ["감량 수치는 완주 회원 기록 기준으로,", "결과는 개인에 따라 다릅니다."],
-  },
-  reviews: {
-    eyebrow: "REVIEWS",
-    titleLines: ["고객이 직접 경험하고", "평가한 윔센터 강남"],
-    sub: "네이버와 블로그 속 진짜 목소리를 확인하세요.",
-  },
-  cases: {
-    eyebrow: "CASES",
-    titleLines: ["당신에게 맞는", "감량 프로그램을 제안합니다."],
-    descLines: ["목표와 몸 상태에 따라,", "서로 다른 프로그램을 제안합니다."],
   },
   cta: {
     title: "나만을 위한 감량 솔루션을 찾아 보세요.",
@@ -422,108 +390,5 @@ export const WIM_NEW_CARES: readonly WimNewCare[] = [
       tagLabel: "받는 것",
       tags: ["CGM으로 일상 혈당 추적", "혈당 그래프와 식사 기록 대조", "나의 식사·혈당 반응 이해"],
     },
-  },
-];
-
-export type WimNewNumber = {
-  value: string;
-  unit?: string;
-  label: string;
-  /** value 폰트를 한 단계 줄일 때 (ex. 텍스트형 수치) */
-  small?: boolean;
-};
-
-export const WIM_NEW_NUMBERS: readonly WimNewNumber[] = [
-  { value: "-13.2", unit: "kg", label: "12주 최대 감량" },
-  { value: "-6.1", unit: "%", label: "평균 체지방 감소" },
-  { value: "최소화", label: "근육량 손실 최소화", small: true },
-  { value: "218", unit: "건", label: "누적 완주 후기" },
-];
-
-export const WIM_NEW_RATINGS = [
-  { label: "네이버 고객 평점", value: "4.91" },
-  { label: "매니저 만족도", value: "4.97" },
-  { label: "프로그램 만족도", value: "4.73" },
-  { label: "기기 관리 만족도", value: "4.60" },
-] as const;
-
-export type WimNewReview = { tag: string; who: string; body: string };
-
-export const WIM_NEW_REVIEWS: readonly WimNewReview[] = [
-  {
-    tag: "체중 클리닉",
-    who: "30대 여성 · 12주",
-    body: "다이어트할 때마다 요요가 와요. 이번엔 검사부터 하고 시작하니 확실히 달랐어요.",
-  },
-  {
-    tag: "메디컬",
-    who: "40대 여성 · 8주",
-    body: "수술은 무서워서 시술만으로 가능할지 걱정했는데 단계별로 설명해 주셔서 마음이 놓였어요.",
-  },
-  {
-    tag: "대사 관리",
-    who: "30대 남성 · 16주",
-    body: "살은 빠졌는데 피곤하고 힘이 없었어요. 여기선 체력 회복까지 같이 봐줍니다.",
-  },
-  {
-    tag: "체형 관리",
-    who: "20대 여성 · 6주",
-    body: "울퉁불퉁 셀룰라이트가 보기 싫었어요. 부위별로 계획을 따로 잡아 주셨습니다.",
-  },
-  {
-    tag: "갱년기",
-    who: "50대 여성 · 12주",
-    body: "오후만 되면 무너지는데 오늘은 컨디션이 좋습니다. 상담 예약 잡길 잘했어요.",
-  },
-  {
-    tag: "수면 관리",
-    who: "30대 여성 · 10주",
-    body: "잠드는 시간부터 다시 맞추니 야식이 줄고 아침 컨디션도 훨씬 안정됐어요.",
-  },
-  {
-    tag: "혈당 관리",
-    who: "40대 남성 · 12주",
-    body: "같은 음식도 제 혈당 반응이 다르다는 걸 알고 나니 식사 선택이 쉬워졌습니다.",
-  },
-];
-
-export type WimNewProgram = {
-  title: string;
-  descLines: readonly string[];
-  image?: string;
-  /** PC와 다른 사진을 쓸 때만 지정 (없으면 image를 그대로 씀) */
-  imageMobile?: string;
-  imageAlt: string;
-  position?: string;
-};
-
-export const WIM_NEW_PROGRAMS: readonly WimNewProgram[] = [
-  {
-    title: "웰니스",
-    descLines: [
-      "식단과 생활 습관을 중심으로, 체중과 체형의 변화를",
-      "세심하게 관리하는 프로그램입니다.",
-    ],
-    image: WIM_NEW_IMAGES.program01Wellness,
-    imageMobile: WIM_NEW_IMAGES.program01WellnessMobile,
-    imageAlt: "웰니스 프로그램",
-  },
-  {
-    title: "웰니스 라이트",
-    descLines: ["센터에 오지 않아도, 앱 기록과 원격 상담으로", "의료진의 관리를 이어갑니다."],
-    image: WIM_NEW_IMAGES.program02Light,
-    imageMobile: WIM_NEW_IMAGES.program02LightMobile,
-    imageAlt: "웰니스 라이트 프로그램",
-    position: "50% 78%",
-  },
-  {
-    title: "리커버리 케어",
-    descLines: [
-      "붓기 케어, 피로 회복, 수면의 질 개선까지.",
-      "그날의 컨디션에 맞춰 회복 관리를 조합합니다.",
-    ],
-    image: WIM_NEW_IMAGES.program03Recovery,
-    imageMobile: WIM_NEW_IMAGES.program03RecoveryMobile,
-    imageAlt: "리커버리 케어 프로그램",
   },
 ];
