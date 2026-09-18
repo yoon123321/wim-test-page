@@ -1,7 +1,7 @@
 /**
  * 감량 사례 상세 (회원 A) — wim-homepage-2 의 /before-after 화면을 한 파일로 옮긴 것.
  * 문구·수치·사진 경로는 아래 DETAIL 에서 고친다. 사진은 public/images/bna 에 있다.
- * 상담 버튼은 이 프로젝트의 /contact 로 보낸다.
+ * 원본과 다른 점: 클릭 추적 없음, 상담 폼 대신 CONSULT_HREF 로 이동, 맨 아래 고객 후기 캐러셀 제외.
  */
 
 import Link from "next/link";
@@ -15,13 +15,22 @@ const CONSULT_HREF = "/contact";
 /** 사진 사이에 쌓이는 수치 변화 — 전 → 후 (단위까지 적는다) */
 type BnaCaseMeasure = { label: string; before: string; after: string };
 
-/** 신체 변화 카드 한 장. before/after 는 막대 높이를 계산하는 데 쓴다 */
+/**
+ * 신체 변화 카드 한 장. before/after 는 그래프를 그리는 데 쓴다.
+ * chart: bars(막대 두 개, 기본) · vfa(나이별 내장지방 분포 위에 전·후 점을 찍는다 — age 필요)
+ */
 type BnaCaseMetricCard = {
   title: string;
   delta: string;
   unit: string;
   before: number;
   after: number;
+  chart?: 'bars' | 'vfa';
+  /** vfa 그래프에서 점을 찍을 나이 */
+  age?: number;
+  /** 넣으면 그래프 대신 이 이미지를 보여준다 */
+  image?: string;
+  imageAlt?: string;
 };
 
 /** 사진과 글을 좌우로 번갈아 놓는 이야기 한 토막 */
@@ -32,7 +41,7 @@ type BnaCaseStory = {
   sectionLayout?: 'cards' | 'zigzag';
   imagePlaceholder?: string;
   title: string;
-  paragraphs: readonly string[];
+  paragraphs: readonly BreakText[];
   images: readonly string[];
   /** 사진 위에 Before/After 를 표시할 때만 넣는다 */
   imageLabels?: readonly string[];
@@ -63,7 +72,7 @@ type BnaCaseDetail = {
     /** 제목 위 작은 영문 라벨 */
     eyebrow?: string;
     title: string;
-    description: string;
+    description?: string;
   };
 
   /** 2. 히어로 */
@@ -81,8 +90,8 @@ type BnaCaseDetail = {
     after: { label: string; value: string; unit: string };
   };
 
-  /** 2-1. 히어로 바로 아래 상담 유도 밴드 */
-  heroCta: { quote: string; description?: string; label: string };
+  /** 2-1. 히어로 바로 아래 밴드 — href 를 넣으면 버튼이 그 페이지로 이동한다 (없으면 상담 폼) */
+  heroCta: { quote: string; description?: string; label: string; href?: string };
 
   /** 3. 영상 — youtubeId 를 채우면 그 자리에 영상이 뜬다 */
   video: {
@@ -94,15 +103,27 @@ type BnaCaseDetail = {
 
   /** 4. 신체 변화 — 감량 전·후 사진과 그 사이 수치 (5. metrics 와 한 섹션으로 그린다) */
   change: {
-    before: { label: string; value: string; unit: string; image: string; alt: string };
-    after: { label: string; value: string; unit: string; image: string; alt: string };
+    before: {
+      label: string;
+      value: string;
+      unit: string;
+      image: string;
+      alt: string;
+    };
+    after: {
+      label: string;
+      value: string;
+      unit: string;
+      image: string;
+      alt: string;
+    };
     measures: readonly BnaCaseMeasure[];
   };
 
   /** 5. 신체 변화 데이터 — 4. change 아래 막대 카드 3장 */
   metrics: {
     title: string;
-    description: string;
+    description?: string;
     beforeLabel: string;
     afterLabel: string;
     cards: readonly BnaCaseMetricCard[];
@@ -123,8 +144,8 @@ type BnaCaseDetail = {
     nextLabel: string;
   };
 
-  /** 8. 상담 유도 밴드 — 페이지 맨 끝 */
-  ctaBand: { quote: string; description?: string; label: string };
+  /** 8. 상담 유도 밴드 — 페이지 맨 끝. 버튼은 상담 폼을 연다 */
+  ctaBand: { quote: string; description?: string; label: string; href?: string };
 };
 
 
@@ -136,40 +157,40 @@ const DETAIL: BnaCaseDetail = {
     message: '의지가 아니라 설계로 뺍니다.',
     image: '/images/bna/case-01-card.webp',
     imageMobile: '/images/bna/case-01-card.webp',
-    alt: '감량 후 회원 A 님의 모습'
+    alt: '감량 후 회원님의 모습'
   },
 
   intro: {
     eyebrow: 'Before & After',
     title: '감량 사례',
-    description:
-      '요요 없는 감량으로 몸과 일상을 모두 되찾은 회원들의 이야기를 들려드립니다.'
+    description: '요요 없는 감량으로 몸과 일상을 모두 되찾은\n회원들의 이야기를 들려드립니다.'
   },
 
   hero: {
     eyebrow: '박민아님(가명) | 무용가 · 안무가',
     accent: '',
     titleLines: ['83.5kg 였던 무용수,', '다시 무대 위에서 빛나다.'],
-    watermark: '-000',
+    watermark: '-14',
     watermarkUnit: 'kg',
     images: [
       {
         src: '/images/bna/case-01-hero.webp',
-        alt: '회원 A 님의 감량 전(왼쪽)과 감량 후(오른쪽) 모습'
+        alt: '회원님의 감량 전(왼쪽)과 감량 후(오른쪽) 모습'
       }
     ],
     summaryLines: ['윔과 함께 몸도, 일상도,', '자신감도 달라지고 있습니다.'],
-    before: { label: 'Before', value: '82', unit: 'kg' },
-    after: { label: 'After', value: '67', unit: 'kg' }
+    before: { label: 'Before', value: '83.5', unit: 'kg' },
+    after: { label: 'After', value: '69.1', unit: 'kg' }
   },
 
   heroCta: {
-    quote: '회원 A님이 받고 있는 프로그램이 궁금하세요?',
-    label: '상담 신청하기'
+    quote: '회원님이 받고 있는 프로그램이 궁금하세요?',
+    label: '프로그램 보러가기',
+    href: '/diet-program'
   },
 
   video: {
-    titleLines: ['회원 A 님의 감량 기록', '윔과 함께한 변화의 과정'],
+    titleLines: ['회원님의 감량 기록', '윔과 함께한 변화의 과정'],
     youtubeId: '',
     poster: '/images/diet-program/coaching-process-bg.webp',
     posterAlt: '감량 과정을 담은 영상 자리'
@@ -178,142 +199,161 @@ const DETAIL: BnaCaseDetail = {
   change: {
     before: {
       label: 'Before',
-      value: '68.4',
+      value: '83.5',
       unit: 'kg',
       image: '/images/bna/case-01-change-before.webp',
-      alt: '회원 A 님의 감량 전 모습'
+      alt: '회원님의 감량 전 모습'
     },
     after: {
       label: 'After',
-      value: '55.1',
+      value: '69.1',
       unit: 'kg',
       image: '/images/bna/case-01-change-after.webp',
-      alt: '회원 A 님의 감량 후 모습'
+      alt: '회원님의 감량 후 모습'
     },
     measures: [
-      { label: '체지방률', before: '34.8%', after: '24.1%' },
-      { label: '골격근량', before: '22.1kg', after: '22.4kg' },
-      { label: '허리둘레', before: '86cm', after: '70cm' }
+      { label: '체중', before: '83.5kg', after: '69.1kg' },
+      { label: '복부 둘레', before: '94.2cm', after: '80.6cm' },
+      { label: 'BMI', before: '28.9kg/m²', after: '23.9kg/m²' }
     ]
   },
 
   metrics: {
-    title: '회원 A님의 신체 변화',
-    description: '요요 없는 감량으로 몸과 일상을 모두 되찾은 회원들의 이야기를 들려드립니다.',
+    title: '회원님의 신체 변화',
     beforeLabel: 'Before',
     afterLabel: 'After',
     cards: [
-      { title: '체지방량', delta: '-10.7', unit: 'kg', before: 28.8, after: 18.1 },
-      { title: '내장지방', delta: '-69.2', unit: 'cm²', before: 152.1, after: 82.9 },
-      { title: '복부둘레', delta: '-15.1', unit: 'cm', before: 95.3, after: 80.2 }
+      {
+        title: '체지방',
+        delta: '-11.3',
+        unit: 'kg',
+        before: 30.5,
+        after: 19.2
+      },
+      {
+        title: '내장지방',
+        delta: '-56.8',
+        unit: 'cm²',
+        before: 130.2,
+        after: 73.4,
+        chart: 'vfa',
+        age: 37,
+        image: '/images/bna/case-01-vfa.webp',
+        imageAlt: '나이별 내장지방 분포에서 감량 전 130.2cm², 감량 후 73.4cm² 위치'
+      },
+      { title: '골격근', delta: '-2', unit: 'kg', before: 29.5, after: 27.5 }
     ]
   },
 
   stories: [
     {
-          "title": "무조건 굶어야 한다고 생각했어요.",
-          "sectionLabel": "BEFORE",
-          "paragraphs": [
-                "수인님은 중학생 때부터 무용을 하며 수없이 다이어트를 반복하셨대요.",
-                "입시 때가 되면 굶고, 끝나면 다시 찌고… 무대가 생기면 또 굶는 생활의 반복."
-          ],
-          "images": ["/images/bna/case-01-before-1.webp"],
-          "imageSide": "right",
-          "imagePlaceholder": "비포 일상 사진"
+      title: '무조건 굶어야 한다고 생각했어요.',
+      sectionLabel: 'BEFORE',
+      paragraphs: [
+        {
+          mobile: '회원님은 중학생 때부터 무용을 하며 수없이 다이어트를\n반복하셨대요. 입시 때가 되면 굶고, 끝나면 다시 찌고…\n무대가 생기면 또 굶는 생활의 반복.',
+          desktop: '회원님은 중학생 때부터 무용을 하며 수없이 다이어트를 반복하셨대요.\n입시 때가 되면 굶고, 끝나면 다시 찌고… 무대가 생기면 또 굶는 생활의 반복.'
+        }
+      ],
+      images: ['/images/bna/case-01-before-1.webp'],
+      imageSide: 'right',
+      imagePlaceholder: '비포 일상 사진'
     },
     {
-          "title": "끊으면 다시 찌는 건 아닐까?",
-          "paragraphs": [
-                "결혼 후 82kg까지 찌고 삭센다, 위고비, 마운자로까지 다 맞아봤지만 빼는 것보다 어려웠던 건 다시 찌지 않는 거였다고 해요."
-          ],
-          "images": ["/images/bna/case-01-before-2.webp"],
-          "imageSide": "left",
-          "imagePlaceholder": "비포 스튜디오 사진"
+      title: '끊으면 다시 찌는 건 아닐까?',
+      paragraphs: [
+        '결혼 후 83.5kg까지 찌고 삭센다, 위고비, 마운자로까지 다 맞아봤지만 빼는 것보다 어려웠던 건 다시 찌지 않는 거였다고 해요.'
+      ],
+      images: ['/images/bna/case-01-before-2.webp'],
+      imageSide: 'left',
+      imagePlaceholder: '비포 스튜디오 사진'
     },
     {
-          "title": "운동은 이미\n누구보다 많이 하고 있었습니다.",
-          "paragraphs": [
-                "아침 운동에 무용 연습까지. 움직임이 부족한 사람은 아니었어요.",
-                "그런데 아무리 열심히 운동을 해도 살은 빠지지 않고 오히려 붓기만 하셨대요."
-          ],
-          "images": ["/images/bna/case-01-before-3.webp"],
-          "imageSide": "left",
-          "wideLayout": "full",
-          "imagePlaceholder": "운동하는 일상 사진"
+      title: '운동은 이미 누구보다 많이 하고 있었습니다.',
+      paragraphs: [
+        '아침 운동에 무용 연습까지. 움직임이 부족한 사람은 아니었어요.',
+        '그런데 아무리 열심히 운동을 해도 살은 빠지지 않고 오히려 붓기만 하셨대요.'
+      ],
+      images: ['/images/bna/case-01-before-3-wide.webp'],
+      imageSide: 'left',
+      wideLayout: 'full',
+      imagePlaceholder: '운동하는 일상 사진'
     },
     {
-          "title": "더 줄이는 대신, 제대로 먹기 시작했습니다.",
-          "paragraphs": [
-                "분명 더 적게 먹으라고 할 줄 알았는데 매니저님은 오히려 더 많이, 제대로 챙겨 먹으라고 하셨대요. 그래서 부족했던 영양을 채우고, 가짜 배고픔과 음식에 대한 갈망부터 줄여나갔습니다."
-          ],
-          "images": ["/images/bna/case-01-solution-1.webp"],
-          "imageSide": "left",
-          "imagePlaceholder": "상담 받는 사진 혹은 카톡 대화 스크린샷",
-          "sectionLabel": "WIM SOLUTION"
+      title: '더 줄이는 대신, 제대로 먹기 시작했습니다.',
+      paragraphs: [
+        '분명 더 적게 먹으라고 할 줄 알았는데 매니저님은 오히려 더 많이, 제대로 챙겨 먹으라고 하셨대요. 그래서 부족했던 영양을 채우고, 가짜 배고픔과 음식에 대한 갈망부터 줄여나갔습니다.'
+      ],
+      images: ['/images/bna/case-01-solution-1.webp'],
+      imageSide: 'left',
+      imagePlaceholder: '상담 받는 사진 혹은 카톡 대화 스크린샷',
+      sectionLabel: 'WIM SOLUTION'
     },
     {
-          "title": "배가 부르니까, 간식이 땡기지 않더라구요.",
-          "paragraphs": [
-                "처음엔 이렇게 먹으면서 정말 빠질까 의심도 많이 하셨대요.",
-                "그런데 잘 먹기 시작하자 간식을 억지로 참는 일도, 야식 생각도 서서히 사라졌다고 해요."
-          ],
-          "images": ["/images/bna/case-01-solution-2.webp"],
-          "imageSide": "right",
-          "imagePlaceholder": "중간 일상 사진"
+      title: '배가 부르니까, 간식이 당기지 않더라고요.',
+      paragraphs: [
+        '처음엔 이렇게 먹으면서 정말 빠질까 의심도 많이 하셨대요.',
+        '그런데 잘 먹기 시작하자 간식을 억지로 참는 일도, 야식 생각도 서서히 사라졌다고 해요.'
+      ],
+      images: ['/images/bna/case-01-solution-2.webp'],
+      imageSide: 'right',
+      imagePlaceholder: '중간 일상 사진'
     },
     {
-          "title": "제대로 회복하니 그제서야 몸이 제 말을 들어주는 것 같았어요.",
-          "paragraphs": [
-                "매주 센터에 방문해서 그날 컨디션에 맞게 기기관리를 받고 나면 항상 체중이 쑥 내려갔대요.",
-                "억지로 운동하며 스트레스만 받았던 지난 시간들이 어이가 없을 지경이라고 하시더라구요."
-          ],
-          "images": ["/images/bna/case-01-solution-3.webp"],
-          "imageSide": "left",
-          "imagePlaceholder": "중간 기기관리 사진",
-          "wideLayout": "full"
+      title: '제대로 회복하니 그제야 몸이 제 말을 들어주는 것 같았어요.',
+      paragraphs: [
+        '매주 센터에 방문해서 그날 컨디션에 맞게 기기관리를 받고 나면 항상 체중이 쑥 내려갔대요.',
+        '억지로 운동하며 스트레스만 받았던 지난 시간들이 어이가 없을 지경이라고 하시더라고요.'
+      ],
+      images: ['/images/bna/case-01-solution-3.webp'],
+      imageSide: 'left',
+      imagePlaceholder: '중간 기기관리 사진',
+      wideLayout: 'full'
     },
     {
-          "title": "한 번도 굶지 않았는데, 몸이 다시 가벼워졌어요.",
-          "paragraphs": [
-                "수인님은 무엇보다 배고픈 고통 없이, 굶지 않고 살이 빠진 게 가장 신기하다고 하세요.",
-                "몸이 다시 가벼워지니 무용도, 일상도 더욱 활기차졌구요."
-          ],
-          "images": [],
-          "imageSide": "left",
-          "imagePlaceholder": "애프터 일상 사진",
-          "sectionLabel": "AFTER",
-          "sectionLayout": "zigzag"
+      title: '몸이 다시 가벼워졌어요.',
+      paragraphs: [
+        '회원님은 무엇보다 굶지 않고 살이 빠진 게 가장 신기하다고 하세요. 몸이 다시 가벼워지니 무용도, 일상도 더욱 활기차졌고요.'
+      ],
+      images: ['/images/bna/case-01-after-1.webp'],
+      imageSide: 'left',
+      imagePlaceholder: '애프터 일상 사진',
+      sectionLabel: 'AFTER',
+      sectionLayout: 'zigzag'
     },
     {
-          "title": "예전에 입던 옷을 다시 꺼내 입기 시작했습니다.",
-          "paragraphs": [
-                "한동안 멀리 했던 몸에 붙는 옷도 자연스럽게 찾게 됐대요.",
-                "예전에 잘 입던 옷이 다시 편해지던 순간, 너무나 뿌듯했다고 하셨어요."
-          ],
-          "images": ["/images/bna/case-01-after-2.webp"],
-          "imageSide": "right",
-          "imagePlaceholder": "애프터 스튜디오 사진"
+      title: '예전에 입던 옷도 커져서\n옷을 전부 다시 샀어요.',
+      paragraphs: [
+        '한동안 멀리했던 몸에 붙는 옷도 자연스럽게 찾게 됐대요. 예전에 잘 입던 옷이 다시 편해지던 순간, 너무나 뿌듯했다고 하셨어요.'
+      ],
+      images: ['/images/bna/case-01-after-2.webp'],
+      imageSide: 'right',
+      imagePlaceholder: '애프터 스튜디오 사진'
     },
     {
-          "title": "다시 무대 위에 설 수 있게 되었어요.",
-          "paragraphs": [
-                "수인님의 목표는 가장 말랐던 몸으로 돌아가는 게 아니래요.",
-                "2세를 준비하고, 무대 위에서도 오래도록 움직일 수 있는 건강하고 예쁜 몸을 유지하는 것.",
-                "수인님은 먹고, 움직이고, 일하는 삶 안에서 평생 유지할 수 있는 몸을 만들어가고 있습니다."
-          ],
-          "images": ["/images/bna/case-01-after-3.webp"],
-          "imageSide": "right",
-          "imagePlaceholder": "무대 사진",
-          "wideLayout": "full"
+      title: '무대가 다시 편해졌어요.',
+      paragraphs: [
+        '이제는 무릎이 아프지도 않고 예전처럼 금방 지치지도 않으신대요.',
+        '그래서 회원님의 목표는 가장 말랐던 몸으로 돌아가는 게 아닙니다.',
+        {
+          mobile: '무대 위에서 오래도록 편히 움직일 수 있는\n건강하고 예쁜 몸을 유지하는 것.',
+          desktop: '무대 위에서 오래도록 편히 움직일 수 있는 건강하고 예쁜 몸을 유지하는 것.'
+        },
+        'WIM에서 배운 모든 것들이 회원님의 삶을 지탱해 줄 거예요.'
+      ],
+      images: ['/images/bna/case-01-after-3.webp'],
+      imageSide: 'right',
+      imagePlaceholder: '무대 사진',
+      wideLayout: 'full'
     }
-],
+  ],
 
   ctaBand: {
-    "quote": "수인님처럼 쉽고 건강하게 감량하고 싶다면?",
-    "description": "내가 다시 찌는 이유를 찾고, 내 라이프 스타일에 맞는 감량 방법을 설계합니다.",
-    "label": "나에게 맞는 감량 상담받기"
-},
-
+    quote: '회원님처럼 쉽고 건강하게 감량하고 싶다면?',
+    description:
+      '내가 다시 찌는 이유를 찾고, 내 라이프스타일에 맞는 감량 방법을 설계합니다.',
+    label: '나에게 맞는 감량 상담받기'
+  }
 };
 
 /* ───────────────────────── 글자 규격 (wim-homepage-2 Typography) ───────────────────────── */
@@ -705,20 +745,13 @@ function Typography({
 
 /* ───────────────────────── 공통 부품 ───────────────────────── */
 
-/** 가로 폭을 잡는 틀 — 모바일은 좌우 20px 여백 */
-function Container({
-  children,
-  className = "",
-  max = "max-w-[1100px]",
-}: {
-  children: ReactNode;
-  className?: string;
-  max?: string;
-}) {
+/** 가로 폭을 잡는 틀 — 기본 최대 1100px, className 에 max-w-* 를 주면 그 값을 쓴다 */
+function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const max = /(^|\s)max-w-/.test(className) ? "" : "max-w-[1100px]";
   return <div className={`mx-auto w-full px-5 ${max} ${className}`}>{children}</div>;
 }
 
-/** 둥근 상담 버튼 (↗ 아이콘 포함) */
+/** 둥근 버튼 (↗ 아이콘 포함) */
 function CtaButton({
   label,
   href,
@@ -760,6 +793,60 @@ function CtaButton({
   );
 }
 
+/* ───────────────────────── 줄바꿈 (wim-homepage-2 SectionLayout) ───────────────────────── */
+
+type BreakText = string | { mobile: string; desktop: string };
+
+function SplitLines({ text }: { text: string }) {
+  const lines = text.split('\n');
+  if (lines.length === 1) return <>{text}</>;
+  return (
+    <>
+      {lines.map((line, index) => (
+        <span key={line}>
+          {index > 0 && <br />}
+          {line}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/** 문자열 안의 \n 을 줄바꿈으로 렌더한다. 줄바꿈 위치는 data/diet-program.ts 에서 조정한다. */
+function LineBreaks({ text }: { text: BreakText }) {
+  if (typeof text === 'string') return <SplitLines text={text} />;
+  return (
+    <>
+      <span className="tb:hidden">
+        <SplitLines text={text.mobile} />
+      </span>
+      <span className="hidden tb:inline">
+        <SplitLines text={text.desktop} />
+      </span>
+    </>
+  );
+}
+
+/**
+ * 문자열 안의 \n 을 모바일에서만 줄바꿈으로 렌더한다. PC 는 한 줄로 이어 붙인다.
+ * 줄바꿈 위치는 data/diet-program.ts 문구의 \n 으로 조정한다.
+ */
+function MobileLineBreaks({ text }: { text: string }) {
+  const lines = text.split('\n');
+  if (lines.length === 1) return <>{text}</>;
+  return (
+    <>
+      {lines.map((line, index) => (
+        <span key={line}>
+          {index > 0 && <br className="tb:hidden" />}
+          {index > 0 && ' '}
+          {line}
+        </span>
+      ))}
+    </>
+  );
+}
+
 
 /* ───────────────────────── CaseIntroSection ───────────────────────── */
 
@@ -771,46 +858,39 @@ function CaseIntroSection({
 }) {
   return (
     <section>
-      <Container className="pb-8 pt-8 text-center tb:pb-8 tb:pt-14 ">
+      <Container className="pb-8 pt-9 text-center tb:pb-8 tb:pt-14 ">
         {intro.eyebrow && (
-          <>
-            <Typography
-              as="p"
-              variant="itc-body-04"
-              tabletVariant="itc-body-03"
-              weight="regular"
-              className="mb-2 uppercase text-gray-02 tb:mb-3 dt:hidden"
-            >
-              {intro.eyebrow}
-            </Typography>
-            <Typography
-              as="p"
-              variant="ko-body-02"
-              weight="regular"
-              className="mb-3 hidden text-center text-gray-02 dt:block"
-            >
-              {intro.eyebrow}
-            </Typography>
-          </>
+          <Typography
+            as="p"
+            variant="itc-body-04"
+            tabletVariant="itc-body-03"
+            desktopSize={16}
+            weight="regular"
+            className="mb-1 text-center uppercase text-gray-02 tb:mb-3 dt:mb-5"
+          >
+            {intro.eyebrow}
+          </Typography>
         )}
         <Typography
           as="h1"
           variant="ko-headline-01"
           tabletVariant="ko-display-01"
           weight="bold"
-          className="text-black"
+          className="text-primary-main dt:text-black"
         >
           {intro.title}
         </Typography>
-        <Typography
-          as="p"
-          variant="ko-body-03"
-          tabletVariant="ko-body-01"
-          weight="regular"
-          className="mt-3 break-keep text-gray-03 tb:mt-[34px]"
-        >
-          {intro.description}
-        </Typography>
+        {intro.description && (
+          <Typography
+            as="p"
+            variant="ko-body-04"
+            tabletVariant="ko-body-01"
+            weight="regular"
+            className="mx-auto mt-5 max-w-[300px] break-keep text-center !tracking-normal text-black tb:mt-[34px] tb:max-w-none tb:!tracking-[-0.02em] dt:text-gray-03"
+          >
+            <MobileLineBreaks text={intro.description} />
+          </Typography>
+        )}
       </Container>
     </section>
   );
@@ -834,12 +914,48 @@ function WeightStep({
         variant="itc-body-04"
         tabletVariant="itc-body-03"
         weight={isAfter ? 'medium' : 'regular'}
+        desktopWeight="semibold"
+        desktopSize={16}
+        className={`uppercase dt:!font-pretendard dt:!leading-none dt:!tracking-normal dt:text-center ${isAfter ? 'text-black' : 'text-gray-02'}`}
+      >
+        {step.label}
+      </Typography>
+      <p
+        className={`mt-1 whitespace-nowrap text-[34px] leading-none tracking-normal tb:mt-4 tb:text-[48px] dt:font-pretendard dt:text-[48px] dt:leading-[1.4] ${
+          isAfter
+            ? 'font-bold text-primary-main dt:font-extrabold'
+            : 'font-medium text-gray-02 dt:font-medium'
+        }`}
+      >
+        {step.value}
+        {step.unit}
+      </p>
+    </div>
+  );
+}
+
+/** 모바일 Before → After 체중 — 가운데 정렬 */
+function MobileWeightStep({
+  step,
+  tone
+}: {
+  step: { label: string; value: string; unit: string };
+  tone: 'before' | 'after';
+}) {
+  const isAfter = tone === 'after';
+  return (
+    <div className="flex flex-col items-center">
+      <Typography
+        as="span"
+        variant="ko-body-04"
+        tabletVariant="ko-body-03"
+        weight="regular"
         className={`uppercase ${isAfter ? 'text-black' : 'text-gray-02'}`}
       >
         {step.label}
       </Typography>
       <p
-        className={`mt-1 whitespace-nowrap text-[34px] leading-none tb:mt-2 tb:text-[48px] ${
+        className={`mt-1 whitespace-nowrap text-[30px] leading-tight tracking-normal tb:text-[40px] ${
           isAfter ? 'font-bold text-primary-main' : 'font-medium text-gray-02'
         }`}
       >
@@ -865,7 +981,76 @@ function CaseHeroSection({
 
   return (
     <section className="relative">
-      <Container className="pb-14 pt-4 tb:pb-20 tb:pt-8">
+      {/* 모바일·태블릿 — 체중 변화 → 사진 → 이름·카피 순서로 가운데 정렬 */}
+      <Container className="pb-5 pt-2 text-center tb:pb-16 dt:hidden">
+        <div className="flex items-center justify-center gap-4 tb:gap-6">
+          <MobileWeightStep step={hero.before} tone="before" />
+          <span
+            aria-hidden="true"
+            className="mt-4 h-0 w-0 border-y-[6px] border-l-[10px] border-y-transparent border-l-primary-main tb:mt-6"
+          />
+          <MobileWeightStep step={hero.after} tone="after" />
+        </div>
+        <p
+          aria-hidden="true"
+          className="mt-3 select-none whitespace-nowrap text-[56px] font-bold leading-none tracking-[-0.02em] text-[#D9DBD8] tb:text-[80px]"
+        >
+          {hero.watermark}
+          {hero.watermarkUnit}
+        </p>
+
+        <div className="mt-6 flex items-end justify-center">
+          {hero.images.map((photo, index) => (
+            <img
+              key={photo.src}
+              src={photo.src}
+              alt={photo.alt}
+              className={
+                isPair
+                  ? `relative h-[340px] w-auto object-contain tb:h-[520px] ${index > 0 ? '-ml-4 tb:-ml-8' : ''}`
+                  : 'h-[460px] w-auto max-w-full object-contain tb:h-[600px]'
+              }
+            />
+          ))}
+        </div>
+
+        <Typography
+          as="p"
+          variant="ko-body-03"
+          tabletVariant="ko-body-01"
+          weight="regular"
+          className="mt-1 text-center !tracking-normal text-gray-02"
+        >
+          {hero.eyebrow}
+        </Typography>
+        <Typography
+          as="h2"
+          variant="ko-headline-02"
+          tabletVariant="ko-display-01"
+          weight="medium"
+          className="mt-3 break-keep !tracking-normal text-[#2E5F3A]"
+        >
+          {titleLines.map((line, index) => (
+            <span key={line} className={index > 0 ? 'font-bold' : undefined}>
+              {index > 0 && <br />}
+              {line}
+            </span>
+          ))}
+        </Typography>
+        <Typography
+          as="p"
+          variant="ko-body-04"
+          tabletVariant="ko-body-01"
+          weight="regular"
+          tabletWeight="medium"
+          className="mt-5 break-keep text-center !tracking-normal text-primary-main"
+        >
+          {hero.summaryLines.join(' ')}
+        </Typography>
+      </Container>
+
+      {/* PC — 왼쪽 카피·체중, 오른쪽 사진 */}
+      <Container className="hidden pb-14 pt-4 tb:pb-20 tb:pt-8 dt:block">
         <div className="grid grid-cols-1 gap-10 dt:grid-cols-2 dt:grid-rows-[auto_1fr] dt:gap-0">
           {/* 왼쪽 위 — 이름, 사진까지 이어지는 선, 감량 카피 */}
           <div className="relative z-20 dt:col-start-1 dt:row-start-1 dt:pt-16">
@@ -876,7 +1061,6 @@ function CaseHeroSection({
                 tabletVariant="ko-body-01"
                 desktopVariant="ko-headline-03"
                 weight="regular"
-                desktopWeight="medium"
                 className="flex-none text-gray-03 dt:text-primary-sub-01"
               >
                 {hero.eyebrow}
@@ -902,7 +1086,7 @@ function CaseHeroSection({
               {titleLines.map((line, index) => (
                 <span
                   key={line}
-                  className={index === 0 ? 'font-medium' : undefined}
+                  className={index === 0 ? 'font-medium' : 'font-bold'}
                 >
                   {index > 0 && <br />}
                   {line}
@@ -921,7 +1105,7 @@ function CaseHeroSection({
                 className={
                   isPair
                     ? `relative h-[340px] w-auto object-contain tb:h-[520px] dt:h-[640px] ${index > 0 ? '-ml-4 tb:-ml-8' : ''}`
-                    : 'h-[380px] w-auto max-w-full object-contain tb:h-[560px] dt:h-[680px]'
+                    : 'h-[380px] w-auto max-w-full object-contain tb:h-[560px] dt:h-[835px] dt:w-[495px]'
                 }
               />
             ))}
@@ -946,18 +1130,18 @@ function CaseHeroSection({
               ))}
             </Typography>
 
-            <div className="mt-6 flex items-center gap-6 border-l-4 border-primary-main pl-6 tb:mt-7 tb:gap-10 tb:pl-9">
+            <div className="mt-6 flex items-center gap-6 border-l-4 border-primary-main pl-6 tb:mt-7 tb:gap-6 tb:pl-9 dt:h-[100px] dt:border-l-[8px]">
               <WeightStep step={hero.before} tone="before" />
               <span
                 aria-hidden="true"
-                className="mt-5 h-0 w-0 border-y-[7px] border-l-[11px] border-y-transparent border-l-primary-main tb:mt-7 tb:border-y-[9px] tb:border-l-[14px]"
+                className="mt-5 h-0 w-0 border-y-[7px] border-l-[11px] border-y-transparent border-l-primary-main tb:mt-7 tb:border-y-[9px] tb:border-l-[14px] dt:border-y-[12.5px] dt:border-l-[25px]"
               />
               <WeightStep step={hero.after} tone="after" />
             </div>
 
             <p
               aria-hidden="true"
-              className="mt-8 select-none whitespace-nowrap text-[72px] font-bold leading-none tracking-[-0.02em] text-[#D9DBD8] tb:mt-9 tb:text-[110px]"
+              className="mt-8 select-none whitespace-nowrap text-[72px] font-bold leading-none tracking-[-0.02em] text-[#D9DBD8] tb:mt-9 tb:text-[110px] dt:font-pretendard dt:text-[96px] dt:leading-[1.5] dt:tracking-normal"
             >
               {hero.watermark}
               {hero.watermarkUnit}
@@ -971,7 +1155,7 @@ function CaseHeroSection({
 
 /* ───────────────────────── CaseCtaBandSection ───────────────────────── */
 
-/** 상담 유도 밴드 — 히어로 바로 아래와 페이지 맨 끝에 쓴다 */
+/** 상담 유도 밴드 — href 가 있으면 그 페이지로, 없으면 상담 페이지(CONSULT_HREF)로 보낸다 */
 function CaseCtaBandSection({
   ctaBand,
   emphasized = false
@@ -984,11 +1168,12 @@ function CaseCtaBandSection({
       <Container className="flex flex-col items-center text-center">
         <Typography
           as="p"
-          variant="ko-headline-03"
+          variant={emphasized ? 'ko-body-01' : 'ko-headline-03'}
           tabletVariant="ko-display-02"
           desktopVariant={emphasized ? 'ko-display-01' : 'ko-display-02'}
-          weight="bold"
-          className="break-keep text-white"
+          weight={emphasized ? 'semibold' : 'bold'}
+          tabletWeight="bold"
+          className={emphasized ? 'break-keep text-center !tracking-normal text-white' : 'break-keep text-white'}
         >
           {ctaBand.quote}
         </Typography>
@@ -1005,7 +1190,12 @@ function CaseCtaBandSection({
           </Typography>
         )}
 
-        <CtaButton href={CONSULT_HREF} label={ctaBand.label} variant="white" className="mt-6 tb:mt-8" />
+        <CtaButton
+          label={ctaBand.label}
+          href={ctaBand.href ?? CONSULT_HREF}
+          variant="white"
+          className="mt-6 tb:mt-8"
+        />
       </Container>
     </section>
   );
@@ -1039,7 +1229,7 @@ function WeightHeading({
         {step.label}
       </Typography>
       <p
-        className={`mt-1 text-[26px] font-bold leading-tight tb:text-[34px] ${
+        className={`mt-0.5 text-[17px] font-bold leading-tight tb:mt-1 tb:text-[34px] ${
           isAfter ? 'text-primary-main' : 'text-gray-02'
         }`}
       >
@@ -1077,20 +1267,22 @@ function LongArrow() {
 /** 사진 사이 수치 한 줄 — 34.8% → 24.1% */
 function MeasureRow({ measure }: { measure: BnaCaseDetail['change']['measures'][number] }) {
   return (
-    <li className="flex items-center justify-between tb:flex-col tb:justify-start">
+    <li className="flex flex-col items-center">
       <Typography
         as="span"
-        variant="ko-body-04"
+        variant="ko-body-02"
         tabletVariant="ko-body-02"
         weight="bold"
-        className="text-black"
+        className="border-b border-black px-1 pb-1.5 text-black tb:border-0 tb:p-0"
       >
         {measure.label}
       </Typography>
-      <p className="flex items-center gap-2 whitespace-nowrap text-[18px] leading-tight tb:mt-2 tb:gap-3 tb:text-[26px]">
+      {/* 모바일은 위아래(↓), 태블릿 이상은 좌우(→)로 잇는다 */}
+      <p className="mt-6 flex flex-col items-center gap-1 whitespace-nowrap text-[15px] leading-tight tb:mt-2 tb:flex-row tb:gap-3 tb:text-[26px]">
         <span className="font-light text-gray-02">{measure.before}</span>
         <span aria-hidden="true" className="font-bold text-primary-main">
-          →
+          <span className="tb:hidden">↓</span>
+          <span className="hidden tb:inline">→</span>
         </span>
         <span className="sr-only">에서</span>
         <span className="bg-primary-sub-02 px-1 font-bold text-primary-main">
@@ -1101,7 +1293,7 @@ function MeasureRow({ measure }: { measure: BnaCaseDetail['change']['measures'][
   );
 }
 
-/** 막대 두 개와 그 사이를 잇는 면으로 감량 전후를 비교한다 */
+/** 막대 두 개와 그 사이를 잇는 면으로 감량 전후를 비교한다 (chart: bars) */
 function BeforeAfterChart({
   card,
   beforeLabel,
@@ -1119,8 +1311,8 @@ function BeforeAfterChart({
   ] as const;
 
   return (
-    <div className="mt-6 tb:mt-8">
-      <div className="relative h-[160px] tb:h-[190px]">
+    <div className="mt-6 flex min-h-0 flex-1 flex-col tb:mt-auto tb:block tb:flex-none tb:pt-8">
+      <div className="relative min-h-0 flex-1 tb:h-[190px] tb:flex-none">
         {/* 가로 눈금선 */}
         <div aria-hidden="true" className="absolute inset-0 flex flex-col justify-between">
           {Array.from({ length: 6 }, (_, index) => (
@@ -1185,6 +1377,101 @@ function BeforeAfterChart({
   );
 }
 
+
+/* ── 내장지방(VFA) 그래프 — 나이별 분포 위에 감량 전·후 점을 찍는다 ── */
+
+/** 그래프 눈금 범위 */
+const VFA_AGE = { min: 10, max: 90 } as const;
+const VFA_MAX = 200;
+/** 정상 기준선 (cm²) — 이 아래가 초록 영역 */
+const VFA_NORMAL = 100;
+/** 그림 좌표 — 가로 300 · 세로 226 안에서 축이 차지하는 칸 */
+const PLOT = { left: 34, right: 272, top: 30, bottom: 200 } as const;
+
+const vfaX = (age: number) =>
+  PLOT.left + ((age - VFA_AGE.min) / (VFA_AGE.max - VFA_AGE.min)) * (PLOT.right - PLOT.left);
+const vfaY = (value: number) =>
+  PLOT.bottom - (Math.min(value, VFA_MAX + 20) / VFA_MAX) * (PLOT.bottom - PLOT.top - 10);
+
+/** 점 표시 — 동그라미 안에 반짝이는 십자 */
+function VfaMarker({ x, y, tone }: { x: number; y: number; tone: 'before' | 'after' }) {
+  const stroke = tone === 'before' ? '#B42318' : '#FFFFFF';
+  return (
+    <g>
+      <circle cx={x} cy={y} r={11} fill={tone === 'before' ? '#FFFFFF' : 'none'} stroke={stroke} strokeWidth={1.2} />
+      <path
+        d={`M${x} ${y - 7}Q${x + 1} ${y - 1} ${x + 7} ${y}Q${x + 1} ${y + 1} ${x} ${y + 7}Q${x - 1} ${y + 1} ${x - 7} ${y}Q${x - 1} ${y - 1} ${x} ${y - 7}Z`}
+        fill={stroke}
+      />
+    </g>
+  );
+}
+
+function VfaChart({ card }: { card: BnaCaseMetricCard }) {
+  const age = card.age ?? 40;
+  const x = vfaX(age);
+  const beforeY = vfaY(card.before);
+  const afterY = vfaY(card.after);
+  const normalY = vfaY(VFA_NORMAL);
+  /** 나이가 들수록 올라가는 분포 띠 */
+  const cloud = `M${vfaX(22)} ${vfaY(18)}C${vfaX(12)} ${vfaY(60)} ${vfaX(38)} ${vfaY(118)} ${vfaX(62)} ${vfaY(150)}C${vfaX(78)} ${vfaY(172)} ${vfaX(86)} ${vfaY(182)} ${vfaX(84)} ${vfaY(150)}C${vfaX(82)} ${vfaY(118)} ${vfaX(72)} ${vfaY(76)} ${vfaX(58)} ${vfaY(46)}C${vfaX(44)} ${vfaY(18)} ${vfaX(30)} ${vfaY(6)} ${vfaX(22)} ${vfaY(18)}Z`;
+
+  return (
+    <svg
+      role="img"
+      aria-label={`나이 ${age}세 기준 내장지방 ${card.before}${card.unit}에서 ${card.after}${card.unit}로 변화`}
+      viewBox="0 0 300 226"
+      className="mt-2 min-h-0 w-full flex-1 tb:-mx-6 tb:mt-3 tb:h-auto tb:w-[calc(100%+3rem)] tb:flex-none"
+    >
+      <defs>
+        <clipPath id="vfa-normal">
+          <rect x={0} y={normalY} width={300} height={240} />
+        </clipPath>
+      </defs>
+
+      <text x={PLOT.left - 12} y={PLOT.top - 12} fontSize={11} fill="#7FB07D">
+        VFA(cm²)
+      </text>
+
+      {/* 세로 눈금 */}
+      {[50, 100, 150, 200].map((tick) => (
+        <g key={tick}>
+          <line x1={PLOT.left} x2={PLOT.right} y1={vfaY(tick)} y2={vfaY(tick)} stroke="#EDEFEC" />
+          <text x={PLOT.left - 8} y={vfaY(tick) + 3} fontSize={11} textAnchor="end" fill="#5D5D5D">
+            {tick}
+          </text>
+        </g>
+      ))}
+      {/* 가로 눈금 */}
+      {[20, 40, 60, 80].map((tick) => (
+        <g key={tick}>
+          <line x1={vfaX(tick)} x2={vfaX(tick)} y1={PLOT.top} y2={PLOT.bottom} stroke="#EDEFEC" />
+          <text x={vfaX(tick)} y={PLOT.bottom + 16} fontSize={11} textAnchor="middle" fill="#5D5D5D">
+            {tick}
+          </text>
+        </g>
+      ))}
+
+      {/* 분포 — 기준선 위는 회색, 아래는 초록 */}
+      <path d={cloud} fill="#E8E9E7" />
+      <path d={cloud} fill="#86B584" clipPath="url(#vfa-normal)" />
+      <line x1={PLOT.left} x2={PLOT.right} y1={normalY} y2={normalY} stroke="#2E5F3A" strokeWidth={1} />
+
+      {/* 축 */}
+      <path d={`M${PLOT.left} ${PLOT.top}V${PLOT.bottom}H${PLOT.right}`} fill="none" stroke="#2E5F3A" strokeWidth={1.2} />
+      <text x={PLOT.right + 4} y={PLOT.bottom + 4} fontSize={12} fill="#7FB07D">
+        Age
+      </text>
+
+      {/* 감량 전·후 점 — 점에서 축까지 옅은 점선 */}
+      <line x1={PLOT.left} x2={x} y1={afterY} y2={afterY} stroke="#FFFFFF" strokeDasharray="2 2" />
+      <line x1={x} x2={x} y1={afterY} y2={PLOT.bottom} stroke="#FFFFFF" strokeDasharray="2 2" />
+      <VfaMarker x={x} y={beforeY} tone="before" />
+      <VfaMarker x={x} y={afterY} tone="after" />
+    </svg>
+  );
+}
+
 /**
  * 4~5. 신체 변화 — 감량 전·후 사진 사이에 주요 수치를 쌓고,
  * 아래에 체성분 막대 카드 3장을 둔다.
@@ -1198,32 +1485,34 @@ function CaseBodyChangeSection({
 }) {
   return (
     <section className="bg-[linear-gradient(180deg,var(--Center_White,#FFF)_0%,#F4FCF3_100%)] py-14 tb:py-24">
-      <Container max="max-w-[1000px]">
+      <Container className="max-w-[1000px]">
         <header className="text-center">
           <Typography
             as="h2"
-            variant="ko-headline-02"
+            variant="ko-headline-01"
             tabletVariant="ko-display-02"
             desktopVariant="ko-display-01"
             weight="bold"
-            className="text-primary-main"
+            className="text-center !tracking-normal text-primary-main tb:!tracking-[-0.02em]"
           >
             {metrics.title}
           </Typography>
-          <Typography
-            as="p"
-            variant="ko-body-04"
-            tabletVariant="ko-body-02"
-            desktopVariant="ko-headline-02"
-            weight="regular"
-            className="mt-3 break-keep text-gray-03 tb:mt-5 dt:text-primary-sub-01"
-          >
-            {metrics.description}
-          </Typography>
+          {metrics.description && (
+            <Typography
+              as="p"
+              variant="ko-body-04"
+              tabletVariant="ko-body-02"
+              desktopVariant="ko-headline-02"
+              weight="regular"
+              className="mt-3 break-keep text-gray-03 tb:mt-5 dt:text-primary-sub-01"
+            >
+              {metrics.description}
+            </Typography>
+          )}
         </header>
 
         {/* 사진 위 — BEFORE ────→ AFTER */}
-        <div className="mt-10 grid grid-cols-[1fr_72px_1fr] items-center gap-x-3 tb:mt-16 tb:grid-cols-[1fr_minmax(160px,260px)_1fr] tb:gap-x-12">
+        <div className="mt-8 grid grid-cols-[1fr_64px_1fr] items-center gap-x-3 tb:mt-16 tb:grid-cols-[1fr_minmax(160px,260px)_1fr] tb:gap-x-12">
           <WeightHeading step={change.before} tone="before" />
           <LongArrow />
           <WeightHeading step={change.after} tone="after" />
@@ -1236,7 +1525,7 @@ function CaseBodyChangeSection({
             alt={change.before.alt}
             className="aspect-[4/5] w-full rounded-[10px] object-cover tb:rounded-xl"
           />
-          <ul className="order-last col-span-2 mt-4 flex list-none flex-col gap-3 rounded-[10px] bg-white/70 px-5 py-4 tb:order-none tb:col-span-1 tb:mt-0 tb:gap-9 tb:bg-transparent tb:p-0">
+          <ul className="order-last col-span-2 mt-8 grid list-none grid-cols-3 gap-2 p-0 tb:order-none tb:col-span-1 tb:mt-0 tb:flex tb:flex-col tb:gap-9">
             {change.measures.map((measure) => (
               <MeasureRow key={measure.label} measure={measure} />
             ))}
@@ -1249,18 +1538,18 @@ function CaseBodyChangeSection({
         </div>
 
         {/* 체성분 막대 카드 */}
-        <div className="mt-10 grid grid-cols-1 gap-4 tb:mt-12 tb:grid-cols-3 tb:gap-5">
+        <div className="mt-10 grid grid-cols-1 gap-10 tb:mt-12 tb:grid-cols-3 tb:gap-5">
           {metrics.cards.map((card) => (
             <article
               key={card.title}
-              className="rounded-[10px] border border-[#E6E9E5] bg-white/90 px-6 pb-6 pt-7 shadow-[0_2px_10px_rgba(21,94,53,0.04)] tb:px-10 tb:pb-8 tb:pt-9"
+              className="mx-auto flex h-[260px] w-[270px] max-w-full flex-col rounded-[10px] border border-[#E6E9E5] bg-white/90 px-4 pb-3 pt-4 shadow-[0_2px_10px_rgba(21,94,53,0.04)] tb:mx-0 tb:h-auto tb:w-full tb:max-w-none tb:px-10 tb:pb-8 tb:pt-9"
             >
               <Typography
                 as="h3"
-                variant="ko-headline-03"
+                variant="ko-body-01"
                 tabletVariant="ko-headline-02"
                 weight="bold"
-                className="text-center text-primary-main"
+                className="flex-none text-center text-primary-main"
               >
                 {card.title}
                 <span className="ml-4 font-normal">
@@ -1268,11 +1557,44 @@ function CaseBodyChangeSection({
                   {card.unit}
                 </span>
               </Typography>
-              <BeforeAfterChart
-                card={card}
-                beforeLabel={metrics.beforeLabel}
-                afterLabel={metrics.afterLabel}
-              />
+              {card.chart === 'vfa' ? (
+                <>
+                  <Typography
+                    as="p"
+                    variant="ko-body-04"
+                    tabletVariant="ko-body-03"
+                    weight="regular"
+                    className="mt-1 flex-none text-center text-gray-03"
+                  >
+                    {card.before}
+                    {card.unit} →{' '}
+                    <b className="font-bold">
+                      {card.after}
+                      {card.unit}
+                    </b>
+                  </Typography>
+                  {card.image ? (
+                    /* 태블릿 이상: 이미지 속 가로축(Age 축)을 옆 막대 그래프 밑단과 같은 높이에 맞춘다.
+                       막대 그래프는 밑단 아래에 라벨 칸 32px(pb-8)을 두므로 같은 칸을 비우고,
+                       이미지에서 축 아래 부분(전체 높이의 12.3%)만큼 이미지를 내려 그 칸에 걸치게 한다. */
+                    <div className="mt-3 flex min-h-0 flex-1 tb:mt-auto tb:block tb:flex-none tb:pb-8 tb:pt-4">
+                      <img
+                        src={card.image}
+                        alt={card.imageAlt ?? ''}
+                        className="h-full min-h-0 w-full object-contain tb:h-auto tb:translate-y-[12.3%]"
+                      />
+                    </div>
+                  ) : (
+                    <VfaChart card={card} />
+                  )}
+                </>
+              ) : (
+                <BeforeAfterChart
+                  card={card}
+                  beforeLabel={metrics.beforeLabel}
+                  afterLabel={metrics.afterLabel}
+                />
+              )}
             </article>
           ))}
         </div>
@@ -1284,7 +1606,7 @@ function CaseBodyChangeSection({
 /* ───────────────────────── CaseStorySection ───────────────────────── */
 
 /** 사진 한 장 또는 두 장. 두 장이면 Before/After 로 나란히 붙인다 */
-function StoryImages({ story }: { story: BnaCaseStory }) {
+function StoryImages({ story, mobileAfter = false }: { story: BnaCaseStory; mobileAfter?: boolean }) {
   if (!story.images.length) {
     return story.imagePlaceholder ? (
       <div className="flex aspect-[4/3] items-center justify-center rounded-[10px] bg-gray-01 p-6 text-center text-gray-03 tb:rounded-[20px]">
@@ -1298,7 +1620,7 @@ function StoryImages({ story }: { story: BnaCaseStory }) {
         src={story.images[0]}
         alt=""
         aria-hidden="true"
-        className="aspect-[4/3] w-full rounded-[10px] object-cover"
+        className={`${mobileAfter ? 'aspect-[27/23]' : 'aspect-[27/17]'} w-full rounded-[10px] object-cover tb:aspect-[4/3]`}
       />
     );
   }
@@ -1331,20 +1653,20 @@ function StoryImages({ story }: { story: BnaCaseStory }) {
 }
 
 /** 이야기 본문 문단 */
-function StoryParagraphs({ story }: { story: BnaCaseStory }) {
+function StoryParagraphs({ story, compactMobile = false }: { story: BnaCaseStory; compactMobile?: boolean }) {
   return (
     <div className="mt-3 flex flex-col tb:mt-5">
-      {story.paragraphs.map((paragraph) => (
+      {story.paragraphs.map((paragraph, index) => (
         <Typography
-          key={paragraph.slice(0, 20)}
+          key={index}
           as="p"
-          variant="ko-body-04"
+          variant={compactMobile ? 'ko-body-04' : 'ko-body-02'}
           tabletVariant="ko-body-02"
           desktopVariant="ko-body-01"
           weight="regular"
-          className="break-keep text-[#333333] dt:text-black"
+          className={`break-keep text-[#333333] dt:text-black ${compactMobile ? '!tracking-normal tb:!tracking-[-0.02em]' : ''}`}
         >
-          {paragraph}
+          <LineBreaks text={paragraph} />
         </Typography>
       ))}
     </div>
@@ -1352,8 +1674,8 @@ function StoryParagraphs({ story }: { story: BnaCaseStory }) {
 }
 
 /** 사진이 없을 때 자리만 잡아두는 회색 상자 */
-function ImageSlot({ story }: { story: BnaCaseStory }) {
-  if (story.images.length) return <StoryImages story={story} />;
+function ImageSlot({ story, mobileAfter = false }: { story: BnaCaseStory; mobileAfter?: boolean }) {
+  if (story.images.length) return <StoryImages story={story} mobileAfter={mobileAfter} />;
   return (
     <div className="flex aspect-[4/3] items-center justify-center rounded-[10px] bg-gray-01 p-6 text-center text-gray-03">
       {story.imagePlaceholder}
@@ -1370,19 +1692,19 @@ function StoryCard({
   isBefore: boolean;
 }) {
   return (
-    <article className={isBefore ? '[&>img]:aspect-[536/400] [&>img]:max-w-[536px]' : undefined}>
+    <article className={`mx-auto w-[270px] max-w-full tb:mx-0 tb:w-auto ${isBefore ? 'tb:[&>img]:aspect-[536/400] tb:[&>img]:max-w-[536px]' : ''}`}>
       <ImageSlot story={story} />
       <Typography
         as="h3"
-        variant="ko-body-01"
+        variant="ko-body-03"
         tabletVariant="ko-headline-03"
         desktopVariant="ko-headline-01"
         weight="bold"
-        className="mt-5 whitespace-pre-line break-keep text-black tb:mt-10"
+        className="mt-5 whitespace-pre-line break-keep !tracking-normal text-black tb:mt-10 tb:!tracking-[-0.02em]"
       >
         {story.title}
       </Typography>
-      <StoryParagraphs story={story} />
+      <StoryParagraphs story={story} compactMobile />
     </article>
   );
 }
@@ -1392,7 +1714,7 @@ function StoryCard({
  * side — 사진 왼쪽, 초록 제목과 글은 오른쪽 아래 (기본)
  * full — 사진을 꽉 채우고, 초록 제목과 글은 아래 가운데
  */
-function StoryWide({ story }: { story: BnaCaseStory }) {
+function StoryWide({ story, isBefore, isAfter }: { story: BnaCaseStory; isBefore: boolean; isAfter: boolean }) {
   if (story.wideLayout === 'full') {
     return (
       <article>
@@ -1401,24 +1723,25 @@ function StoryWide({ story }: { story: BnaCaseStory }) {
             src={story.images[0]}
             alt=""
             aria-hidden="true"
-            className="aspect-[4/3] w-full rounded-[10px] object-cover tb:aspect-auto"
+            className={`relative left-1/2 aspect-[21/10] w-screen max-w-none -translate-x-1/2 rounded-none object-cover tb:left-auto tb:w-full tb:max-w-full tb:translate-x-0 tb:rounded-[10px] ${isBefore ? 'tb:aspect-[1100/350] dt:rounded-[16px]' : 'tb:aspect-auto'}`}
           />
         ) : (
           <div className="flex aspect-[4/3] items-center justify-center rounded-[10px] bg-gray-01 p-6 text-center text-gray-03 tb:aspect-[952/305]">
             {story.imagePlaceholder}
           </div>
         )}
-        <div className="mt-6 text-center tb:mt-14">
+        <div className={isAfter ? 'mt-5 text-center tb:mt-14' : 'mt-8 text-center tb:mt-14'}>
           <Typography
             as="h3"
-            variant="ko-body-01"
+            variant="ko-body-03"
             tabletVariant="ko-headline-02"
+            desktopVariant={isBefore ? 'ko-headline-01' : 'ko-headline-02'}
             weight="bold"
-            className="whitespace-pre-line break-keep text-primary-main"
+            className="whitespace-pre-line break-keep !tracking-normal text-primary-main tb:!tracking-[-0.02em]"
           >
             {story.title}
           </Typography>
-          <StoryParagraphs story={story} />
+          <StoryParagraphs story={story} compactMobile />
         </div>
       </article>
     );
@@ -1433,29 +1756,31 @@ function StoryWide({ story }: { story: BnaCaseStory }) {
  */
 function StorySide({
   story,
-  emphasis = false
+  emphasis = false,
+  mobileAfter = false
 }: {
   story: BnaCaseStory;
+  mobileAfter?: boolean;
   /** 묶음 마지막을 강조할 때 — 제목을 크게, 초록으로 */
   emphasis?: boolean;
 }) {
   const imageRight = story.imageSide === 'right';
   return (
-    <article className="grid grid-cols-1 gap-5 tb:grid-cols-2 tb:gap-5">
+    <article className={`grid grid-cols-1 gap-5 tb:grid-cols-2 tb:gap-5 ${mobileAfter ? 'mx-auto w-[270px] max-w-full tb:mx-0 tb:w-full' : ''}`}>
       <div className={imageRight ? 'tb:order-2' : undefined}>
-        <ImageSlot story={story} />
+        <ImageSlot story={story} mobileAfter={mobileAfter} />
       </div>
       <div className={`tb:self-end ${imageRight ? 'tb:order-1' : ''}`}>
         <Typography
           as="h3"
-          variant="ko-body-01"
+          variant="ko-body-03"
           tabletVariant={emphasis ? 'ko-headline-02' : 'ko-headline-03'}
           weight="bold"
-          className={`whitespace-pre-line break-keep ${emphasis ? 'text-primary-main' : 'text-black'}`}
+          className={`whitespace-pre-line break-keep !tracking-normal tb:!tracking-[-0.02em] ${emphasis ? 'text-primary-main' : 'text-black'}`}
         >
           {story.title}
         </Typography>
-        <StoryParagraphs story={story} />
+        <StoryParagraphs story={story} compactMobile />
       </div>
     </article>
   );
@@ -1480,19 +1805,36 @@ function StoryChapter({
 
   return (
     <div>
-      <Typography
-        as="h2"
-        variant="ko-headline-01"
-        tabletVariant="ko-display-01"
-        weight="bold"
-        className="text-center uppercase text-black"
-      >
-        {label}
-      </Typography>
-      <div className="mt-8 flex flex-col gap-12 tb:mt-16 tb:gap-20">
+      {label === 'AFTER' ? (
+        /* AFTER — 초록 제목에 밑줄, 양옆으로 가로선을 길게 */
+        <div className="flex items-center gap-6 tb:gap-11">
+          <span aria-hidden="true" className="h-px flex-1 bg-primary-main" />
+          <Typography
+            as="h2"
+            variant="ko-headline-01"
+            tabletVariant="ko-display-01"
+            weight="bold"
+            className="flex-none uppercase text-primary-main underline decoration-4 decoration-primary-main underline-offset-[10px]"
+          >
+            {label}
+          </Typography>
+          <span aria-hidden="true" className="h-px flex-1 bg-primary-main" />
+        </div>
+      ) : (
+        <Typography
+          as="h2"
+          variant="ko-headline-01"
+          tabletVariant="ko-display-01"
+          weight="bold"
+          className={`text-center uppercase text-black ${label === 'BEFORE' || label === 'WIM SOLUTION' ? 'underline decoration-4 decoration-black underline-offset-[10px]' : ''}`}
+        >
+          {label}
+        </Typography>
+      )}
+      <div className="mx-auto mt-8 flex w-full max-w-[380px] flex-col gap-12 tb:mt-16 tb:max-w-none tb:gap-20">
         {isZigzag &&
           cards.map((story) => (
-            <StorySide key={story.title} story={story} />
+            <StorySide key={story.title} story={story} mobileAfter={label === 'AFTER'} />
           ))}
         {!isZigzag && cards.length > 0 && (
           <div className={`grid grid-cols-1 gap-y-12 tb:grid-cols-2 tb:gap-y-20 ${label === 'BEFORE' ? 'tb:gap-x-7' : 'gap-x-5'}`}>
@@ -1501,7 +1843,7 @@ function StoryChapter({
             ))}
           </div>
         )}
-        {wide && <StoryWide story={wide} />}
+        {wide && <StoryWide story={wide} isBefore={label === 'BEFORE'} isAfter={label === 'AFTER'} />}
       </div>
     </div>
   );
@@ -1537,16 +1879,16 @@ function StoryRow({ story }: { story: BnaCaseStory }) {
           {story.title}
         </Typography>
         <div className="mt-5 flex flex-col gap-4 tb:mt-7">
-          {story.paragraphs.map((paragraph) => (
+          {story.paragraphs.map((paragraph, index) => (
             <Typography
-              key={paragraph.slice(0, 20)}
+              key={index}
               as="p"
               variant="ko-body-04"
               tabletVariant="ko-body-03"
               weight="regular"
               className="break-keep text-gray-03"
             >
-              {paragraph}
+              <LineBreaks text={paragraph} />
             </Typography>
           ))}
         </div>
@@ -1581,7 +1923,7 @@ function CaseStorySection({
   return (
     <section className="bg-white py-14 tb:py-28">
       <Container className="dt:px-0">
-        <div className="flex flex-col gap-20 tb:gap-32">
+        <div className="flex flex-col gap-20 tb:gap-21">
           {groupChapters(stories).map((chapter) =>
             chapter.label ? (
               <StoryChapter
@@ -1612,16 +1954,14 @@ export default function BeforeAfterPage() {
   const detail = DETAIL;
   return (
     <main className="overflow-hidden bg-white font-pretendard text-black">
-      {/* 1~2. 페이지 제목과 감량 결과 히어로 — 가장자리가 옅게 어두워지는 배경을 함께 쓴다 */}
-      <div className="bg-[radial-gradient(ellipse_at_50%_45%,#FFFFFF_35%,#F1F2F1_100%)]">
+      {/* 1~2. 페이지 제목과 감량 결과 히어로 — 배경 이미지를 함께 쓴다 */}
+      <div className="bg-[url('/images/bna/detail-first-section-bg.webp')] bg-cover bg-center bg-no-repeat">
         <CaseIntroSection intro={detail.intro} />
         <CaseHeroSection hero={detail.hero} />
       </div>
 
-      {/* 2-1. 상담 유도 밴드 — 히어로 바로 아래 */}
-      <CaseCtaBandSection ctaBand={detail.heroCta} />
-
-      {/* 3. 영상 — 영상이 준비될 때까지 잠시 숨긴다 (원본의 CaseVideoSection) */}
+      {/* 2-1. 히어로 바로 아래 밴드 — 감량 프로그램 페이지로 이동 */}
+      <CaseCtaBandSection ctaBand={detail.heroCta} emphasized />
 
       {/* 4~5. 신체 변화 — 전·후 사진, 주요 수치, 체성분 카드 */}
       <CaseBodyChangeSection change={detail.change} metrics={detail.metrics} />
