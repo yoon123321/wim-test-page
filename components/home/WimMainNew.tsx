@@ -5,7 +5,7 @@
  *
  * - 모바일: 메인_MO_1 (360 기준) / PC: 메인_PC (1440, 콘텐츠 1280 기준)
  * - 색상은 globals.css @theme 팔레트 토큰만 사용 (primary-*, gray-*, black, white)
- * - 문구·카드 데이터는 data/home-new.ts 에서 수정
+ * - 문구·카드 데이터는 data/home.ts 에서 수정
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,7 @@ import {
   WIM_NEW_ICONS,
   type WimNewTest,
   type WimNewCare,
-} from "@/data/home-new";
+} from "@/data/home";
 
 const CARE_SCRIM =
   "pointer-events-none absolute inset-0 mix-blend-multiply bg-gradient-to-b from-[#e0e0e0] from-[16.588%] to-[#666666] to-[91.169%]";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Typography } from "./Typography";
-import { WIM_NEW_COPY, WIM_NEW_ICONS } from "@/data/home-new";
+import { WIM_NEW_COPY, WIM_NEW_ICONS } from "@/data/home";
 
 export default function FooterMain() {
   const COPY = WIM_NEW_COPY.footer;

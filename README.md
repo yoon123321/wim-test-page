@@ -68,12 +68,12 @@ data/diet-new.ts                             문구 — 버전2
 **`data/` 에는 React 코드를 두지 않습니다.** 문구만 고칠 때 컴포넌트를 열지 않아도 되도록 나눈 것입니다.
 
 ```ts
-// data/home-new.ts — 값만
+// data/home.ts — 값만
 export const WIM_NEW_COPY = { ... };
 export const WIM_NEW_TESTS = [ ... ];
 
 // components/home/WimMainNew.tsx — 그 값으로 화면을 만든다
-import { WIM_NEW_COPY, WIM_NEW_TESTS } from "@/data/home-new";
+import { WIM_NEW_COPY, WIM_NEW_TESTS } from "@/data/home";
 ```
 
 `components/common/` 에는 **두 페이지 이상이 쓰는 것만** 둡니다. 한 페이지 전용이면 그 페이지 폴더로 내립니다.
@@ -137,4 +137,4 @@ dt:      1200px~     PC
 - **버전 스위치**는 `components/common/VariantProvider.tsx` 가 관리합니다. 첫 렌더는 항상 버전1이고, 마운트 후 `localStorage` 를 읽어 전환합니다(하이드레이션 불일치 방지). 그래서 버전2를 보려면 헤더 스위치를 한 번 눌러야 합니다.
 - **헤더는 한 벌입니다.** `components/common/HeaderMain.tsx` 를 두 버전이 함께 씁니다. 메뉴는 `data/navigation.ts` 의 `NAVIGATION_MAIN` 에서 수정합니다.
 - **메인의 STEP 01·02 섹션**(`TestsSection`, `CaresSection`)은 `WimMainNew.tsx` 에서 export 되어 감량 페이지에서도 그대로 씁니다. 문구를 고치면 두 페이지에 함께 반영됩니다.
-- **이미지 경로**는 `data/home-new.ts` 의 `WIM_NEW_IMAGES` / `WIM_NEW_ICONS` 한 곳에 모여 있습니다. 같은 이름으로 파일만 덮어쓰면 코드 수정이 필요 없습니다.
+- **이미지 경로**는 `data/home.ts` 의 `WIM_NEW_IMAGES` / `WIM_NEW_ICONS` 한 곳에 모여 있습니다. 같은 이름으로 파일만 덮어쓰면 코드 수정이 필요 없습니다.

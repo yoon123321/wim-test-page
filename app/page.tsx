@@ -136,7 +136,7 @@ export default function HomePage() {
                     key={item.label}
                     className={`flex min-h-[96px] flex-col justify-center px-2 text-center tb:min-h-[100px] tb:border-r-2 tb:border-[#b7dc91] tb:px-5 ${index % 2 === 0 ? "border-r-2 border-[#b7dc91]" : ""}`}
                   >
-                    <Typography as="span" size="sm" weight="bold" className="break-keep text-[#17653d]">
+                    <Typography as="span" size="sm" weight="bold" className="break-keep text-center text-[20px] leading-[150%] text-primary-main">
                       {item.label}
                     </Typography>
                     <div className="mt-3 flex items-baseline justify-center gap-1">
