@@ -59,6 +59,32 @@
   --font-franklin: "ITC Franklin Gothic LT Pro", "Libre Franklin", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   --font-garamond: "EB Garamond", serif;
 
+  /**
+   * 03. wim-* 별칭 — 본 사이트(wim-homepage-2)에서 옮겨 온 컴포넌트 전용
+   *
+   * 브랜드 페이지 등 본 사이트에서 그대로 복사한 컴포넌트는 `wim-` 접두사 토큰을 쓴다.
+   * (text-wim-black, bg-wim-white, font-wim-pretendard ...)
+   * 값은 위 코어 팔레트를 그대로 가리키므로 색을 바꿀 때는 위에서만 고치면 된다.
+   */
+  --color-wim-black: var(--color-black);
+  --color-wim-white: var(--color-white);
+  --color-wim-primary-main: var(--color-primary-main);
+  --color-wim-primary-sub-01: var(--color-primary-sub-01);
+  --color-wim-primary-sub-02: var(--color-primary-sub-02);
+  --color-wim-primary-sub-03: var(--color-primary-sub-03);
+  --color-wim-gray-03: var(--color-gray-03);
+  --color-wim-gray-02: var(--color-gray-02);
+  --color-wim-gray-01: var(--color-gray-01);
+  --color-wim-gray-00: var(--color-gray-00);
+
+  --font-wim-pretendard: var(--font-pretendard);
+  --font-wim-franklin: var(--font-franklin);
+  --font-wim-garamond: var(--font-garamond);
+
+  /** 1280 컨테이너가 좌우 여백을 확보하는 폭(1280+40). 이 아래에서는 px-5 를 유지한다. */
+  --breakpoint-wide: 82.5rem;
+  /** 본 사이트에서 옮겨 온 컴포넌트가 쓰는 소형 분기 */
+  --breakpoint-xs: 28.125rem; /* 450px */
 }
 
 /** 모바일에만 적용해야 할 때 쓰는 max-width 변형 (767px 이하) */
