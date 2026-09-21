@@ -5,6 +5,7 @@
  */
 
 import Link from "next/link";
+import BnaTestimonialsSection from "./BnaTestimonialsSection";
 import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from "react";
 
 /** 상담 버튼이 이동할 곳 */
@@ -1313,14 +1314,7 @@ function BeforeAfterChart({
   return (
     <div className="mt-6 flex min-h-0 flex-1 flex-col tb:mt-auto tb:block tb:flex-none tb:pt-8">
       <div className="relative min-h-0 flex-1 tb:h-[190px] tb:flex-none">
-        {/* 가로 눈금선 */}
-        <div aria-hidden="true" className="absolute inset-0 flex flex-col justify-between">
-          {Array.from({ length: 6 }, (_, index) => (
-            <span key={index} className="h-px w-full bg-[#EDEFEC]" />
-          ))}
-        </div>
-
-        {/* 두 막대 꼭대기를 잇는 연한 면 */}
+        {/* 두 막대 꼭대기를 잇는 연한 면 — 눈금선이 비치도록 반투명하게 둔다 */}
         <svg
           aria-hidden="true"
           viewBox="0 0 100 100"
@@ -1330,8 +1324,16 @@ function BeforeAfterChart({
           <polygon
             points={`${BAR_X.before},${100 - height(card.before)} ${BAR_X.after},${100 - height(card.after)} ${BAR_X.after},100 ${BAR_X.before},100`}
             fill="#E4F1DF"
+            fillOpacity={0.6}
           />
         </svg>
+
+        {/* 가로 눈금선 — 연한 면 위에 겹쳐 그어 면 너머로 줄이 보이게 한다 */}
+        <div aria-hidden="true" className="absolute inset-0 flex flex-col justify-between">
+          {Array.from({ length: 6 }, (_, index) => (
+            <span key={index} className="h-px w-full bg-[#EDEFEC]" />
+          ))}
+        </div>
 
         {bars.map((bar) => (
           <div
@@ -1968,6 +1970,9 @@ export default function BeforeAfterPage() {
 
       {/* 6. 회원 이야기 — BEFORE · WIM SOLUTION · AFTER */}
       <CaseStorySection stories={detail.stories} />
+
+      {/* 7. 다른 회원들의 Before & After */}
+      <BnaTestimonialsSection />
 
       {/* 8. 상담 유도 밴드 — 페이지 맨 끝 */}
       <CaseCtaBandSection ctaBand={detail.ctaBand} />
