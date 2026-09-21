@@ -88,7 +88,6 @@ export default function HomePage() {
         eyebrow={HOME_MAIN_V1.intro.eyebrow}
         titleLines={HOME_MAIN_V1.intro.titleLines}
         showDesc={false}
-        showTestChips
         gradientBackground
         desktopMaxWidth="1200px"
         largeImage

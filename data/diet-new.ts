@@ -213,7 +213,7 @@ export const DIET_RATING_BARS = [
 
 export const DIET_PLANS = [
   { name: "Wellness Lite", subtitle: "비대면 관리 프로그램", target: "혼자서도 어느 정도 되는데, 방향과 점검이 필요한 분", priceLabel: "상담 후 플랜 안내", priceValue: "진단 기반 견적", cta: "상담으로 확인" },
-  { name: "Wellness", subtitle: "대면 관리 프로그램", target: "이번엔 제대로, 사람과 함께 바꾸고 싶은 분", priceLabel: "8월 프로모션 적용 · 6주", priceValue: "진단 후 견적", cta: "이 플랜으로 상담" },
+  { name: "Wellness", subtitle: "대면 관리 프로그램", target: "이번엔 제대로, 매니저와 함께 바꾸고 싶은 분", priceLabel: "8월 프로모션 적용 · 6주", priceValue: "진단 후 견적", cta: "이 플랜으로 상담" },
   { name: "Wellness Signature", subtitle: "대면 관리 프로그램", target: "BMI 30 이상, 요요가 반복돼온 분 — 가장 촘촘한 관리", priceLabel: "상담 후 플랜 안내", priceValue: "진단 기반 견적", cta: "상담으로 확인" },
 ] as const;
 

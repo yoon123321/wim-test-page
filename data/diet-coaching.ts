@@ -9,12 +9,12 @@ export type CoachingBar = { label: string; value: string; percent: number };
 export const DIET_COACHING = {
   kicker: "HOW WE COACH",
   title: "검사지 한 장이, 코칭이 되기까지",
-  subLines: ["40대 여성 회원 한 분의 검사 결과를", "그대로 따라가 보세요."],
+  subLines: ["30대 여성 회원 한 분의 검사 결과를", "그대로 따라가 보세요."],
   note: "＊ 실제 검사 항목으로 구성한 예시 사례입니다",
   steps: [
     {
       tag: "STEP 1 · 타고난 기질 — WIM-I",
-      title: "나만의 반응 패턴을 확인합니다",
+      title: "나만의 기질을 확인합니다",
       bars: [
         { label: "스트레스 내성", value: "낮음", percent: 20 },
         { label: "부정적 충동성", value: "높음", percent: 80 },
@@ -25,7 +25,7 @@ export const DIET_COACHING = {
     },
     {
       tag: "STEP 2 · 지금의 생활 — WIM-Scale",
-      title: "현재 상태를 겹쳐 봅니다",
+      title: "현재 생활을 겹쳐 봅니다",
       bars: [
         { label: "스트레스 지수", value: "높음", percent: 80 },
         { label: "보상적 식사", value: "높음", percent: 80 },
@@ -53,6 +53,6 @@ export const DIET_COACHING = {
       { no: "2", title: "충동이 오는 상황 예측", desc: "기록으로 무너지는 시간대를 찾아, 그 순간을 미리 대비합니다." },
       { no: "3", title: "끊지 않고 바꾸기", desc: "초코라떼는 대체 음료로, 야식 시간대는 다른 보상 루틴으로 바꿉니다." },
     ],
-    closing: "같은 80%여도, 기질이 다르면 코칭이 다릅니다.",
+    closing: "기질이 다르면 코칭이 다릅니다.",
   },
 } as const;
