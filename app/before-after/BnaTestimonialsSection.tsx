@@ -12,8 +12,7 @@ import { createPortal } from 'react-dom';
 
 const COPY = {
   closeLabel: '상세 닫기',
-  ageLabel: '나이',
-  genderLabel: '성별',
+  memberInfoLabel: '회원 정보',
   programLabel: '프로그램',
   periodLabel: '관리 기간',
   beforeLabel: 'BEFORE',
@@ -198,12 +197,44 @@ type Testimonial = (typeof TESTIMONIALS)[number];
 
 /* ───────────────────────── 상세 모달 ───────────────────────── */
 
+/** 사진 옆에서 이전·다음 사례로 넘기는 동그란 화살표 */
+function StepArrow({
+  direction,
+  onClick
+}: {
+  direction: 'prev' | 'next';
+  onClick: () => void;
+}) {
+  const isPrev = direction === 'prev';
+  return (
+    <button
+      type="button"
+      aria-label={isPrev ? '이전 사례' : '다음 사례'}
+      onClick={(event) => {
+        event.stopPropagation();
+        onClick();
+      }}
+      className={`absolute top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-primary-main text-white shadow-md transition-colors hover:bg-primary-main/90 ${
+        isPrev ? 'left-0' : 'right-0'
+      }`}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d={isPrev ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} />
+      </svg>
+    </button>
+  );
+}
+
 /** 태블릿 이하는 전체 화면, PC(dt·1200px~)는 가운데 900px 모달 */
 function TestimonialDetailModal({
   testimonial,
+  onPrev,
+  onNext,
   onClose
 }: {
   testimonial: Testimonial;
+  onPrev: () => void;
+  onNext: () => void;
   onClose: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
@@ -215,11 +246,17 @@ function TestimonialDetailModal({
     period,
     comment,
     managerFeedback,
-    beforeImageLarge,
-    afterImageLarge,
     weightBefore,
     weightAfter
   } = testimonial;
+  /** 프로그램명은 데이터 값이 아니라 관리 기간으로 정한다 — 18주 이하면 Wellness */
+  const periodWeeks = Number.parseInt(period, 10);
+  const displayProgram = Number.isNaN(periodWeeks)
+    ? program
+    : periodWeeks <= 18
+      ? 'Wellness'
+      : 'Wellness Signature';
+  const shortGender = gender === '여성' ? '여' : gender === '남성' ? '남' : gender;
 
   useEffect(() => setMounted(true), []);
 
@@ -289,18 +326,16 @@ function TestimonialDetailModal({
 
             <div className="mt-5 h-[4px] w-full max-w-[560px] bg-primary-main" />
 
-            <dl className="mt-4 flex w-full max-w-[560px] flex-wrap items-center gap-x-8 gap-y-2 text-[14px] font-medium leading-[1.5] dt:text-[18px]">
+            <dl className="mt-4 flex w-full max-w-[560px] flex-wrap items-center gap-x-5 gap-y-2 whitespace-nowrap text-[14px] font-medium leading-[1.5] dt:text-[18px]">
               <div className="flex gap-2">
-                <dt className="font-bold">{COPY.ageLabel}</dt>
-                <dd>{age}세</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="font-bold">{COPY.genderLabel}</dt>
-                <dd>{gender}</dd>
+                <dt className="font-bold">{COPY.memberInfoLabel}</dt>
+                <dd>
+                  {age}세({shortGender})
+                </dd>
               </div>
               <div className="flex gap-2">
                 <dt className="font-bold">{COPY.programLabel}</dt>
-                <dd>{program}</dd>
+                <dd>{displayProgram}</dd>
               </div>
               <div className="flex gap-2">
                 <dt className="font-bold">{COPY.periodLabel}</dt>
@@ -308,33 +343,39 @@ function TestimonialDetailModal({
               </div>
             </dl>
 
-            <div className="mt-10 grid w-full max-w-[560px] grid-cols-2 overflow-hidden tb:mt-9">
-              <figure>
-                <div className="relative aspect-[280/224] w-full overflow-hidden bg-[#F4F4F4]">
-                  <img src={beforeImageLarge} alt={`${name} 감량 전`} className="h-full w-full object-cover" />
-                </div>
-                <figcaption className="bg-[#DEDEDC] py-2 text-center text-[15px] font-medium text-white">
+            {/* 사진 좌우로 이전·다음 사례를 넘긴다. 글 영역과 겹치지 않도록 사진 줄 안에 둔다 */}
+            <div className="relative mt-10 flex w-full max-w-[750px] justify-center tb:mt-9">
+              <StepArrow direction="prev" onClick={onPrev} />
+              <StepArrow direction="next" onClick={onNext} />
+
+            {/* 합성 사진은 좌우 절반이 각각 전·후라 라벨 두 칸이 그대로 맞는다 */}
+            <figure className="w-full max-w-[560px] overflow-hidden">
+              <div className="relative aspect-[1240/670] w-full overflow-hidden bg-[#F4F4F4]">
+                <img
+                  src={testimonial.comboImage}
+                  alt={`${name} 감량 전·후`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <figcaption className="grid grid-cols-2">
+                <span className="bg-[#DEDEDC] py-2 text-center text-[15px] font-medium text-white">
                   {COPY.beforeLabel}
-                </figcaption>
-              </figure>
-              <figure>
-                <div className="relative aspect-[280/224] w-full overflow-hidden bg-[#F4FCF3]">
-                  <img src={afterImageLarge} alt={`${name} 감량 후`} className="h-full w-full object-cover" />
-                </div>
-                <figcaption className="bg-primary-main py-2 text-center text-[15px] font-bold text-white">
+                </span>
+                <span className="bg-primary-main py-2 text-center text-[15px] font-bold text-white">
                   {COPY.afterLabel}
-                </figcaption>
-              </figure>
+                </span>
+              </figcaption>
+            </figure>
             </div>
 
-            <div className="mt-9 grid w-full max-w-[560px] grid-cols-2 gap-y-5 tb:grid-cols-4 tb:gap-y-0">
+            <div className="mt-9 grid w-full max-w-[560px] grid-cols-4">
               {deltas.map(([label, before, after, unit], index) => (
                 <div
                   key={label}
-                  className={`text-center text-primary-main ${index > 0 ? 'tb:border-l-2 tb:border-primary-main' : ''}`}
+                  className={`text-center text-primary-main ${index > 0 ? 'border-l-2 border-primary-main' : ''}`}
                 >
-                  <p className="text-[16px] font-bold leading-[1.5] dt:text-[24px]">{label}</p>
-                  <p className="mt-1 text-[16px] font-medium leading-[1.5] dt:text-[24px]">
+                  <p className="text-[13px] font-bold leading-[1.5] tb:text-[16px] dt:text-[24px]">{label}</p>
+                  <p className="mt-1 text-[13px] font-medium leading-[1.5] tb:text-[16px] dt:text-[24px]">
                     -{(before - after).toFixed(1)}
                     {unit}
                   </p>
@@ -374,14 +415,22 @@ function TestimonialDetailModal({
 
 /** 74 → '74.0kg' — 감량 전후 체중을 같은 자릿수로 맞춘다 */
 const formatWeight = (value: number) => `${value.toFixed(1)}kg`;
+/** '여성' 32 → '여/32세' — 이름 옆에 붙이는 짧은 표기 */
+const formatWho = (gender: string, age: number) => `${gender.charAt(0)}/${age}세`;
 
 /**
  * 감량 전·후가 한 장으로 합쳐진 사진 아래에
  * 체중 변화 한 줄, 회원 정보 한 줄, 후킹 문구 한 줄을 둔다.
  */
-function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const { name, age, gender, program, period } = testimonial;
+function TestimonialCard({
+  testimonial,
+  onDetailOpen
+}: {
+  testimonial: Testimonial;
+  /** 카드를 누르면 불린다 — 목록이 상세를 연다 */
+  onDetailOpen: () => void;
+}) {
+  const { name, age, gender } = testimonial;
 
   return (
     <article className="text-left">
@@ -389,7 +438,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         type="button"
         aria-label={`${name} 감량 사례 상세 보기`}
         className="block w-full cursor-pointer text-left"
-        onClick={() => setIsDetailOpen(true)}
+        onClick={onDetailOpen}
       >
         <div className="relative aspect-[1240/670] overflow-hidden rounded-xl bg-gray-00 transition-shadow hover:shadow-lg tb:rounded-2xl">
           <img
@@ -401,19 +450,16 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
         <h3 className="mt-5 break-keep text-[16px] font-bold leading-[1.5] text-black tb:text-[20px]">
           [{formatWeight(testimonial.weightBefore)} → {formatWeight(testimonial.weightAfter)}] {name}님
+          {/* 성별·나이는 이름 옆에 작게 붙인다 */}
+          <span className="ml-2 text-[13px] font-medium text-gray-02 tb:text-[15px]">
+            {formatWho(gender, age)}
+          </span>
         </h3>
-        {/* 회원 정보는 제목 바로 아래 작게 붙이고, 그 아래 한 줄 문구를 둔다 */}
-        <p className="mt-1 break-keep text-[13px] leading-[1.5] text-gray-02 tb:text-[14px]">
-          {age}세 · {gender} · {period} 관리 · {program}
-        </p>
-        <p className="mt-3 break-keep text-[14px] font-medium leading-[1.5] text-gray-03 tb:text-[16px]">
+        <p className="mt-2 break-keep text-[14px] font-medium leading-[1.5] text-gray-03 tb:text-[16px]">
           {testimonial.hook}
         </p>
       </button>
 
-      {isDetailOpen && (
-        <TestimonialDetailModal testimonial={testimonial} onClose={() => setIsDetailOpen(false)} />
-      )}
     </article>
   );
 }
@@ -428,6 +474,15 @@ export default function BnaTestimonialsSection({ compact = false }: { compact?: 
   const viewportRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [pageCount, setPageCount] = useState(1);
+  /** 상세를 연 사례의 순번. 모달은 하나만 두고 좌우로 넘긴다 */
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const openTestimonial = openIndex === null ? null : TESTIMONIALS[openIndex];
+
+  /** 끝에서 넘기면 반대쪽 끝으로 돈다 */
+  const stepTo = (step: 1 | -1) =>
+    setOpenIndex((current) =>
+      current === null ? current : (current + step + TESTIMONIALS.length) % TESTIMONIALS.length
+    );
 
   const sync = useCallback(() => {
     const viewport = viewportRef.current;
@@ -479,12 +534,15 @@ export default function BnaTestimonialsSection({ compact = false }: { compact?: 
           className="flex snap-x snap-mandatory gap-0 overflow-x-auto scroll-smooth pb-8 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {/* 한 화면에 두 장씩 — 모바일은 한 장씩 */}
-          {TESTIMONIALS.map((testimonial) => (
+          {TESTIMONIALS.map((testimonial, index) => (
             <div
               key={testimonial.id}
               className="min-w-0 shrink-0 basis-full snap-start px-2 tb:basis-1/2 tb:px-3"
             >
-              <TestimonialCard testimonial={testimonial} />
+              <TestimonialCard
+                testimonial={testimonial}
+                onDetailOpen={() => setOpenIndex(index)}
+              />
             </div>
           ))}
         </div>
@@ -530,6 +588,15 @@ export default function BnaTestimonialsSection({ compact = false }: { compact?: 
           </div>
         )}
       </div>
+
+      {openTestimonial && (
+        <TestimonialDetailModal
+          testimonial={openTestimonial}
+          onPrev={() => stepTo(-1)}
+          onNext={() => stepTo(1)}
+          onClose={() => setOpenIndex(null)}
+        />
+      )}
     </section>
   );
 }
