@@ -829,6 +829,29 @@ function LineBreaks({ text }: { text: BreakText }) {
 }
 
 /**
+ * \n 으로 나눈 조각을 문장 단위 줄로 렌더한다.
+ *
+ * <br> 로 줄을 끊으면 "이 화면 폭에서 예쁜 모양"이 고정돼, 폭이 줄면
+ * 긴 문장만 두 줄로 밀려 들쭉날쭉해진다. 여기서는 조각마다 자기 줄을
+ * 차지하게 하고(block), 줄이 넘칠 때는 text-balance 가 줄 길이를 고르게
+ * 나눠 좁은 화면에서도 모양이 무너지지 않는다.
+ *
+ * BreakText 를 받으면 문장 단위로 끊어둔 desktop 쪽을 모든 폭에서 쓴다.
+ */
+function SentenceLines({ text }: { text: BreakText }) {
+  const source = typeof text === 'string' ? text : text.desktop;
+  return (
+    <>
+      {source.split('\n').map((sentence) => (
+        <span key={sentence} className="block text-balance">
+          {sentence}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/**
  * 문자열 안의 \n 을 모바일에서만 줄바꿈으로 렌더한다. PC 는 한 줄로 이어 붙인다.
  * 줄바꿈 위치는 data/diet-program.ts 문구의 \n 으로 조정한다.
  */
@@ -1329,16 +1352,16 @@ function BeforeAfterChart({
         </svg>
 
         {/* 가로 눈금선 — 연한 면 위에 겹쳐 그어 면 너머로 줄이 보이게 한다 */}
-        <div aria-hidden="true" className="absolute inset-0 flex flex-col justify-between">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between">
           {Array.from({ length: 6 }, (_, index) => (
-            <span key={index} className="h-px w-full bg-[#EDEFEC]" />
+            <span key={index} className="h-px w-full bg-[#BFC3BD]/55" />
           ))}
         </div>
 
         {bars.map((bar) => (
           <div
             key={bar.key}
-            className="absolute bottom-0 flex w-6 -translate-x-1/2 flex-col items-center tb:w-[26px]"
+            className="absolute bottom-0 z-10 flex w-6 -translate-x-1/2 flex-col items-center tb:w-[26px]"
             style={{ left: `${bar.x}%`, height: `${height(bar.value)}%` }}
           >
             <span
@@ -1668,7 +1691,7 @@ function StoryParagraphs({ story, compactMobile = false }: { story: BnaCaseStory
           weight="regular"
           className={`break-keep text-[#333333] dt:text-black ${compactMobile ? '!tracking-normal tb:!tracking-[-0.02em]' : ''}`}
         >
-          <LineBreaks text={paragraph} />
+          <SentenceLines text={paragraph} />
         </Typography>
       ))}
     </div>
@@ -1890,7 +1913,7 @@ function StoryRow({ story }: { story: BnaCaseStory }) {
               weight="regular"
               className="break-keep text-gray-03"
             >
-              <LineBreaks text={paragraph} />
+              <SentenceLines text={paragraph} />
             </Typography>
           ))}
         </div>
