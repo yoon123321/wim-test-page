@@ -31,3 +31,7 @@ yarn-error.log*
 # tooling state
 /.omc/
 /.claude/
+
+# 배포용으로 만든 이미지 묶음 — 한 덩이가 199MB 라 저장소에 두지 않는다
+*.tar
+*.tar.gz

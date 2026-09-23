@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.vercel
+.claude
+.codex
+.agents
+.omc
+.env
+.env.*
+*.pem
+*.key
+*.tar
+*.tar.gz
+*.tsbuildinfo
+*.log
+.DS_Store
