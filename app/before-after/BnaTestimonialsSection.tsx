@@ -448,14 +448,14 @@ function TestimonialCard({
           />
         </div>
 
-        <h3 className="mt-5 break-keep text-[16px] font-bold leading-[1.5] text-black tb:text-[20px]">
+        <h3 className="mt-5 break-keep text-[14px] font-bold leading-[1.5] text-[#1D1E1E] tb:mt-5 tb:pl-10 tb:text-[22px]">
           [{formatWeight(testimonial.weightBefore)} → {formatWeight(testimonial.weightAfter)}] {name}님
           {/* 성별·나이는 이름 옆에 작게 붙인다 */}
           <span className="ml-2 text-[13px] font-medium text-gray-02 tb:text-[15px]">
             {formatWho(gender, age)}
           </span>
         </h3>
-        <p className="mt-2 break-keep text-[14px] font-medium leading-[1.5] text-gray-03 tb:text-[16px]">
+        <p className="mt-2 break-keep text-[12px] font-normal leading-[1.5] text-[#155E35] tb:pl-10 tb:text-[18px] tb:font-medium tb:text-[#2E5F3A]">
           {testimonial.hook}
         </p>
       </button>
@@ -470,6 +470,23 @@ function TestimonialCard({
  * 후기 목록 — 한 화면에 두 장씩(모바일 한 장) 보여주고 좌우로 넘긴다.
  * embla 없이 스크롤 스냅으로 굴리고, 스크롤 위치로 현재 쪽을 센다.
  */
+/** 한 페이지에 두 장씩 묶는다 — 넘기는 단위가 곧 점 하나다 */
+const TESTIMONIAL_PAGES = Array.from(
+  { length: Math.ceil(TESTIMONIALS.length / 2) },
+  (_, index) => TESTIMONIALS.slice(index * 2, index * 2 + 2)
+);
+
+/** 섹션 머리말·안내 문구 (위쪽 COPY 는 상세 모달용이라 이름을 나눈다) */
+const SECTION_COPY = {
+  eyebrow: 'MORE STORIES',
+  title: '더 많은 변화가 WIM에서 이어지고 있습니다.',
+  /** 캐러셀 오른쪽 위 안내 */
+  swipeHint: '옆으로 넘겨 실제 회원님들의 사례를 확인해 보세요.',
+  carouselLabel: '회원 사례 캐러셀',
+  /** {n} 자리에 순번이 들어간다 */
+  dotLabel: '{n}번째 사례 보기'
+} as const;
+
 export default function BnaTestimonialsSection({ compact = false }: { compact?: boolean }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -498,13 +515,6 @@ export default function BnaTestimonialsSection({ compact = false }: { compact?: 
     return () => window.removeEventListener('resize', sync);
   }, [sync]);
 
-  /** 한 번에 한 화면씩 넘긴다 */
-  const scrollByPage = (direction: 1 | -1) => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    viewport.scrollBy({ left: direction * viewport.clientWidth, behavior: 'smooth' });
-  };
-
   const scrollToPage = (index: number) => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -512,81 +522,72 @@ export default function BnaTestimonialsSection({ compact = false }: { compact?: 
   };
 
   return (
-    <section className="overflow-hidden bg-white pb-16 pt-16 tb:pb-20 tb:pt-24">
-      <div className={`mx-auto px-4 text-center tb:px-8 ${compact ? 'max-w-[1100px]' : 'max-w-[1280px]'}`}>
-        <span className="mb-4 inline-block rounded-full bg-primary-sub-02 px-5 py-2 text-sm font-bold text-primary-main shadow-sm">
-          Before &amp; After
-        </span>
-        <h2 className="mb-6 break-keep text-[28px] font-bold leading-[1.4] text-primary-main tb:text-[44px]">
-          놀라운 변화,<br className="block tb:hidden" /> 검증된 성과
-        </h2>
-        <p className="mx-auto max-w-3xl text-[15px] leading-[1.6] text-gray-03 tb:text-[18px]">
-          WIM의 맞춤형 프로그램으로 건강하게 체중 관리에 성공한
-          <br className="hidden tb:block" /> 고객들의 실제 결과를 확인하세요
-        </p>
-      </div>
+    <section className="overflow-hidden bg-white pb-16 pt-16 tb:pb-16 tb:pt-16">
+      <div
+        className={`mx-auto w-full px-5 md:px-0 ${compact ? 'max-w-[1100px]' : 'max-w-[1280px]'}`}
+      >
+        <header className="text-center">
+          <p className="text-[14px] font-normal leading-[1.5] text-primary-main tb:text-[16px] tb:font-bold">
+            {SECTION_COPY.eyebrow}
+          </p>
+          <h2 className="mx-auto mt-4 max-w-[300px] break-keep text-[24px] font-bold leading-[1.5] text-black tb:mt-3 tb:max-w-none tb:text-[36px]">
+            {SECTION_COPY.title}
+          </h2>
+        </header>
 
-      <div className={`mx-auto mt-12 w-full px-4 tb:px-8 ${compact ? 'max-w-[1100px]' : 'max-w-[1200px]'}`}>
-        <div
-          ref={viewportRef}
-          onScroll={sync}
-          aria-label="고객 후기 캐러셀"
-          className="flex snap-x snap-mandatory gap-0 overflow-x-auto scroll-smooth pb-8 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {/* 한 화면에 두 장씩 — 모바일은 한 장씩 */}
-          {TESTIMONIALS.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className="min-w-0 shrink-0 basis-full snap-start px-2 tb:basis-1/2 tb:px-3"
-            >
-              <TestimonialCard
-                testimonial={testimonial}
-                onDetailOpen={() => setOpenIndex(index)}
-              />
-            </div>
-          ))}
-        </div>
+        <div className="flex flex-col">
+          {/* 넘길 수 있다는 걸 알려준다 — 캐러셀 오른쪽 위. 모바일에서는 감춘다 */}
+          <p className="order-1 mt-8 hidden text-right tb:mt-18 tb:block">
+            <span className="border-b border-primary-main pb-1 text-[14px] font-normal leading-[1.5] text-[#155E35]">
+              {SECTION_COPY.swipeHint}
+            </span>
+          </p>
 
-        {pageCount > 1 && (
-          <div className="mt-4 flex items-center justify-center gap-6">
-            <button
-              type="button"
-              onClick={() => scrollByPage(-1)}
-              className="rounded-full bg-primary-sub-03 p-2 text-primary-main transition-colors hover:bg-primary-sub-02"
-              aria-label="이전 후기"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div className="flex justify-center gap-3">
-              {Array.from({ length: pageCount }, (_, index) => (
-                <button
-                  type="button"
-                  key={index}
-                  onClick={() => scrollToPage(index)}
-                  className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                    index === selectedIndex
-                      ? 'scale-125 bg-primary-main shadow-sm'
-                      : 'bg-gray-02 opacity-70 hover:opacity-100'
-                  }`}
-                  aria-label={`${index + 1}번째 후기 보기`}
-                  aria-current={index === selectedIndex ? 'true' : undefined}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => scrollByPage(1)}
-              className="rounded-full bg-primary-sub-03 p-2 text-primary-main transition-colors hover:bg-primary-sub-02"
-              aria-label="다음 후기"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
+          <div
+            ref={viewportRef}
+            onScroll={sync}
+            aria-label={SECTION_COPY.carouselLabel}
+            className="order-3 mt-6 flex snap-x snap-mandatory overflow-x-auto scroll-smooth tb:order-2 tb:mt-9 tb:pb-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {/* 한 페이지에 두 장 — 모바일은 세로, 태블릿부터 가로 배치 */}
+            {TESTIMONIAL_PAGES.map((page, pageIndex) => (
+              <div
+                key={page[0].id}
+                className="grid min-w-0 shrink-0 basis-full snap-start grid-cols-1 content-start gap-10 tb:grid-cols-2 tb:gap-0"
+              >
+                {page.map((testimonial, itemIndex) => (
+                  <div key={testimonial.id} className="min-w-0 tb:px-3">
+                    <TestimonialCard
+                      testimonial={testimonial}
+                      onDetailOpen={() => setOpenIndex(pageIndex * 2 + itemIndex)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
-        )}
+
+          {/* 지금 보는 자리 — 짚은 칸만 길쭉해진다 */}
+          {pageCount > 1 && (
+            <div className="order-2 mt-10 flex items-center justify-center gap-1 tb:order-3 tb:mt-8 tb:gap-2">
+              {Array.from({ length: pageCount }, (_, index) => {
+                const isCurrent = index === selectedIndex;
+                return (
+                  <button
+                    type="button"
+                    key={index}
+                    onClick={() => scrollToPage(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      isCurrent ? 'w-8 bg-gray-02' : 'w-2 bg-gray-01 hover:bg-gray-02'
+                    }`}
+                    aria-label={SECTION_COPY.dotLabel.replace('{n}', String(index + 1))}
+                    aria-current={isCurrent ? 'true' : undefined}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {openTestimonial && (
